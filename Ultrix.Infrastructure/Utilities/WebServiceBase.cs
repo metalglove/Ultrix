@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Ultrix.Infrastructure.Bases
+namespace Ultrix.Infrastructure.Utilities
 {
     public class WebServiceBase
     {

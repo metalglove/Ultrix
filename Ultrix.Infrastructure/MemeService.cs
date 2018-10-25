@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Ultrix.Application.Interfaces;
 using Ultrix.Common;
-using Ultrix.Infrastructure.Bases;
+using Ultrix.Infrastructure.Utilities;
 using Ultrix.Infrastructure.Entities;
 
 namespace Ultrix.Infrastructure
