@@ -3,7 +3,49 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Domain", "Ultrix.Domain\Ultrix.Domain.csproj", "{104F4A1F-F2CF-4096-B375-B11D946DF403}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Persistance", "Ultrix.Persistance\Ultrix.Persistance.csproj", "{6D73751B-2176-4530-8DEC-EC8D55DD89A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Application", "Ultrix.Application\Ultrix.Application.csproj", "{A98F0F83-BBFD-4B1D-8319-044E72C43EEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Infrastructure", "Ultrix.Infrastructure\Ultrix.Infrastructure.csproj", "{2F6BFB24-1505-4B18-BF58-9FBB94604F01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Presentation", "Ultrix.Presentation\Ultrix.Presentation.csproj", "{F4D7E538-B095-4B29-84EB-7B8515710159}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Common", "Ultrix.Common\Ultrix.Common.csproj", "{BBF009CC-3610-434B-A436-D310BA7AC1B8}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{104F4A1F-F2CF-4096-B375-B11D946DF403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{104F4A1F-F2CF-4096-B375-B11D946DF403}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{104F4A1F-F2CF-4096-B375-B11D946DF403}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{104F4A1F-F2CF-4096-B375-B11D946DF403}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D73751B-2176-4530-8DEC-EC8D55DD89A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D73751B-2176-4530-8DEC-EC8D55DD89A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D73751B-2176-4530-8DEC-EC8D55DD89A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D73751B-2176-4530-8DEC-EC8D55DD89A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A98F0F83-BBFD-4B1D-8319-044E72C43EEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A98F0F83-BBFD-4B1D-8319-044E72C43EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A98F0F83-BBFD-4B1D-8319-044E72C43EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A98F0F83-BBFD-4B1D-8319-044E72C43EEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F6BFB24-1505-4B18-BF58-9FBB94604F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F6BFB24-1505-4B18-BF58-9FBB94604F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F6BFB24-1505-4B18-BF58-9FBB94604F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F6BFB24-1505-4B18-BF58-9FBB94604F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4D7E538-B095-4B29-84EB-7B8515710159}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4D7E538-B095-4B29-84EB-7B8515710159}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4D7E538-B095-4B29-84EB-7B8515710159}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4D7E538-B095-4B29-84EB-7B8515710159}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
