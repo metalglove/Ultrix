@@ -13,13 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Infrastructure", "Ul
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Presentation", "Ultrix.Presentation\Ultrix.Presentation.csproj", "{F4D7E538-B095-4B29-84EB-7B8515710159}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Common", "Ultrix.Common\Ultrix.Common.csproj", "{BBF009CC-3610-434B-A436-D310BA7AC1B8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{63ABD9C1-973B-4B88-8446-5153D58903A1}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\MemesDbContext.mdf = ..\..\..\MemesDbContext.mdf
 		..\..\..\MemesDbContext_log.ldf = ..\..\..\MemesDbContext_log.ldf
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Mapping", "Ultrix.Mapping\Ultrix.Mapping.csproj", "{9D35D64F-7527-418A-ADEF-801C136E683B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{F4D7E538-B095-4B29-84EB-7B8515710159}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4D7E538-B095-4B29-84EB-7B8515710159}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4D7E538-B095-4B29-84EB-7B8515710159}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBF009CC-3610-434B-A436-D310BA7AC1B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D35D64F-7527-418A-ADEF-801C136E683B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D35D64F-7527-418A-ADEF-801C136E683B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D35D64F-7527-418A-ADEF-801C136E683B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D35D64F-7527-418A-ADEF-801C136E683B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

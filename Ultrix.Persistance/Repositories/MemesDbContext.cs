@@ -2,13 +2,12 @@
 using System.Threading.Tasks;
 using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
-using Ultrix.Common;
 using Ultrix.Domain.Entities;
 using Ultrix.Persistance.Extensions;
 
 namespace Ultrix.Persistance.Repositories
 {
-    public class MemesDbContext : DbContext, IMemeRepository
+    public class MemesDbContext : DbContext
     {
         public DbSet<Meme> Memes { get; set; }
 
@@ -17,17 +16,17 @@ namespace Ultrix.Persistance.Repositories
 
         }
 
-        public async Task<IMeme> FetchMemeAsync(int id)
-        {
-            Meme fetchedMeme = await Memes.SingleOrDefaultAsync(meme => meme.Id.Equals(id));
-            return !fetchedMeme.Equals(default(Meme)) ? fetchedMeme : throw new FetchingMemeFailedException();
-        }
-        public async Task<bool> SaveMemeAsync(IMeme meme)
-        {
-            await Memes.AddAsync((Meme)meme);
-            int saveResult = await SaveChangesAsync();
-            return saveResult.Equals(1) ? true : saveResult.Equals(0) ? false : throw new SavingMemeFailedException();
-        }
+        //public async Task<Meme> FetchMemeAsync(int id)
+        //{
+        //    Meme fetchedMeme = await Memes.SingleOrDefaultAsync(meme => meme.Id.Equals(id));
+        //    return !fetchedMeme.Equals(default(Meme)) ? fetchedMeme : throw new FetchingMemeFailedException();
+        //}
+        //public async Task<bool> SaveMemeAsync(Meme meme)
+        //{
+        //    await Memes.AddAsync(meme);
+        //    int saveResult = await SaveChangesAsync();
+        //    return saveResult.Equals(1) ? true : saveResult.Equals(0) ? false : throw new SavingMemeFailedException();
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,8 +1,6 @@
-﻿using Ultrix.Common;
-
-namespace Ultrix.Domain.Entities
+﻿namespace Ultrix.Domain.Entities
 {
-    public class Meme : IMeme
+    public class Meme
     {
         public string Id { get; set; }
         public string Title { get; set; }

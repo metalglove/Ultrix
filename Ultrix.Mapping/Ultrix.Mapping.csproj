@@ -5,12 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ultrix.Domain\Ultrix.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
-    <Folder Include="Utilities\" />
+    <ProjectReference Include="..\Ultrix.Application\Ultrix.Application.csproj" />
+    <ProjectReference Include="..\Ultrix.Infrastructure\Ultrix.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ultrix.Persistance\Ultrix.Persistance.csproj" />
   </ItemGroup>
 
   <ItemGroup>

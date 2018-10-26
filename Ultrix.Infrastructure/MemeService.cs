@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Ultrix.Application.Interfaces;
-using Ultrix.Common;
 using Ultrix.Infrastructure.Utilities;
-using Ultrix.Infrastructure.Entities;
+using Ultrix.Domain.Entities;
+using Newtonsoft.Json;
 
 namespace Ultrix.Infrastructure
 {
@@ -16,9 +16,10 @@ namespace Ultrix.Infrastructure
 
         }
 
-        public async Task<IMeme> GetRandomMemeAsync()
+        public async Task<Meme> GetRandomMemeAsync()
         {
-            IMeme meme = await GetJsonAsyncAndConvertTo<Meme>("RandomMeme.php");
+            string memeAsJson = await GetAsync("RandomMeme.php");
+            Meme meme = JsonConvert.DeserializeObject<Meme>(memeAsJson, new MemeConverter());
             return meme == null || meme.Title == null ? await GetRandomMemeAsync() : meme;
         }
     }

@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Ultrix.Common;
+using Ultrix.Domain.Entities;
 
 namespace Ultrix.Application.Interfaces
 {
     public interface IMemeService
     {
-        Task<IMeme> GetRandomMemeAsync();
+        Task<Meme> GetRandomMemeAsync();
     }
 }

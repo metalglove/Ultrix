@@ -8,8 +8,4 @@
     <Folder Include="Exceptions\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ultrix.Common\Ultrix.Common.csproj" />
-  </ItemGroup>
-
 </Project>

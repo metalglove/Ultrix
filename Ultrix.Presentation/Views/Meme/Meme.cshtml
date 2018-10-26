@@ -1,0 +1,26 @@
+﻿@model Meme
+
+<div class="row">
+    <div class="center-align">
+        <div class="card blue-grey darken-2">
+            <div class="card-title" style="color: white; font-weight:500;padding-left: 5px;"> @Model.Title </div>
+            <div class="card-image">
+                @{
+                    if (Model.VideoUrl != null)
+                    {
+                        <video controls>
+                            <source src="@Model.VideoUrl" type="video/mp4" />
+                        </video>
+                    }
+                    else
+                    {
+                        <img src="@Model.ImageUrl"/>
+                    }
+                }
+            </div>
+            <div class="card-action">
+                <a href="@Model.PageUrl" style="color: white">Source</a>
+            </div>
+        </div>
+    </div>
+</div>
