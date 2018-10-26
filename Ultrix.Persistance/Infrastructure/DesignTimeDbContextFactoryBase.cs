@@ -21,7 +21,7 @@ namespace Ultrix.Persistance.Infrastructure
         private TContext Create(string basePath, string environmentName)
         {
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(basePath + "\\..\\Ultrix..WebUI")
+                .SetBasePath(basePath + "\\..\\Ultrix..Presentation")
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.Local.json", optional: true)
                 .AddJsonFile($"appsettings.{environmentName}.json", optional: true)

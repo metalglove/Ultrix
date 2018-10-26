@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ultrix.Application\Ultrix.Application.csproj" />
     <ProjectReference Include="..\Ultrix.Domain\Ultrix.Domain.csproj" />
   </ItemGroup>
 

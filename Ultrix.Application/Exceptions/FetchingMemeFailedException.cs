@@ -2,7 +2,7 @@
 
 namespace Ultrix.Application.Exceptions
 {
-    internal class FetchingMemeFailedException : Exception
+    public class FetchingMemeFailedException : Exception
     {
     }
 }
