@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Ultrix</title>
 
-    <environment include="Development">
+    <environment names="Development, Production">
         <link rel="stylesheet" href="~/lib/materialize/css/materialize.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
@@ -68,17 +68,14 @@
             </div>
         </div>
     </footer>
-    <environment names="Development">
+    <environment names="Development, Production">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/materialize/js/materialize.min.js"></script>
-        <script src="~/lib/materialize/js/init.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/lib/materialize/js/materialize.min.js"></script>
-        <script src="~/lib/materialize/js/init.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
