@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{63ABD9C1-9
 		..\..\..\MemesDbContext_log.ldf = ..\..\..\MemesDbContext_log.ldf
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Mapping", "Ultrix.Mapping\Ultrix.Mapping.csproj", "{9D35D64F-7527-418A-ADEF-801C136E683B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Mapping", "Ultrix.Mapping\Ultrix.Mapping.csproj", "{9D35D64F-7527-418A-ADEF-801C136E683B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
