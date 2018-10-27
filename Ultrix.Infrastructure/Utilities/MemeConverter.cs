@@ -45,7 +45,6 @@ namespace Ultrix.Infrastructure.Utilities
                     pi.CanWrite && pi.Name == name);
 
                 prop?.SetValue(instance, jp.Value.ToString());
-                //prop?.SetValue(instance, jp.Value.ToObject(prop.PropertyType, serializer));
             }
 
             return instance;

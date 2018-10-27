@@ -10,9 +10,10 @@ namespace Ultrix.Mapping
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection serviceCollection)
         {
-            string connection = @"Server = (localdb)\mssqllocaldb; Database = MemesDbContext; Trusted_Connection = True; ConnectRetryCount = 0";
+            const string connection = @"Server = (localdb)\mssqllocaldb; Database = MemesDbContext; Trusted_Connection = True; ConnectRetryCount = 0";
             serviceCollection.AddDbContext<MemesDbContext>(options => options.UseSqlServer(connection));
-            serviceCollection.AddTransient<IMemeService, MemeService>();
+            serviceCollection.AddTransient<IExternalMemeService, ExternalMemeService>();
+            serviceCollection.AddTransient<ILocalMemeService, LocalMemeService>();
             return serviceCollection;
         }
     }

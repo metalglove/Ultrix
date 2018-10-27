@@ -1,28 +1,28 @@
 ﻿var isInCallback = false;
 var hasReachedScrollEnd = false;
 
-var scrollHandler = function () {
-    if (hasReachedScrollEnd == false && ($(document).scrollTop() + $(window).height() + 700 >= $(document).height())) {
-        loadData(url);
+var scrollHandler = async function () {
+    if (hasReachedScrollEnd === false && ($(document).scrollTop() + $(window).height() + 700 >= $(document).height())) {
+        await loadData(url);
     }
 }
 
-function loadData(loadAnotherItemUrl) {
-    return new Promise((resolve, reject) => {
+async function loadData(loadAnotherItemUrl) {
+    return await new Promise(async (resolve, reject) => {
         if (!isInCallback) {
             isInCallback = true;
             hasReachedScrollEnd = true;
             $("div#loading").show();
-            Promise.all([
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl),
-                getMeme(loadAnotherItemUrl)
+            await Promise.all([
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl),
+                await getMeme(loadAnotherItemUrl)
             ]).then(values => {
                 $("div.infinite-scroll").append(values.join(""));
                 $("div#loading").hide();
@@ -36,18 +36,18 @@ function loadData(loadAnotherItemUrl) {
         }
     });
 }
-function getMeme(loadAnotherItemUrl) {
-    return new Promise((resolve, reject) => {
+async function getMeme(loadAnotherItemUrl) {
+    return await new Promise((resolve, reject) => {
         $.ajax({
-            type: 'GET',
+            type: "GET",
             url: loadAnotherItemUrl,
             data: "",
             success: function (data, textstatus) {
-                if (data != '') {
+                if (data !== "") {
                     resolve(data);
                 }
             },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
+            error: function (xmlHttpRequest, textStatus, errorThrown) {
                 reject(errorThrown);
             }
         });
