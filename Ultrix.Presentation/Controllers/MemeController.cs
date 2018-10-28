@@ -9,11 +9,13 @@ namespace Ultrix.Presentation.Controllers
     public class MemeController : Controller
     {
         private readonly IMemeService _memeService;
-        
+        private readonly IMemeRepository _memeRepository;
+
         // Switch between IExternalMemeService and ILocalMemeService both implement IMemeService
-        public MemeController(ILocalMemeService memeService)
+        public MemeController(ILocalMemeService memeService, IMemeRepository memeRepository) // i do not want MemesDbContext here but rather IMemesDbContext
         {
             _memeService = memeService;
+            _memeRepository = memeRepository;
         }
 
         [Route("")]

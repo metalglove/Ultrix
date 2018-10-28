@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Ultrix.Application.Interfaces;
 using Ultrix.Infrastructure;
+using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
 
 namespace Ultrix.Mapping
@@ -10,8 +10,12 @@ namespace Ultrix.Mapping
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection serviceCollection)
         {
-            const string connection = @"Server = (localdb)\mssqllocaldb; Database = MemesDbContext; Trusted_Connection = True; ConnectRetryCount = 0";
-            serviceCollection.AddDbContext<MemesDbContext>(options => options.UseSqlServer(connection));
+            serviceCollection.AddSingleton<MemesDbFactory>();
+            serviceCollection.AddTransient<IMemeRepository, MemesDbContext>((serviceProvider) =>
+            {
+                MemesDbFactory memesDbFactory = serviceProvider.GetService<MemesDbFactory>();
+                return memesDbFactory.CreateNewInstance();
+            });
             serviceCollection.AddTransient<IExternalMemeService, ExternalMemeService>();
             serviceCollection.AddTransient<ILocalMemeService, LocalMemeService>();
             return serviceCollection;

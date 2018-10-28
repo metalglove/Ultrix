@@ -3,49 +3,60 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace Ultrix.Persistance.Infrastructure
 {
     public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext
     {
-        private const string ConnectionStringName = "MemesDatabase";
         private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
+        protected abstract string ConnectionStringName { get; }
+        protected string ConnectionString { get; private set; }
 
-        public TContext CreateDbContext(string[] args)
+        protected DesignTimeDbContextFactoryBase(bool precompileConnectionString = false)
         {
-            return Create(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable(AspNetCoreEnvironment));
+            if (precompileConnectionString)
+            {
+                SetConnectionString(BuildConfiguration());
+            }
         }
 
+        private void SetConnectionString(IConfiguration configuration)
+        {
+            ConnectionString = configuration.GetConnectionString(ConnectionStringName);
+        }
+        private static IConfigurationRoot BuildConfiguration()
+        {
+            string basePath = Directory.GetCurrentDirectory();
+            string environmentName = Environment.GetEnvironmentVariable(AspNetCoreEnvironment);
+            return new ConfigurationBuilder()
+                   .SetBasePath(basePath)
+                   .AddJsonFile("appsettings.json")
+                   .AddJsonFile("appsettings.Local.json", optional: true)
+                   .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
+                   .AddEnvironmentVariables()
+                   .Build();
+        }
         protected abstract TContext CreateNewInstance(DbContextOptions<TContext> options);
-
-        private TContext Create(string basePath, string environmentName)
+        public virtual TContext CreateDbContext(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(basePath + "\\..\\Ultrix..Presentation")
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.Local.json", optional: true)
-                .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
-                .AddEnvironmentVariables()
-                .Build();
-
-            var connectionString = configuration.GetConnectionString(ConnectionStringName);
-
-            return Create(connectionString);
+            return args.Contains("UsePrecompiledConnectingString")
+                ? Create(ConnectionString)
+                : Create(BuildConfiguration());
         }
-
+        private TContext Create(IConfiguration configuration)
+        {
+            SetConnectionString(configuration);
+            return Create(ConnectionString);
+        }
         private TContext Create(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentException($"Connection string '{ConnectionStringName}' is null or empty.", nameof(connectionString));
             }
-
-            Console.WriteLine($"DesignTimeDbContextFactoryBase.Create(string): Connection string: '{connectionString}'.");
-
-            var optionsBuilder = new DbContextOptionsBuilder<TContext>();
-
+            DbContextOptionsBuilder<TContext> optionsBuilder = new DbContextOptionsBuilder<TContext>();
             optionsBuilder.UseSqlServer(connectionString);
-
             return CreateNewInstance(optionsBuilder.Options);
         }
     }

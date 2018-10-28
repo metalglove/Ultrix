@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
+using Ultrix.Infrastructure.Extensions;
 
 namespace Ultrix.Infrastructure
 {
@@ -16,7 +17,7 @@ namespace Ultrix.Infrastructure
     {
         private const string NineGagRandomUrl = "http://9gag.com/random/";
         private const string NineGagPhotoCacheUrl = "http://img-9gag-fun.9cache.com/photo/";
-        private const string NineGagGagUrl = "http://9gag.com/gag/";
+        private const string Mp4Tag = "_460sv.mp4";
 
         public LocalMemeService()
         {
@@ -45,11 +46,12 @@ namespace Ultrix.Infrastructure
         }
         private static IEnumerable<HtmlNode> ExtractValidMetaTags(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectNodes("//meta/@content")
-                                    .Where(node =>
-                                        node.Attributes["property"] != null &&
-                                        node.Attributes["property"].Value.StartsWith("og:") &&
-                                        node.Attributes["content"] != null);
+            return doc.DocumentNode
+                .SelectNodes("//meta/@content")
+                    .Where(node =>
+                        node.Attributes["property"] != null &&
+                        node.Attributes["property"].Value.StartsWith("og:") &&
+                        node.Attributes["content"] != null);
         }
         private static async Task<Meme> ExtractMemeFromMetaNodesAsync(IEnumerable<HtmlNode> collection)
         {
@@ -72,8 +74,8 @@ namespace Ultrix.Infrastructure
                         break;
                 }
             }
-            meme.Id = GetMemeIdFromUrl(meme.PageUrl);
-            string videoUrl = NineGagPhotoCacheUrl + meme.Id + "_460sv.mp4";
+            meme.Id = meme.GetMemeIdFromUrl();
+            string videoUrl = NineGagPhotoCacheUrl + meme.Id + Mp4Tag;
             if (await HasVideoUrlAsync(videoUrl))
             {
                 meme.VideoUrl = videoUrl;
@@ -87,10 +89,6 @@ namespace Ultrix.Infrastructure
                 HttpResponseMessage newMessage = await httpClient.GetAsync(videoUrl, HttpCompletionOption.ResponseHeadersRead);
                 return newMessage.StatusCode.Equals(HttpStatusCode.OK);
             }
-        }
-        private static string GetMemeIdFromUrl(string pageUrl)
-        {
-            return pageUrl.Replace(NineGagGagUrl, "");
         }
     }
 }

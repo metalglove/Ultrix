@@ -4,6 +4,7 @@ using Ultrix.Application.Interfaces;
 using Ultrix.Infrastructure.Utilities;
 using Ultrix.Domain.Entities;
 using Newtonsoft.Json;
+using Ultrix.Infrastructure.Extensions;
 
 namespace Ultrix.Infrastructure
 {
@@ -20,6 +21,7 @@ namespace Ultrix.Infrastructure
         {
             string memeAsJson = await GetAsync("RandomMeme.php");
             Meme meme = JsonConvert.DeserializeObject<Meme>(memeAsJson, new MemeConverter());
+            meme.Id = meme.GetMemeIdFromUrl();
             return meme?.Title == null ? await GetRandomMemeAsync() : meme;
         }
     }
