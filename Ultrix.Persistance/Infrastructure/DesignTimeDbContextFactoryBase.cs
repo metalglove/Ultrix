@@ -12,13 +12,13 @@ namespace Ultrix.Persistance.Infrastructure
         private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
         protected abstract string ConnectionStringName { get; }
         protected string ConnectionString { get; private set; }
+        protected DbContextOptionsBuilder<TContext> OptionsBuilder { get; private set; }
 
         protected DesignTimeDbContextFactoryBase(bool precompileConnectionString = false)
         {
-            if (precompileConnectionString)
-            {
-                SetConnectionString(BuildConfiguration());
-            }
+            if (!precompileConnectionString) return;
+            SetConnectionString(BuildConfiguration());
+            SetDbContextOptionsBuilder(ConnectionString);
         }
 
         private void SetConnectionString(IConfiguration configuration)
@@ -27,7 +27,7 @@ namespace Ultrix.Persistance.Infrastructure
         }
         private static IConfigurationRoot BuildConfiguration()
         {
-            string basePath = Directory.GetCurrentDirectory();
+            string basePath = Directory.GetCurrentDirectory(); // TODO: need check for it being in the Presentation layer else add //..//Ultrix.Presentation
             string environmentName = Environment.GetEnvironmentVariable(AspNetCoreEnvironment);
             return new ConfigurationBuilder()
                    .SetBasePath(basePath)
@@ -51,13 +51,20 @@ namespace Ultrix.Persistance.Infrastructure
         }
         private TContext Create(string connectionString)
         {
+            if (OptionsBuilder == null)
+                SetDbContextOptionsBuilder(connectionString);
+
+            return CreateNewInstance(OptionsBuilder.Options);
+        }
+        private void SetDbContextOptionsBuilder(string connectionString)
+        {
             if (string.IsNullOrEmpty(connectionString))
             {
                 throw new ArgumentException($"Connection string '{ConnectionStringName}' is null or empty.", nameof(connectionString));
             }
             DbContextOptionsBuilder<TContext> optionsBuilder = new DbContextOptionsBuilder<TContext>();
             optionsBuilder.UseSqlServer(connectionString);
-            return CreateNewInstance(optionsBuilder.Options);
+            OptionsBuilder = optionsBuilder;
         }
     }
 }

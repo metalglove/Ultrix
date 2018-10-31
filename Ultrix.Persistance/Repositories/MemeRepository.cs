@@ -1,31 +1,31 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
-using Ultrix.Persistance.Extensions;
+using Ultrix.Persistance.Contexts;
 
 namespace Ultrix.Persistance.Repositories
 {
-    public class MemesDbContext : DbContext, IMemeRepository
+    public class MemeRepository : IMemeRepository
     {
-        public DbSet<Meme> Memes { get; set; }
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public MemesDbContext(DbContextOptions options) : base (options)
+        public MemeRepository(ApplicationDbContext applicationDbContext)
         {
-
+            _applicationDbContext = applicationDbContext;
         }
 
         public async Task<Meme> FetchMemeAsync(string memeId)
         {
-            Meme fetchedMeme = await Memes.SingleOrDefaultAsync(meme => meme.Id.Equals(memeId));
+            Meme fetchedMeme = await _applicationDbContext.Memes.SingleOrDefaultAsync(meme => meme.Id.Equals(memeId));
             return !fetchedMeme.Equals(default(Meme)) ? fetchedMeme : throw new FetchingMemeFailedException();
         }
         public async Task<bool> SaveMemeAsync(Meme meme)
         {
-            await Memes.AddAsync(meme);
-            int saveResult = await SaveChangesAsync();
+            await _applicationDbContext.Memes.AddAsync(meme);
+            int saveResult = await _applicationDbContext.SaveChangesAsync();
             bool saveSuccess;
             try
             {
@@ -39,12 +39,7 @@ namespace Ultrix.Persistance.Repositories
         }
         public async Task<bool> DoesMemeExistAsync(Meme meme)
         {
-            return await Memes.AnyAsync(memeInDb => memeInDb.Id.Equals(meme.Id));
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyAllConfigurations();
+            return await _applicationDbContext.Memes.AnyAsync(memeInDb => memeInDb.Id.Equals(meme.Id));
         }
     }
 }
