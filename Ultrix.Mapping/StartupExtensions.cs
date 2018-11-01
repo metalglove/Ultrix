@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Ultrix.Application.Interfaces;
+using Ultrix.Application.Services;
 using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Infrastructure;
 using Ultrix.Persistance.Contexts;
@@ -33,6 +34,13 @@ namespace Ultrix.Mapping
             serviceCollection.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            serviceCollection.AddTransient<IUserService, UserService>(serviceProvider =>
+            {
+                UserManager<ApplicationUser> userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
+                SignInManager<ApplicationUser> signInManager = serviceProvider.GetService<SignInManager<ApplicationUser>>();
+                return new UserService(signInManager, userManager);
+            });
 
             // TODO: Move this configuration
             serviceCollection.Configure<IdentityOptions>(options =>

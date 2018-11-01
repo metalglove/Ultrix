@@ -1,30 +1,22 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities.Authentication;
-using Ultrix.Persistance.Contexts;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Ultrix.Presentation.Controllers
 {
     public class AccountController : Controller
     {
-        protected ApplicationDbContext _context;
-        protected UserManager<ApplicationUser> _userManager;
-        protected SignInManager<ApplicationUser> _signInManager;
+        protected readonly IUserService _userService;
 
-        public AccountController(
-            ApplicationDbContext context,
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager
-        )
+        public AccountController(IUserService userService)
         {
-            _context = context;
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _userService = userService;
         }
+
         [Route("ACC")]
         public IActionResult Index()
         {
@@ -34,11 +26,11 @@ namespace Ultrix.Presentation.Controllers
         [Route("create")]
         public async Task<IActionResult> CreateUserAsync()
         {
-            IdentityResult createIdentityResult = await _userManager.CreateAsync(new ApplicationUser
+            IdentityResult createIdentityResult = await _userService.CreateUserAsync(new ApplicationUser
             {
                 UserName = "Metalglove",
                 Email = "metalglove@ultrix.nl"
-            },"password");
+            }, "password");
 
             return Content(createIdentityResult.Succeeded ? "User was created" : "User creation failed", "text/html");
         }
@@ -46,16 +38,16 @@ namespace Ultrix.Presentation.Controllers
         [Route("logout")]
         public async Task<IActionResult> LogoutAsync()
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await _userService.SignOutAsync(HttpContext);
             return Content("done");
         }
 
         [Route("login")]
         public async Task<IActionResult> LoginUserAsync(string returnUrl)
         {
-            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            await _userService.SignOutAsync(HttpContext);
 
-            SignInResult signInResult = await _signInManager.PasswordSignInAsync("Metalglove", "password", true, false);
+            SignInResult signInResult = await _userService.SignInAsync("Metalglove", "password");
             if (!signInResult.Succeeded)
                 return Content("Failed to login", "text/html");
 

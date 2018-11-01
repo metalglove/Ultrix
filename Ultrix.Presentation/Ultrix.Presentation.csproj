@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ultrix.Application\Ultrix.Application.csproj" />
     <ProjectReference Include="..\Ultrix.Mapping\Ultrix.Mapping.csproj" />
   </ItemGroup>
 
