@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
+using Ultrix.Presentation.ViewModels.Account;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Ultrix.Presentation.Controllers
@@ -44,19 +45,26 @@ namespace Ultrix.Presentation.Controllers
             return Content("done");
         }
 
-        [Route("login")]
-        public async Task<IActionResult> LoginUserAsync(string returnUrl)
+        [HttpPost]
+        public async Task<IActionResult> LoginUserAsync(LoginViewModel loginViewModel)
         {
-            await _userService.SignOutAsync(HttpContext);
+            if (ModelState.IsValid)
+            {
+                await _userService.SignOutAsync(HttpContext);
+                SignInResult signInResult = await _userService.SignInAsync(loginViewModel.Username, loginViewModel.Password);
+                if (signInResult.Succeeded)
+                {
+                    if (!string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl))
+                    {
+                        return Redirect(loginViewModel.ReturnUrl);
+                    }
 
-            SignInResult signInResult = await _userService.SignInAsync("Metalglove", "password");
-            if (!signInResult.Succeeded)
-                return Content("Failed to login", "text/html");
-
-            if (string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction(nameof(Index));
-
-            return Redirect(returnUrl);
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            
+            ModelState.AddModelError("", "Invalid login attempt");
+            return Redirect(loginViewModel.ReturnUrl);
         }
 
         [Authorize()]

@@ -8,6 +8,7 @@
     <environment names="Development, Production">
         <link rel="stylesheet" href="~/lib/materialize/css/materialize.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -24,7 +25,24 @@
                 <ul class="right show-on-large show-on-medium hide-on-small-only">
                     <li>@Html.ActionLink("Index", "Index", "Meme")</li>
                     <li>@Html.ActionLink("Memes", "Memes", "Meme")</li>
+                    <li>
+                        <a class="dropdown-trigger" href="#" data-target="userMenu">
+                            <i class="material-icons" style="line-height: unset; height: auto;">account_circle</i>
+                        </a>
+                    </li>
                 </ul>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    // If user is authenticated show usersMenu
+                }
+                else
+                {
+                    if (!(ViewData["LoginViewModel"] is LoginViewModel))
+                    {
+                        ViewData["LoginViewModel"] = new LoginViewModel { ReturnUrl = Url.Action("Index", "Meme") };
+                    }
+                    await Html.RenderPartialAsync("../Account/Login", (LoginViewModel) ViewData["LoginViewModel"]);
+                }
                 <ul id="nav-mobile" class="side-nav hide-on-large-only hide-on-med-only show-on-small">
                     <li>@Html.ActionLink("Index", "Index", "Meme")</li>
                     <li>@Html.ActionLink("Memes", "Memes", "Meme")</li>

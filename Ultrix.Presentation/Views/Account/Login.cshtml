@@ -1,0 +1,40 @@
+﻿@model LoginViewModel
+
+<ul id="userMenu" class="dropdown-content wider" style="overflow: hidden!important">
+    <li> 
+        <h5 class="indigo-text" style="text-align: center">Login</h5>
+        <div class="section"></div>
+
+        <div class="container">
+            <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+                <form class="col s12" method="post" id="loginForm" asp-controller="Account" asp-action="LoginUserAsync" asp-route-returnUrl="@Model.ReturnUrl">
+                    <div class="row">
+                        <div class="col s12">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input class="validate" type="text" asp-for="Username" />
+                            <label asp-for="Username">Enter your username</label>
+                            @Html.ValidationMessageFor(x => x.Username)
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input class="validate" type="password" asp-for="Password" />
+                            <label asp-for="Password">Enter your password</label>
+                            @Html.ValidationMessageFor(x => x.Password)
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="row">
+                        <input type="submit" class="col s12 btn btn waves-effect indigo" value="Login"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </li>
+</ul>
