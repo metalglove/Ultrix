@@ -4,12 +4,11 @@ using Ultrix.Domain.Entities;
 
 namespace Ultrix.Persistance.Configurations
 {
-    public class MemeConfiguration : IEntityTypeConfiguration<Meme>
+    public class CollectionSubscriberConfiguration : IEntityTypeConfiguration<CollectionSubscriber>
     {
-        public void Configure(EntityTypeBuilder<Meme> builder)
+        public void Configure(EntityTypeBuilder<CollectionSubscriber> builder)
         {
             builder.HasKey("Id");
-            builder.Property(p => p.TimestampAdded).HasDefaultValueSql("GetDate()");
         }
     }
 }

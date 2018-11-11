@@ -15,8 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Presentation", "Ultr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{63ABD9C1-973B-4B88-8446-5153D58903A1}"
 	ProjectSection(SolutionItems) = preProject
+		E:\Cloud\OneDrive\Fontys\S2\Individuele opdracht\Ontwikkel documenten\Database Diagram.png = E:\Cloud\OneDrive\Fontys\S2\Individuele opdracht\Ontwikkel documenten\Database Diagram.png
 		..\..\..\MemesDbContext.mdf = ..\..\..\MemesDbContext.mdf
 		..\..\..\MemesDbContext_log.ldf = ..\..\..\MemesDbContext_log.ldf
+		E:\Cloud\OneDrive\Fontys\S2\Individuele opdracht\Ontwikkel documenten\Ultrix user interfaces.pdf = E:\Cloud\OneDrive\Fontys\S2\Individuele opdracht\Ontwikkel documenten\Ultrix user interfaces.pdf
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Mapping", "Ultrix.Mapping\Ultrix.Mapping.csproj", "{9D35D64F-7527-418A-ADEF-801C136E683B}"

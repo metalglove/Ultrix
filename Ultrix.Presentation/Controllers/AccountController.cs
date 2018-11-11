@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.Interfaces;
+using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -10,7 +11,7 @@ namespace Ultrix.Presentation.Controllers
 {
     public class AccountController : Controller
     {
-        protected readonly IUserService _userService;
+        private readonly IUserService _userService;
 
         public AccountController(IUserService userService)
         {
@@ -29,7 +30,8 @@ namespace Ultrix.Presentation.Controllers
             IdentityResult createIdentityResult = await _userService.CreateUserAsync(new ApplicationUser
             {
                 UserName = "Metalglove",
-                Email = "metalglove@ultrix.nl"
+                Email = "metalglove@ultrix.nl",
+                UserDetail = new UserDetail { ProfilePictureData = "test" }
             }, "password");
 
             return Content(createIdentityResult.Succeeded ? "User was created" : "User creation failed", "text/html");

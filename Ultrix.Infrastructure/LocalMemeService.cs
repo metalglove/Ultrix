@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -28,16 +29,10 @@ namespace Ultrix.Infrastructure
         {
             using (HttpClient httpClient = new HttpClient())
             {
-                //const int bytesToRead = 30000;
-                //httpClient.DefaultRequestHeaders.Range = new RangeHeaderValue(0, bytesToRead);
                 HttpResponseMessage response = await httpClient.GetAsync(NineGagRandomUrl, HttpCompletionOption.ResponseHeadersRead);
                 using (Stream stream = await response.Content.ReadAsStreamAsync())
                 {
-                    //byte[] buffer = new byte[bytesToRead];
-                    //stream.Read(buffer, 0, buffer.Length);
-                    //string partialHtml = Encoding.UTF8.GetString(buffer);
                     HtmlDocument doc = new HtmlDocument();
-                    //doc.LoadHtml(partialHtml);
                     doc.Load(stream);
                     IEnumerable<HtmlNode> collection = ExtractValidMetaTags(doc);
                     return await ExtractMemeFromMetaNodesAsync(collection);
@@ -80,6 +75,7 @@ namespace Ultrix.Infrastructure
             {
                 meme.VideoUrl = videoUrl;
             }
+            meme.TimestampAdded = DateTime.Now;
             return meme;
         }
         private static async Task<bool> HasVideoUrlAsync(string videoUrl)

@@ -22,6 +22,7 @@ namespace Ultrix.Infrastructure
             string memeAsJson = await GetAsync("RandomMeme.php");
             Meme meme = JsonConvert.DeserializeObject<Meme>(memeAsJson, new MemeConverter());
             meme.Id = meme.GetMemeIdFromUrl();
+            meme.TimestampAdded = DateTime.Now;
             return meme?.Title == null ? await GetRandomMemeAsync() : meme;
         }
     }

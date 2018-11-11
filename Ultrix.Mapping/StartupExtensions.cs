@@ -31,7 +31,7 @@ namespace Ultrix.Mapping
                     options => options.UseSqlServer(applicationDbFactory.GetConnectionString()), 
                     ServiceLifetime.Transient);
             }
-            serviceCollection.AddIdentity<ApplicationUser, IdentityRole>()
+            serviceCollection.AddIdentity<ApplicationUser, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 

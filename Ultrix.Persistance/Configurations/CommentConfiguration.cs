@@ -4,9 +4,9 @@ using Ultrix.Domain.Entities;
 
 namespace Ultrix.Persistance.Configurations
 {
-    public class MemeConfiguration : IEntityTypeConfiguration<Meme>
+    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
-        public void Configure(EntityTypeBuilder<Meme> builder)
+        public void Configure(EntityTypeBuilder<Comment> builder)
         {
             builder.HasKey("Id");
             builder.Property(p => p.TimestampAdded).HasDefaultValueSql("GetDate()");

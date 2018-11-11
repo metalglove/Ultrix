@@ -4,12 +4,12 @@ using Ultrix.Domain.Entities;
 
 namespace Ultrix.Persistance.Configurations
 {
-    public class MemeConfiguration : IEntityTypeConfiguration<Meme>
+    public class FollowerConfiguration : IEntityTypeConfiguration<Follower>
     {
-        public void Configure(EntityTypeBuilder<Meme> builder)
+        public void Configure(EntityTypeBuilder<Follower> builder)
         {
             builder.HasKey("Id");
-            builder.Property(p => p.TimestampAdded).HasDefaultValueSql("GetDate()");
+            builder.Property(p => p.TimestampFollowed).HasDefaultValueSql("GetDate()");
         }
     }
 }
