@@ -25,7 +25,7 @@ namespace Ultrix.Presentation.Controllers
             return View("../Home/Index");
         }
 
-        [Route("create")]
+        [Route("Register")]
         public async Task<IActionResult> CreateUserAsync()
         {
             IdentityResult createIdentityResult = await _userService.CreateUserAsync(new ApplicationUser
@@ -38,15 +38,15 @@ namespace Ultrix.Presentation.Controllers
             return Content(createIdentityResult.Succeeded ? "User was created" : "User creation failed", "text/html");
         }
 
-        [Route("logout")]
+        [Route("Logout")]
         public async Task<IActionResult> LogoutAsync()
         {
             await _userService.SignOutAsync(HttpContext);
             return Content("done");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> LoginUserAsync(LoginViewModel loginViewModel)
+        [Route("Login"), HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> LoginUserAsync([FromBody] LoginViewModel loginViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -56,15 +56,14 @@ namespace Ultrix.Presentation.Controllers
                 {
                     if (!string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl))
                     {
-                        return Redirect(loginViewModel.ReturnUrl);
+                        return Json(new { Authenticated = true, ReturnUrl = loginViewModel.ReturnUrl });
                     }
 
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { Authenticated = true });
                 }
             }
             
-            ModelState.AddModelError("", "Invalid login attempt");
-            return Redirect(loginViewModel.ReturnUrl);
+            return Json(new { Authenticated = false });
         }
 
         [Authorize()]
