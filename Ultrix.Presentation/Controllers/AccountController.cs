@@ -39,10 +39,10 @@ namespace Ultrix.Presentation.Controllers
         }
 
         [Route("Logout")]
-        public async Task<IActionResult> LogoutAsync()
+        public async Task<IActionResult> LogoutAsync(string returnUrl)
         {
             await _userService.SignOutAsync(HttpContext);
-            return Content("done");
+            return View("../Meme/Index");
         }
 
         [Route("Login"), HttpPost, ValidateAntiForgeryToken]
@@ -56,14 +56,14 @@ namespace Ultrix.Presentation.Controllers
                 {
                     if (!string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl))
                     {
-                        return Json(new { Authenticated = true, ReturnUrl = loginViewModel.ReturnUrl });
+                        return Json(new { authenticated = true, returnurl = loginViewModel.ReturnUrl });
                     }
 
-                    return Json(new { Authenticated = true });
+                    return Json(new { authenticated = true });
                 }
             }
             
-            return Json(new { Authenticated = false });
+            return Json(new { authenticated = false });
         }
 
         [Authorize()]

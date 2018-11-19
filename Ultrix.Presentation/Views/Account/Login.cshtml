@@ -51,9 +51,8 @@
                 },
                 data: JSON.stringify(getFormData($(this))),
                 success: function (data) {
-                    console.log(data);
                     if (data.authenticated === true) {
-                        if (data.returnurl !== null)
+                        if (data.returnurl !== undefined)
                             window.location.href = data.returnurl;
                         else
                             window.location.href = '/';

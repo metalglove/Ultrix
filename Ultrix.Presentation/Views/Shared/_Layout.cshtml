@@ -31,10 +31,12 @@
                 </ul>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    // If user is authenticated show usersMenu
+                    Console.WriteLine("IS AUTHENTICATED");
+                    await Html.RenderPartialAsync("../Account/UsersMenu");
                 }
                 else
                 {
+                    Console.WriteLine("IS NOT AUTHENTICATED");
                     await Html.RenderPartialAsync("../Account/Login", new LoginViewModel { ReturnUrl = Url.Action("Index", "Meme") });
                 }
                 <ul id="nav-mobile" class="side-nav hide-on-large-only hide-on-med-only show-on-small">
