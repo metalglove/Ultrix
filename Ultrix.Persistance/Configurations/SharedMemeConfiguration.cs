@@ -8,7 +8,10 @@ namespace Ultrix.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<SharedMeme> builder)
         {
-            builder.HasKey("Id");
+            builder.HasKey(sharedMeme => sharedMeme.Id);
+
+            //builder.OwnsOne(sharedMeme => sharedMeme.Meme).HasPrincipalKey(sharedMeme => sharedMeme.MemeId);
+
             builder.Property(p => p.TimestampShared).HasDefaultValueSql("GetDate()");
         }
     }

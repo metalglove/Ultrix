@@ -17,10 +17,10 @@ namespace Ultrix.Persistance.Repositories
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<Meme> FetchMemeAsync(string memeId)
+        public async Task<Meme> GetMemeAsync(string memeId)
         {
             Meme fetchedMeme = await _applicationDbContext.Memes.SingleOrDefaultAsync(meme => meme.Id.Equals(memeId));
-            return !fetchedMeme.Equals(default(Meme)) ? fetchedMeme : throw new FetchingMemeFailedException();
+            return !fetchedMeme.Equals(default(Meme)) ? fetchedMeme : throw new GettingMemeFailedException();
         }
         public async Task<bool> SaveMemeAsync(Meme meme)
         {

@@ -8,7 +8,7 @@ namespace Ultrix.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<CollectionSubscriber> builder)
         {
-            builder.HasKey("Id");
+            builder.HasKey(collectionSubscriber => collectionSubscriber.Id);
         }
     }
 }

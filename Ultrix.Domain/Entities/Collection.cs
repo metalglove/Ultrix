@@ -12,5 +12,6 @@ namespace Ultrix.Domain.Entities
         public string Name { get; set; }
         public DateTime TimestampAdded { get; set; }
         public virtual List<CollectionItemDetail> CollectionItemDetails { get; set; }
+        public virtual List<CollectionSubscriber> CollectionSubscribers { get; set; }
     }
 }

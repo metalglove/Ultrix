@@ -9,7 +9,10 @@ namespace Ultrix.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<MemeLike> builder)
         {
-            builder.HasKey("Id");
+            builder.HasKey(memeLike => memeLike.Id);
+
+            //builder.OwnsOne(memeLike => memeLike.Meme).HasPrincipalKey(memeLike => memeLike.MemeId);
+
             builder.Property(p => p.TimestampAdded).HasDefaultValueSql("GetDate()");
         }
     }

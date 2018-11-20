@@ -8,7 +8,7 @@ namespace Ultrix.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<Follower> builder)
         {
-            builder.HasKey("Id");
+            builder.HasKey(follower => follower.Id);
             builder.Property(p => p.TimestampFollowed).HasDefaultValueSql("GetDate()");
         }
     }

@@ -8,7 +8,10 @@ namespace Ultrix.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<Comment> builder)
         {
-            builder.HasKey("Id");
+            builder.HasKey(comment => comment.Id);
+
+            //builder.OwnsOne(comment => comment.Meme).HasPrincipalKey(comment => comment.MemeId);
+
             builder.Property(p => p.TimestampAdded).HasDefaultValueSql("GetDate()");
         }
     }

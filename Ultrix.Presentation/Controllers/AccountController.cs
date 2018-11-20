@@ -32,12 +32,12 @@ namespace Ultrix.Presentation.Controllers
             return Content(createIdentityResult.Succeeded ? "User was created" : "User creation failed", "text/html");
         }
 
-        [Route("Logout")]
+        [Route("Logout"), Authorize]
         public async Task<IActionResult> LogoutAsync(string returnUrl)
         {
             await _userService.SignOutAsync(HttpContext);
-            
-            return View("../Meme/Index");
+
+            return RedirectToAction("IndexAsync", "Meme");
         }
 
         [Route("Login"), HttpPost, ValidateAntiForgeryToken]
@@ -49,6 +49,7 @@ namespace Ultrix.Presentation.Controllers
                 SignInResult signInResult = await _userService.SignInAsync(loginViewModel.Username, loginViewModel.Password);
                 if (signInResult.Succeeded)
                 {
+                   var x = HttpContext.User.Identity;
                     return !string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl)
                         ? Json(new { authenticated = true, returnurl = loginViewModel.ReturnUrl })
                         : Json(new { authenticated = true });

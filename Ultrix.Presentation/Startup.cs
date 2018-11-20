@@ -42,7 +42,7 @@ namespace Ultrix.Presentation
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Meme/Error");
                 app.UseHsts();
             }
 
@@ -55,7 +55,7 @@ namespace Ultrix.Presentation
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Account}/{action=Index}/");
+                    template: "{controller=Meme}/{action=Index}/");
             });
         }
     }

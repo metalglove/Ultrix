@@ -8,7 +8,7 @@ namespace Ultrix.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<UserDetail> builder)
         {
-            builder.HasKey("Id");
+            builder.HasKey(userDetail => userDetail.Id);
             builder.Property(p => p.TimestampCreated).HasDefaultValueSql("GetDate()");
         }
     }

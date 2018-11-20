@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Ultrix.Application.Interfaces;
 using Ultrix.Application.Services;
+using Ultrix.Application.Validators;
+using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Infrastructure;
 using Ultrix.Persistance.Contexts;
@@ -21,6 +23,13 @@ namespace Ultrix.Mapping
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 return new MemeRepository(applicationDbFactory.CreateNewInstance());
+            });
+            serviceCollection.AddTransient<IEntityValidator<Collection>, CollectionValidator>();
+            serviceCollection.AddTransient<ICollectionRepository, CollectionRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<Collection> entityValidator = serviceProvider.GetService<IEntityValidator<Collection>>();
+                return new CollectionRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
             serviceCollection.AddTransient<IExternalMemeService, ExternalMemeService>();
             serviceCollection.AddTransient<ILocalMemeService, LocalMemeService>();
@@ -59,7 +68,6 @@ namespace Ultrix.Mapping
 
                 options.ExpireTimeSpan = TimeSpan.FromDays(3);
             });
-
             return serviceCollection;
         }
     }
