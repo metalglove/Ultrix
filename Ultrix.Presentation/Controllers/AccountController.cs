@@ -19,12 +19,6 @@ namespace Ultrix.Presentation.Controllers
             _userService = userService;
         }
 
-        [Route("ACC")]
-        public IActionResult Index()
-        {
-            return View("../Home/Index");
-        }
-
         [Route("Register")]
         public async Task<IActionResult> CreateUserAsync()
         {
@@ -42,6 +36,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> LogoutAsync(string returnUrl)
         {
             await _userService.SignOutAsync(HttpContext);
+            
             return View("../Meme/Index");
         }
 
@@ -54,12 +49,9 @@ namespace Ultrix.Presentation.Controllers
                 SignInResult signInResult = await _userService.SignInAsync(loginViewModel.Username, loginViewModel.Password);
                 if (signInResult.Succeeded)
                 {
-                    if (!string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl))
-                    {
-                        return Json(new { authenticated = true, returnurl = loginViewModel.ReturnUrl });
-                    }
-
-                    return Json(new { authenticated = true });
+                    return !string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl)
+                        ? Json(new { authenticated = true, returnurl = loginViewModel.ReturnUrl })
+                        : Json(new { authenticated = true });
                 }
             }
             

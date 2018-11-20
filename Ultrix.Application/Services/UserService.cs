@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities.Authentication;
 using Microsoft.AspNetCore.Http;
+using System;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Ultrix.Application.Services
@@ -30,7 +31,17 @@ namespace Ultrix.Application.Services
 
         public async Task SignOutAsync(HttpContext httpContext)
         {
-            await httpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+            // TODO: Refactor SignOutAsync to be clean
+            await _signInManager.SignOutAsync();
+            foreach (string key in httpContext.Request.Cookies.Keys)
+            {
+                httpContext.Response.Cookies.Append(key, "", new CookieOptions { Expires = DateTime.Now.AddDays(-1) });
+            }
+            if (httpContext.User.Identity.IsAuthenticated)
+            {
+                await httpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+                httpContext.User = null;
+            }
         }
     }
 }

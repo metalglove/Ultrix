@@ -59,3 +59,8 @@ img, video {
     flex: 1 0 auto;
     overflow: hidden;
 }
+.meme-icon {
+    font-size: 30px;
+    vertical-align: middle;
+    line-height: 3;
+}

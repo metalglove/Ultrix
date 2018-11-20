@@ -19,10 +19,11 @@
     <div class="navbar-fixed">
         <nav class="blue-grey darken-2">
             <div class="nav-wrapper container">
-                @Html.ActionLink("Ultrix", "Index", "Meme", new { area = "" }, new { @class = "brand-logo" })
+                @Html.ActionLink("Ultrix", "IndexAsync", "Meme", new { area = "" }, new { @class = "brand-logo" })
                 <ul class="right show-on-large show-on-medium hide-on-small-only">
-                    <li>@Html.ActionLink("Index", "Index", "Meme")</li>
-                    <li>@Html.ActionLink("Memes", "Memes", "Meme")</li>
+                    <li>@Html.ActionLink("Home", "IndexAsync", "Meme")</li>
+                    <li>@Html.ActionLink("Trending", "Trending", "Meme")</li>
+                    <li>@Html.ActionLink("Collections", "Collections", "Collection")</li>
                     <li>
                         <a class="dropdown-trigger" href="#" data-target="userMenu">
                             <i class="material-icons" style="line-height: unset; height: auto;">account_circle</i>
@@ -31,23 +32,22 @@
                 </ul>
                 @if (User.Identity.IsAuthenticated)
                 {
-                    Console.WriteLine("IS AUTHENTICATED");
                     await Html.RenderPartialAsync("../Account/UsersMenu");
                 }
                 else
                 {
-                    Console.WriteLine("IS NOT AUTHENTICATED");
-                    await Html.RenderPartialAsync("../Account/Login", new LoginViewModel { ReturnUrl = Url.Action("Index", "Meme") });
+                    await Html.RenderPartialAsync("../Account/Login", new LoginViewModel { ReturnUrl = Url.Action("IndexAsync", "Meme") });
                 }
                 <ul id="nav-mobile" class="side-nav hide-on-large-only hide-on-med-only show-on-small">
-                    <li>@Html.ActionLink("Index", "Index", "Meme")</li>
-                    <li>@Html.ActionLink("Memes", "Memes", "Meme")</li>
+                    <li>@Html.ActionLink("Home", "IndexAsync", "Meme")</li>
+                    <li>@Html.ActionLink("Trending", "Trending", "Meme")</li>
+                    <li>@Html.ActionLink("Collections", "Collections", "Collection")</li>
                 </ul>
             </div>
         </nav>
     </div>
 
-    <partial name="_CookieConsentPartial" />
+    @*<partial name="_CookieConsentPartial" />*@
 
     <div class="container">
         @RenderBody()

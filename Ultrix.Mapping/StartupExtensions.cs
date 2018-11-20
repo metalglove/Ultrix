@@ -55,7 +55,7 @@ namespace Ultrix.Mapping
             // TODO: Move routing to application layer
             serviceCollection.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/login";
+                options.LoginPath = "/Login";
 
                 options.ExpireTimeSpan = TimeSpan.FromDays(3);
             });

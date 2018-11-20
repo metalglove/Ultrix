@@ -18,9 +18,48 @@
                     }
                 }
             </div>
-            <div class="card-action">
-                <a href="@Model.PageUrl" style="color: white">Source</a>
+            <div class="card-action" style="height: 150px">
+                <p><a href="@Model.PageUrl" style="color: white">Source</a></p>
+                <div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <i class="material-icons col s1 meme-icon">thumb_up</i>
+                        <i class="material-icons col s1 meme-icon">thumb_down</i>
+                        <div class="input-field col s3">
+                            <select id="friendselect">
+                                <option value="" disabled selected>Friend..</option>
+                                <option value="">Friend 1</option>
+                                <option value="">Friend 2</option>
+                                <option value="">Friend 3</option>
+                            </select>
+                            <label>Share with a friend</label>
+                        </div>
+                        <i class="material-icons col s1 meme-icon">share</i>
+                        <div class="input-field col s3">
+                            <select id="collectionselect">
+                                <option value="" disabled selected>Collection..</option>
+                                <option value="">Collection 1</option>
+                                <option value="">Collection 2</option>
+                                <option value="">Collection 3</option>
+                            </select>
+                            <label>Add to a collection</label>
+                        </div>
+                        <i class="material-icons col s1 meme-icon">add_box</i>
+                        <i class="material-icons col s1 offset-s1 meme-icon">forum</i>
+                    }
+                    else
+                    {
+                        <i class="material-icons col s1 meme-icon">thumb_up</i>
+                        <i class="material-icons col s1 meme-icon">thumb_down</i>
+                        <i class="material-icons col s1 offset-s9 meme-icon" >forum</i>
+                    }
+                </div>
             </div>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('select').formSelect();
+    });
+</script>
