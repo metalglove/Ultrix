@@ -1,7 +1,11 @@
-﻿
+﻿@model IEnumerable<Collection>
 @{
     ViewData["Title"] = "Collections";
 }
 
 <h2>Collections</h2>
 
+@foreach (Collection collection in Model)
+{
+    await Html.RenderPartialAsync("SubscribableCollection", collection);
+}

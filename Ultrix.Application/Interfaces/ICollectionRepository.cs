@@ -8,6 +8,7 @@ namespace Ultrix.Application.Interfaces
     {
         Task<bool> DoesCollectionNameExistAsync(string collectionName);
         Task<Collection> GetCollectionAsync(int collectionId);
+        Task<List<Collection>> GetAllCollectionsAsync();
         Task<List<Collection>> GetMyCollectionsAsync(int userId);
         Task<List<Collection>> GetMySubscribedCollectionsAsync(int userId);
         Task<bool> CreateCollectionAsync(Collection collection);

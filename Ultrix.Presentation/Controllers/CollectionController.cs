@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
-using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Presentation.ViewModels.Collection_;
 
 namespace Ultrix.Presentation.Controllers
@@ -23,9 +22,11 @@ namespace Ultrix.Presentation.Controllers
         }
 
         [Route("Collections")]
-        public IActionResult Collections()
+        public async Task<IActionResult> CollectionsAsync()
         {
-            return View("Collections");
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<Collection> collections = await _collectionRepository.GetAllCollectionsAsync();
+            return View("Collections", collections);
         }
 
         [Route("CreateCollection"), Authorize, HttpPost, ValidateAntiForgeryToken]
@@ -83,9 +84,20 @@ namespace Ultrix.Presentation.Controllers
         [Route("AddMemeToCollection")]
         public async Task<IActionResult> AddMemeToCollectionAsync()
         {
-            Meme meme = await _memeRepository.GetMemeAsync("aLgPGDM");
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            Meme meme = await _memeRepository.GetMemeAsync("a9KYjgo");
             await _collectionRepository.AddToCollectionAsync(meme, 1, userId);
+
+            Meme meme2 = await _memeRepository.GetMemeAsync("aGZx476");
+            await _collectionRepository.AddToCollectionAsync(meme2, 1, userId);
+
+            Meme meme3 = await _memeRepository.GetMemeAsync("ayBnoGY");
+            await _collectionRepository.AddToCollectionAsync(meme3, 1, userId);
+
+            Meme meme4 = await _memeRepository.GetMemeAsync("amB8V4d");
+            await _collectionRepository.AddToCollectionAsync(meme4, 1, userId);
+
             return Content("ok", "text/html");
         }
     }

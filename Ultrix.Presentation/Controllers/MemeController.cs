@@ -40,12 +40,10 @@ namespace Ultrix.Presentation.Controllers
         }
 
         [Route("Trending")]
-        public IActionResult Trending()
+        public async Task<IActionResult> TrendingAsync()
         {
             return View("Trending");
         }
-
-       
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

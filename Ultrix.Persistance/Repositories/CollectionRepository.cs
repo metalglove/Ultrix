@@ -54,7 +54,25 @@ namespace Ultrix.Persistance.Repositories
             }
             return collections;
         }
-
+        public async Task<List<Collection>> GetAllCollectionsAsync()
+        {
+            List<Collection> collections = await _applicationDbContext.Collections.ToListAsync();
+            foreach (Collection collection in collections)
+            {
+                await _applicationDbContext.Entry(collection)
+                .Collection(selCollection => selCollection.CollectionItemDetails).LoadAsync();
+                foreach (CollectionItemDetail collectionItemDetail in collection.CollectionItemDetails)
+                {
+                    await _applicationDbContext.Entry(collectionItemDetail).Reference(itemDetail => itemDetail.Meme).LoadAsync();
+                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Comments).LoadAsync();
+                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Likes).LoadAsync();
+                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Shares).LoadAsync();
+                }
+                await _applicationDbContext.Entry(collection)
+                    .Collection(selCollection => selCollection.CollectionSubscribers).LoadAsync();
+            }
+            return collections;
+        }
         public async Task<List<Collection>> GetMySubscribedCollectionsAsync(int userId)
         {
             List<Collection> mySubscribedCollections = await _applicationDbContext.CollectionSubscribers
