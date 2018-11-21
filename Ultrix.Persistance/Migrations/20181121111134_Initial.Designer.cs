@@ -10,8 +10,8 @@ using Ultrix.Persistance.Contexts;
 namespace Ultrix.Persistance.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20181111124507_Intial")]
-    partial class Intial
+    [Migration("20181121111134_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,8 +165,6 @@ namespace Ultrix.Persistance.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
-                    b.Property<int>("UserDetailId");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
@@ -180,8 +178,6 @@ namespace Ultrix.Persistance.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("UserDetailId");
-
                     b.ToTable("AspNetUsers");
                 });
 
@@ -193,7 +189,9 @@ namespace Ultrix.Persistance.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<DateTime>("TimestampAdded");
+                    b.Property<DateTime>("TimestampAdded")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<int>("UserId");
 
@@ -201,7 +199,7 @@ namespace Ultrix.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Collection");
+                    b.ToTable("Collections");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.CollectionItemDetail", b =>
@@ -216,19 +214,19 @@ namespace Ultrix.Persistance.Migrations
 
                     b.Property<string>("MemeId");
 
-                    b.Property<DateTime>("TimestampAdded");
-
-                    b.Property<int?>("UserId");
+                    b.Property<DateTime>("TimestampAdded")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddedByUserId");
 
                     b.HasIndex("CollectionId");
 
                     b.HasIndex("MemeId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("CollectionItemDetail");
+                    b.ToTable("CollectionItemDetails");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.CollectionSubscriber", b =>
@@ -249,7 +247,7 @@ namespace Ultrix.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CollectionSubscriber");
+                    b.ToTable("CollectionSubscribers");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Comment", b =>
@@ -262,7 +260,9 @@ namespace Ultrix.Persistance.Migrations
 
                     b.Property<string>("Text");
 
-                    b.Property<DateTime>("TimestampAdded");
+                    b.Property<DateTime>("TimestampAdded")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<int>("UserId");
 
@@ -272,7 +272,7 @@ namespace Ultrix.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Follower", b =>
@@ -281,17 +281,21 @@ namespace Ultrix.Persistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ApplicationUserId");
-
                     b.Property<int>("FollowerUserId");
+
+                    b.Property<DateTime>("TimestampFollowed")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("FollowerUserId");
 
-                    b.ToTable("Follower");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Followers");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Meme", b =>
@@ -303,7 +307,9 @@ namespace Ultrix.Persistance.Migrations
 
                     b.Property<string>("PageUrl");
 
-                    b.Property<DateTime>("TimestampAdded");
+                    b.Property<DateTime>("TimestampAdded")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<string>("Title");
 
@@ -324,7 +330,9 @@ namespace Ultrix.Persistance.Migrations
 
                     b.Property<string>("MemeId");
 
-                    b.Property<DateTime>("TimestampAdded");
+                    b.Property<DateTime>("TimestampAdded")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.Property<int>("UserId");
 
@@ -334,7 +342,7 @@ namespace Ultrix.Persistance.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("MemeLike");
+                    b.ToTable("MemeLikes");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.SharedMeme", b =>
@@ -343,36 +351,42 @@ namespace Ultrix.Persistance.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ApplicationUserId");
-
                     b.Property<bool>("IsSeen");
+
+                    b.Property<string>("MemeId");
 
                     b.Property<int>("ReceiverUserId");
 
                     b.Property<int>("SenderUserId");
 
-                    b.Property<DateTime>("TimestampShared");
+                    b.Property<DateTime>("TimestampShared")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("MemeId");
 
-                    b.ToTable("SharedMeme");
+                    b.HasIndex("ReceiverUserId");
+
+                    b.HasIndex("SenderUserId");
+
+                    b.ToTable("SharedMemes");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.UserDetail", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("Id");
 
                     b.Property<string>("ProfilePictureData");
 
-                    b.Property<DateTime>("TimestampCreated");
+                    b.Property<DateTime>("TimestampCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserDetail");
+                    b.ToTable("UserDetails");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -420,87 +434,104 @@ namespace Ultrix.Persistance.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.ApplicationUser", b =>
-                {
-                    b.HasOne("Ultrix.Domain.Entities.UserDetail", "UserDetail")
-                        .WithMany()
-                        .HasForeignKey("UserDetailId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Ultrix.Domain.Entities.Collection", b =>
                 {
                     b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
                         .WithMany("Collections")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.CollectionItemDetail", b =>
                 {
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
+                        .WithMany("CollectionItemDetails")
+                        .HasForeignKey("AddedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("Ultrix.Domain.Entities.Collection", "Collection")
                         .WithMany("CollectionItemDetails")
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Ultrix.Domain.Entities.Meme", "Meme")
-                        .WithMany()
+                        .WithMany("InCollectionItemDetails")
                         .HasForeignKey("MemeId");
-
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.CollectionSubscriber", b =>
                 {
                     b.HasOne("Ultrix.Domain.Entities.Collection", "Collection")
-                        .WithMany()
+                        .WithMany("CollectionSubscribers")
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
                         .WithMany("CollectionSubscribers")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Comment", b =>
                 {
                     b.HasOne("Ultrix.Domain.Entities.Meme", "Meme")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("MemeId");
 
                     b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Follower", b =>
                 {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser")
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "FollowerUser")
+                        .WithMany("Follows")
+                        .HasForeignKey("FollowerUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
                         .WithMany("Followers")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.MemeLike", b =>
                 {
                     b.HasOne("Ultrix.Domain.Entities.Meme", "Meme")
-                        .WithMany()
+                        .WithMany("Likes")
                         .HasForeignKey("MemeId");
 
                     b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
                         .WithMany("MemeLikes")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.SharedMeme", b =>
                 {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser")
-                        .WithMany("SharedMemes")
-                        .HasForeignKey("ApplicationUserId");
+                    b.HasOne("Ultrix.Domain.Entities.Meme", "Meme")
+                        .WithMany("Shares")
+                        .HasForeignKey("MemeId");
+
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "ReceiverUser")
+                        .WithMany("ReceivedSharedMemes")
+                        .HasForeignKey("ReceiverUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "SenderUser")
+                        .WithMany("SendSharedMemes")
+                        .HasForeignKey("SenderUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Ultrix.Domain.Entities.UserDetail", b =>
+                {
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "ApplicationUser")
+                        .WithOne("UserDetail")
+                        .HasForeignKey("Ultrix.Domain.Entities.UserDetail", "Id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

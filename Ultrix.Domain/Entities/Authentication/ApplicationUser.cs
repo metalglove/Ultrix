@@ -7,7 +7,6 @@ namespace Ultrix.Domain.Entities.Authentication
     {
         // Id, UserName, PasswordHash in IdentityUser
         public override int Id { get; set; }
-        public int UserDetailId { get; set; }
         public virtual UserDetail UserDetail { get; set; }
         public virtual List<MemeLike> MemeLikes { get; set; }
         public virtual List<Follower> Followers { get; set; }

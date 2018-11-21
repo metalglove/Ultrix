@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
@@ -25,6 +26,21 @@ namespace Ultrix.Persistance.Repositories
         public async Task<bool> SaveMemeAsync(Meme meme)
         {
             await _applicationDbContext.Memes.AddAsync(meme);
+            int saveResult = await _applicationDbContext.SaveChangesAsync();
+            bool saveSuccess;
+            try
+            {
+                saveSuccess = Convert.ToBoolean(saveResult);
+            }
+            catch (Exception)
+            {
+                throw new SavingMemeFailedException();
+            }
+            return saveSuccess;
+        }
+        public async Task<bool> SaveMemesAsync(IEnumerable<Meme> memes)
+        {
+            await _applicationDbContext.Memes.AddRangeAsync(memes);
             int saveResult = await _applicationDbContext.SaveChangesAsync();
             bool saveSuccess;
             try

@@ -13,7 +13,6 @@ namespace Ultrix.Presentation.Controllers
         private readonly IMemeService _memeService;
         private readonly IMemeRepository _memeRepository;
 
-        // Switch between IExternalMemeService and ILocalMemeService both implement IMemeService
         public MemeController(ILocalMemeService memeService, IMemeRepository memeRepository)
         {
             _memeService = memeService;
@@ -28,6 +27,7 @@ namespace Ultrix.Presentation.Controllers
                 await _memeService.GetRandomMemeAsync(), await _memeService.GetRandomMemeAsync(),
                 await _memeService.GetRandomMemeAsync(), await _memeService.GetRandomMemeAsync()
             };
+            await _memeRepository.SaveMemesAsync(memes);
             return View("Index", memes);
         }
 
@@ -35,6 +35,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> MemeAsync()
         {
             Meme meme = await _memeService.GetRandomMemeAsync();
+            await _memeRepository.SaveMemeAsync(meme);
             return PartialView("Meme", meme);
         }
 
@@ -43,6 +44,8 @@ namespace Ultrix.Presentation.Controllers
         {
             return View("Trending");
         }
+
+       
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

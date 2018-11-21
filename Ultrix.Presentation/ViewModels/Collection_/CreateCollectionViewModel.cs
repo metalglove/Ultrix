@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ultrix.Presentation.ViewModels.Collection
+namespace Ultrix.Presentation.ViewModels.Collection_
 {
     public class CreateCollectionViewModel : AntiForgeryTokenViewModelBase
     {

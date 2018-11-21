@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Ultrix.Persistance.Migrations
 {
-    public partial class Intial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,57 +21,6 @@ namespace Ultrix.Persistance.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Memes",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false, maxLength: 10),
-                    Title = table.Column<string>(nullable: true),
-                    ImageUrl = table.Column<string>(nullable: true),
-                    VideoUrl = table.Column<string>(nullable: true),
-                    PageUrl = table.Column<string>(nullable: true),
-                    TimestampAdded = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Memes", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserDetails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ProfilePictureData = table.Column<string>(nullable: true),
-                    TimestampCreated = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserDetails", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetRoleClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    RoleId = table.Column<int>(nullable: false),
-                    ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,16 +42,46 @@ namespace Ultrix.Persistance.Migrations
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserDetailId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Memes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: true),
+                    ImageUrl = table.Column<string>(nullable: true),
+                    VideoUrl = table.Column<string>(nullable: true),
+                    PageUrl = table.Column<string>(nullable: true),
+                    TimestampAdded = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Memes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<int>(nullable: false),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_UserDetails_UserDetailId",
-                        column: x => x.UserDetailId,
-                        principalTable: "UserDetails",
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -210,6 +189,52 @@ namespace Ultrix.Persistance.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Followers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<int>(nullable: false),
+                    FollowerUserId = table.Column<int>(nullable: false),
+                    TimestampFollowed = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Followers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Followers_AspNetUsers_FollowerUserId",
+                        column: x => x.FollowerUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Followers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserDetails",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    ProfilePictureData = table.Column<string>(nullable: true),
+                    TimestampCreated = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserDetails_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -220,8 +245,8 @@ namespace Ultrix.Persistance.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     UserId = table.Column<int>(nullable: false),
-                    MemeId = table.Column<string>(nullable: false, maxLength: 10),
-                    Text = table.Column<string>(nullable: false),
+                    MemeId = table.Column<string>(nullable: true),
+                    Text = table.Column<string>(nullable: true),
                     TimestampAdded = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
                 },
                 constraints: table =>
@@ -238,28 +263,6 @@ namespace Ultrix.Persistance.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Followers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(nullable: false),
-                    FollowerUserId = table.Column<int>(nullable: false),
-                    ApplicationUserId = table.Column<int>(nullable: true),
-                    TimestampFollowed = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Followers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Follower_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -269,7 +272,7 @@ namespace Ultrix.Persistance.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    MemeId = table.Column<string>(nullable: false, maxLength: 10),
+                    MemeId = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: false),
                     IsLike = table.Column<bool>(nullable: false),
                     TimestampAdded = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
@@ -278,17 +281,17 @@ namespace Ultrix.Persistance.Migrations
                 {
                     table.PrimaryKey("PK_MemeLikes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MemeLike_Memes_MemeId",
+                        name: "FK_MemeLikes_Memes_MemeId",
                         column: x => x.MemeId,
                         principalTable: "Memes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MemeLike_AspNetUsers_UserId",
+                        name: "FK_MemeLikes_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,16 +302,28 @@ namespace Ultrix.Persistance.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ReceiverUserId = table.Column<int>(nullable: false),
                     SenderUserId = table.Column<int>(nullable: false),
+                    MemeId = table.Column<string>(nullable: true),
                     IsSeen = table.Column<bool>(nullable: false),
-                    TimestampShared = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()"),
-                    ApplicationUserId = table.Column<int>(nullable: true)
+                    TimestampShared = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SharedMemes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SharedMemes_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_SharedMemes_Memes_MemeId",
+                        column: x => x.MemeId,
+                        principalTable: "Memes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SharedMemes_AspNetUsers_ReceiverUserId",
+                        column: x => x.ReceiverUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_SharedMemes_AspNetUsers_SenderUserId",
+                        column: x => x.SenderUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -321,14 +336,19 @@ namespace Ultrix.Persistance.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     AddedByUserId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: true),
                     CollectionId = table.Column<int>(nullable: false),
-                    MemeId = table.Column<string>(nullable: false, maxLength: 10),
+                    MemeId = table.Column<string>(nullable: true),
                     TimestampAdded = table.Column<DateTime>(nullable: false, defaultValueSql: "GetDate()")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CollectionItemDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CollectionItemDetails_AspNetUsers_AddedByUserId",
+                        column: x => x.AddedByUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CollectionItemDetails_Collections_CollectionId",
                         column: x => x.CollectionId,
@@ -339,12 +359,6 @@ namespace Ultrix.Persistance.Migrations
                         name: "FK_CollectionItemDetails_Memes_MemeId",
                         column: x => x.MemeId,
                         principalTable: "Memes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CollectionItemDetails_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -373,7 +387,7 @@ namespace Ultrix.Persistance.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -416,14 +430,9 @@ namespace Ultrix.Persistance.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_UserDetailId",
-                table: "AspNetUsers",
-                column: "UserDetailId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Collections_UserId",
-                table: "Collections",
-                column: "UserId");
+                name: "IX_CollectionItemDetails_AddedByUserId",
+                table: "CollectionItemDetails",
+                column: "AddedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CollectionItemDetails_CollectionId",
@@ -436,8 +445,8 @@ namespace Ultrix.Persistance.Migrations
                 column: "MemeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CollectionItemDetails_UserId",
-                table: "CollectionItemDetails",
+                name: "IX_Collections_UserId",
+                table: "Collections",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -461,9 +470,14 @@ namespace Ultrix.Persistance.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Followers_ApplicationUserId",
+                name: "IX_Followers_FollowerUserId",
                 table: "Followers",
-                column: "ApplicationUserId");
+                column: "FollowerUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Followers_UserId",
+                table: "Followers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MemeLikes_MemeId",
@@ -476,9 +490,19 @@ namespace Ultrix.Persistance.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SharedMemes_ApplicationUserId",
+                name: "IX_SharedMemes_MemeId",
                 table: "SharedMemes",
-                column: "ApplicationUserId");
+                column: "MemeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SharedMemes_ReceiverUserId",
+                table: "SharedMemes",
+                column: "ReceiverUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SharedMemes_SenderUserId",
+                table: "SharedMemes",
+                column: "SenderUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -499,10 +523,10 @@ namespace Ultrix.Persistance.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CollectionItemDetail");
+                name: "CollectionItemDetails");
 
             migrationBuilder.DropTable(
-                name: "CollectionSubscriber");
+                name: "CollectionSubscribers");
 
             migrationBuilder.DropTable(
                 name: "Comments");
@@ -517,6 +541,9 @@ namespace Ultrix.Persistance.Migrations
                 name: "SharedMemes");
 
             migrationBuilder.DropTable(
+                name: "UserDetails");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -527,9 +554,6 @@ namespace Ultrix.Persistance.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "UserDetails");
         }
     }
 }

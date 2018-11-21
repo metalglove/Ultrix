@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Ultrix.Application.Interfaces;
@@ -19,13 +16,24 @@ namespace Ultrix.Infrastructure
         private const string NineGagRandomUrl = "http://9gag.com/random/";
         private const string NineGagPhotoCacheUrl = "http://img-9gag-fun.9cache.com/photo/";
         private const string Mp4Tag = "_460sv.mp4";
+        private readonly IMemeRepository _memeRepository;
 
-        public LocalMemeService()
+        public LocalMemeService(IMemeRepository memeRepository)
         {
-
+            _memeRepository = memeRepository;
         }
 
         public async Task<Meme> GetRandomMemeAsync()
+        {
+            // TODO: multithread fetch memes?..
+            Meme meme = await GetMemeAsync();
+            while (await _memeRepository.DoesMemeExistAsync(meme))
+            {
+                meme = await GetMemeAsync();
+            }
+            return meme;
+        }
+        private async Task<Meme> GetMemeAsync()
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -75,7 +83,7 @@ namespace Ultrix.Infrastructure
             {
                 meme.VideoUrl = videoUrl;
             }
-            meme.TimestampAdded = DateTime.Now;
+            //meme.TimestampAdded = DateTime.Now;
             return meme;
         }
         private static async Task<bool> HasVideoUrlAsync(string videoUrl)

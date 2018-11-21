@@ -49,7 +49,6 @@ namespace Ultrix.Presentation.Controllers
                 SignInResult signInResult = await _userService.SignInAsync(loginViewModel.Username, loginViewModel.Password);
                 if (signInResult.Succeeded)
                 {
-                   var x = HttpContext.User.Identity;
                     return !string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl)
                         ? Json(new { authenticated = true, returnurl = loginViewModel.ReturnUrl })
                         : Json(new { authenticated = true });
