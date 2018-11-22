@@ -86,16 +86,16 @@ namespace Ultrix.Presentation.Controllers
         {
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            Meme meme = await _memeRepository.GetMemeAsync("a9KYjgo");
+            Meme meme = await _memeRepository.GetMemeAsync("aPYWWvV");
             await _collectionRepository.AddToCollectionAsync(meme, 1, userId);
 
-            Meme meme2 = await _memeRepository.GetMemeAsync("aGZx476");
+            Meme meme2 = await _memeRepository.GetMemeAsync("arG4qNd");
             await _collectionRepository.AddToCollectionAsync(meme2, 1, userId);
 
-            Meme meme3 = await _memeRepository.GetMemeAsync("ayBnoGY");
+            Meme meme3 = await _memeRepository.GetMemeAsync("az9Lr5K");
             await _collectionRepository.AddToCollectionAsync(meme3, 1, userId);
 
-            Meme meme4 = await _memeRepository.GetMemeAsync("amB8V4d");
+            Meme meme4 = await _memeRepository.GetMemeAsync("aVYWpyy");
             await _collectionRepository.AddToCollectionAsync(meme4, 1, userId);
 
             return Content("ok", "text/html");
