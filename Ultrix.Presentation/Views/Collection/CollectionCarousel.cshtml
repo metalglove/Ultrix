@@ -1,4 +1,4 @@
-﻿@model CollectionPresenterViewModel
+﻿@model CollectionCarouselViewModel
 
 <h3>@Model.Collection.Name</h3>
 <div class="collection-grid-container">
@@ -45,11 +45,11 @@
     }
     else
     {
-        <div class="button-grid-container">
-            <a class="waves-effect waves-light btn">Delete collection</a>
-            <a class="waves-effect waves-light btn">Manage collection</a>
-            <a class="waves-effect waves-light btn">View collection</a>
-        </div>
+    <div class="button-grid-container">
+        <a class="waves-effect waves-light btn">Delete collection</a>
+        <a class="waves-effect waves-light btn">Manage collection</a>
+        @Html.ActionLink("View collection", "CollectionAsync", "Collection", new { id = Model.Collection.Id }, new { @class = "waves-effect waves-light btn" })
+    </div>
     }
 </div>
 
