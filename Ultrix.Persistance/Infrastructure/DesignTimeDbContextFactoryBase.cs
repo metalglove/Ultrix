@@ -63,6 +63,7 @@ namespace Ultrix.Persistance.Infrastructure
                 throw new ArgumentException($"Connection string '{ConnectionStringName}' is null or empty.", nameof(connectionString));
             }
             DbContextOptionsBuilder<TContext> optionsBuilder = new DbContextOptionsBuilder<TContext>();
+            optionsBuilder.UseLazyLoadingProxies();
             optionsBuilder.UseSqlServer(connectionString);
             OptionsBuilder = optionsBuilder;
         }

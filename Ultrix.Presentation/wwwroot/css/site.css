@@ -132,3 +132,7 @@ img, video {
     display: grid;
     grid-template-rows: auto;
 }
+.button-container {
+    display: grid;
+    margin: auto;
+}

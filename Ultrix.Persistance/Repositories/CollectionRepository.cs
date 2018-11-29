@@ -36,65 +36,19 @@ namespace Ultrix.Persistance.Repositories
         }
         public async Task<List<Collection>> GetMyCollectionsAsync(int userId)
         {
-            List<Collection> collections = await _applicationDbContext.Collections
+            return await _applicationDbContext.Collections
                 .Where(collection => collection.UserId.Equals(userId)).ToListAsync();
-            foreach (Collection collection in collections)
-            {
-                await _applicationDbContext.Entry(collection)
-                .Collection(selCollection => selCollection.CollectionItemDetails).LoadAsync();
-                foreach (CollectionItemDetail collectionItemDetail in collection.CollectionItemDetails)
-                {
-                    await _applicationDbContext.Entry(collectionItemDetail).Reference(itemDetail => itemDetail.Meme).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Comments).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Likes).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Shares).LoadAsync();
-                }
-                await _applicationDbContext.Entry(collection)
-                    .Collection(selCollection => selCollection.CollectionSubscribers).LoadAsync();
-            }
-            return collections;
         }
         public async Task<List<Collection>> GetAllCollectionsAsync()
         {
-            List<Collection> collections = await _applicationDbContext.Collections.ToListAsync();
-            foreach (Collection collection in collections)
-            {
-                await _applicationDbContext.Entry(collection)
-                .Collection(selCollection => selCollection.CollectionItemDetails).LoadAsync();
-                foreach (CollectionItemDetail collectionItemDetail in collection.CollectionItemDetails)
-                {
-                    await _applicationDbContext.Entry(collectionItemDetail).Reference(itemDetail => itemDetail.Meme).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Comments).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Likes).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Shares).LoadAsync();
-                }
-                await _applicationDbContext.Entry(collection)
-                    .Collection(selCollection => selCollection.CollectionSubscribers).LoadAsync();
-            }
-            return collections;
+            return await _applicationDbContext.Collections.ToListAsync();
         }
         public async Task<List<Collection>> GetMySubscribedCollectionsAsync(int userId)
         {
-            List<Collection> mySubscribedCollections = await _applicationDbContext.CollectionSubscribers
+            return await _applicationDbContext.CollectionSubscribers
                 .Where(collectionSubscriber => collectionSubscriber.UserId.Equals(userId))
                 .Select(collectionSubscriber => collectionSubscriber.Collection).ToListAsync();
-            foreach (Collection collection in mySubscribedCollections)
-            {
-                await _applicationDbContext.Entry(collection)
-                .Collection(selCollection => selCollection.CollectionItemDetails).LoadAsync();
-                foreach (CollectionItemDetail collectionItemDetail in collection.CollectionItemDetails)
-                {
-                    await _applicationDbContext.Entry(collectionItemDetail).Reference(itemDetail => itemDetail.Meme).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Comments).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Likes).LoadAsync();
-                    await _applicationDbContext.Entry(collectionItemDetail.Meme).Collection(meme => meme.Shares).LoadAsync();
-                }
-                await _applicationDbContext.Entry(collection)
-                    .Collection(selCollection => selCollection.CollectionSubscribers).LoadAsync();
-            }
-            return mySubscribedCollections;
         }
-
         public async Task<bool> AddToCollectionAsync(Meme meme, int collectionId, int userId)
         {
             if (await DoesMemeExistInCollectionAsync(meme, collectionId))
@@ -123,15 +77,10 @@ namespace Ultrix.Persistance.Repositories
                 .FirstOrDefaultAsync(collection => collection.Id.Equals(collectionId));
             if (selectedCollection.Equals(default))
                 return false;
-
-            await _applicationDbContext.Entry(selectedCollection)
-                .Collection(selCollection => selCollection.CollectionItemDetails).LoadAsync();
-            await _applicationDbContext.Entry(selectedCollection)
-                .Collection(selCollection => selCollection.CollectionSubscribers).LoadAsync();
-
             return selectedCollection.CollectionItemDetails
                 .Any(collectionItemDetail => collectionItemDetail.MemeId.Equals(meme.Id));
         }
+
         public Task<bool> AuthorizeSubscriberOnCollectionAsync(int userId, int collectionId)
         {
             throw new NotImplementedException();
@@ -157,9 +106,9 @@ namespace Ultrix.Persistance.Repositories
             return await _applicationDbContext.Collections.AnyAsync(collection => collection.Name.Equals(collectionName));
         }
 
-        public Task<Collection> GetCollectionAsync(int collectionId)
+        public async Task<Collection> GetCollectionAsync(int collectionId)
         {
-            throw new NotImplementedException();
+            return await _applicationDbContext.Collections.SingleOrDefaultAsync(collection => collection.Id.Equals(collectionId));
         }
 
         public Task<bool> RemoveFromCollectionAsync(string memeId, int collectionId)

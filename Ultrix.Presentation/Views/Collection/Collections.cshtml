@@ -7,5 +7,5 @@
 
 @foreach (Collection collection in Model)
 {
-    await Html.RenderPartialAsync("SubscribableCollection", collection);
+    await Html.RenderPartialAsync("CollectionCarousel", new CollectionPresenterViewModel(collection, true));
 }

@@ -12,6 +12,8 @@ namespace Ultrix.Application.Validators
                 throw new ArgumentException("CollectionValidator throws: IsNullOrWhiteSpace");
             if (entity.UserId.Equals(null) || entity.UserId.Equals(0))
                 throw new ArgumentException("CollectionValidator throws: UserId is not set");
+            if (!entity.TimestampAdded.Equals(default))
+                throw new ArgumentException("CollectionValidator throws: TimestampAdded is set. (is not allowed must be set in database)");
             return true;
         }
     }

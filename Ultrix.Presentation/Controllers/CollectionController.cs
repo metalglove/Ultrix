@@ -28,7 +28,17 @@ namespace Ultrix.Presentation.Controllers
             List<Collection> collections = await _collectionRepository.GetAllCollectionsAsync();
             return View("Collections", collections);
         }
-
+        [Route("Collection/{id}"), HttpGet]
+        public async Task<IActionResult> CollectionAsync(int? id)
+        {
+            if(!id.HasValue)
+                return BadRequest();
+            Collection collection = await _collectionRepository.GetCollectionAsync(id.Value);
+            if (collection.Equals(default))
+                return BadRequest();
+            else
+                return View("Collection", new CollectionViewModel(collection, false));
+        }
         [Route("CreateCollection"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCollectionAsync([FromBody] CreateCollectionViewModel createCollectionViewModel)
         {
@@ -49,7 +59,17 @@ namespace Ultrix.Presentation.Controllers
             }
             return Json(new { IsCreated = false });
         }
+        [Route("MyCollections"), Authorize, HttpGet]
+        public async Task<IActionResult> MyCollectionsAsync()
+        {
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<Collection> myCollections = await _collectionRepository.GetMyCollectionsAsync(userId);
+            List<Collection> subcribedCollections = await _collectionRepository.GetMySubscribedCollectionsAsync(userId);
+            MyCollectionsViewModel myCollectionViewModel = new MyCollectionsViewModel(myCollections, subcribedCollections);
+            return View("MyCollections", myCollectionViewModel);
+        }
 
+        #region Dev
         [Route("CreateCollection2"), Authorize, HttpGet]
         public async Task<IActionResult> CreateCollectionAsync2()
         {
@@ -71,15 +91,6 @@ namespace Ultrix.Presentation.Controllers
                 return Json(new { IsCreated = true });
             return Json(new { IsCreated = false });
         }
-        [Route("MyCollections"), Authorize, HttpGet]
-        public async Task<IActionResult> MyCollectionsAsync()
-        {
-            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<Collection> myCollections = await _collectionRepository.GetMyCollectionsAsync(userId);
-            List<Collection> subcribedCollections = await _collectionRepository.GetMySubscribedCollectionsAsync(userId);
-            MyCollectionsViewModel myCollectionViewModel = new MyCollectionsViewModel(myCollections, subcribedCollections);
-            return View("MyCollections", myCollectionViewModel);
-        }
 
         [Route("AddMemeToCollection")]
         public async Task<IActionResult> AddMemeToCollectionAsync()
@@ -100,5 +111,6 @@ namespace Ultrix.Presentation.Controllers
 
             return Content("ok", "text/html");
         }
+        #endregion Dev
     }
 }

@@ -1,14 +1,14 @@
 ﻿@model MyCollectionsViewModel
 
-<h2>MyCollections</h2>
+<h2>My collections</h2>
 
 @foreach (Collection myCollection in Model.MyCollections)
 {
-    await Html.RenderPartialAsync("Collection", myCollection);
+    await Html.RenderPartialAsync("CollectionCarousel", new CollectionPresenterViewModel(myCollection, false));
 }
 
-<h2>MySubscribedCollections</h2>
+<h2>My subscribed collections</h2>
 @foreach (Collection mySubscribedCollection in Model.SubscribedCollections)
 {
-    await Html.RenderPartialAsync("Collection", mySubscribedCollection);
+    await Html.RenderPartialAsync("CollectionCarousel", new CollectionPresenterViewModel(mySubscribedCollection, false));
 }
