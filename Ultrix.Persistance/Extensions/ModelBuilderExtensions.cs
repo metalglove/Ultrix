@@ -10,12 +10,12 @@ namespace Ultrix.Persistance.Extensions
     {
         public static void ApplyAllConfigurations(this ModelBuilder modelBuilder)
         {
-            var applyConfigurationMethodInfo = modelBuilder
+            MethodInfo applyConfigurationMethodInfo = modelBuilder
                 .GetType()
                 .GetMethods(BindingFlags.Instance | BindingFlags.Public)
                 .First(m => m.Name.Equals("ApplyConfiguration", StringComparison.OrdinalIgnoreCase));
 
-            var ret = typeof(ApplicationDbContext).Assembly
+            _ = typeof(ApplicationDbContext).Assembly
                 .GetTypes()
                 .Select(t => (t, i: t.GetInterfaces().FirstOrDefault(i => i.Name.Equals(typeof(IEntityTypeConfiguration<>).Name, StringComparison.Ordinal))))
                 .Where(it => it.i != null)

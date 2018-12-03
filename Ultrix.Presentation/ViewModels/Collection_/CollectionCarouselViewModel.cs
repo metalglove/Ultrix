@@ -4,8 +4,8 @@ namespace Ultrix.Presentation.ViewModels.Collection_
 {
     public class CollectionCarouselViewModel
     {
-        public Collection Collection { get; private set; }
-        public bool IsSubscribable { get; private set; }
+        public Collection Collection { get; }
+        public bool IsSubscribable { get; }
 
         public CollectionCarouselViewModel(Collection collection, bool isSubscribable)
         {

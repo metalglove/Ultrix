@@ -29,7 +29,7 @@ async function loadData(loadAnotherItemUrl) {
                 isInCallback = false;
                 hasReachedScrollEnd = false;
             }, reason => {
-                console.log(reason)
+                console.log(reason);
                 isInCallback = false;
                 hasReachedScrollEnd = false;
             });

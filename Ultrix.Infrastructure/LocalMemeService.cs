@@ -25,7 +25,7 @@ namespace Ultrix.Infrastructure
 
         public async Task<Meme> GetRandomMemeAsync()
         {
-            // TODO: multithread fetch memes?..
+            // TODO: multi-thread fetch memes?..
             Meme meme = await GetMemeAsync();
             while (await _memeRepository.DoesMemeExistAsync(meme))
             {

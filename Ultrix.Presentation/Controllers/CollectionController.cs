@@ -24,7 +24,6 @@ namespace Ultrix.Presentation.Controllers
         [Route("Collections")]
         public async Task<IActionResult> CollectionsAsync()
         {
-            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<Collection> collections = await _collectionRepository.GetAllCollectionsAsync();
             return View("Collections", collections);
         }
@@ -64,8 +63,8 @@ namespace Ultrix.Presentation.Controllers
         {
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<Collection> myCollections = await _collectionRepository.GetMyCollectionsAsync(userId);
-            List<Collection> subcribedCollections = await _collectionRepository.GetMySubscribedCollectionsAsync(userId);
-            MyCollectionsViewModel myCollectionViewModel = new MyCollectionsViewModel(myCollections, subcribedCollections);
+            List<Collection> subscribedCollections = await _collectionRepository.GetMySubscribedCollectionsAsync(userId);
+            MyCollectionsViewModel myCollectionViewModel = new MyCollectionsViewModel(myCollections, subscribedCollections);
             return View("MyCollections", myCollectionViewModel);
         }
 

@@ -61,21 +61,21 @@
                         $('#errorMsg').show();
                     }
                 },
-                error: function (xmlHttpRequest, textStatus, errorThrown) {
-                    console.log("Loginform resulted faulty..");
+                error: function () {
+                    console.log("LoginForm resulted faulty..");
                 }
             });
             event.preventDefault();
         });
     });
     function getFormData($form) {
-        var unindexed_array = $form.serializeArray();
-        var indexed_array = {};
+        var unindexedArray = $form.serializeArray();
+        var indexedArray = {};
 
-        $.map(unindexed_array, function (n, i) {
-            indexed_array[n['name']] = n['value'];
+        $.map(unindexedArray, function (n, i) {
+            indexedArray[n['name']] = n['value'];
         });
 
-        return indexed_array;
+        return indexedArray;
     }
 </script>

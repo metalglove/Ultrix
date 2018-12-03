@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -8,7 +9,7 @@ namespace Ultrix.Infrastructure.Utilities
 {
     public class WebServiceBase
     {
-        private HttpClient Client { get; set; }
+        private HttpClient Client { get; }
 
         public WebServiceBase(Uri baseAddress)
         {
@@ -26,7 +27,8 @@ namespace Ultrix.Infrastructure.Utilities
             }
             catch (HttpRequestException httpRequestException)
             {
-                throw httpRequestException;
+                Debug.WriteLine(httpRequestException.Message);
+                throw;
             }
         }
         public async Task<T> GetJsonAsyncAndConvertTo<T>(string path)
@@ -38,7 +40,8 @@ namespace Ultrix.Infrastructure.Utilities
             }
             catch (Exception exception)
             {
-                throw exception;
+                Debug.WriteLine(exception.Message);
+                throw;
             }
         }
         public async Task PostAsync(string path, params KeyValuePair<string, string>[] postValues)
@@ -51,7 +54,8 @@ namespace Ultrix.Infrastructure.Utilities
             }
             catch (HttpRequestException httpRequestException)
             {
-                throw httpRequestException;
+                Debug.WriteLine(httpRequestException.Message);
+                throw;
             }
         }
     }
