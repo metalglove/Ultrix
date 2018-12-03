@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 using Ultrix.Persistance.Contexts;
@@ -22,8 +22,7 @@ namespace Ultrix.Persistance.Repositories
 
         public async Task<bool> CreateCollectionAsync(Collection collection)
         {
-            if (!_collectionValidator.Validate(collection))
-                return false;
+            _collectionValidator.Validate(collection);
 
             if (await CollectionsAnyByNameExist(collection))
                 return false;
@@ -71,6 +70,136 @@ namespace Ultrix.Persistance.Repositories
 
             return true;
         }
+        public async Task<bool> AuthorizeSubscriberOnCollectionAsync(int userId, int collectionId)
+        {
+            if (!await _applicationDbContext.Users.AnyAsync(user => user.Id.Equals(userId)))
+                throw new ApplicationUserNotFoundException();
+            if (!await _applicationDbContext.Collections.AnyAsync(collection => collection.Id.Equals(collectionId)))
+                throw new CollectionNotFoundException();
+
+            CollectionSubscriber collectionSubscriber =
+                await _applicationDbContext.CollectionSubscribers
+                    .SingleOrDefaultAsync(collSub =>
+                        collSub.CollectionId.Equals(collectionId) &&
+                        collSub.UserId.Equals(userId));
+
+            if (collectionSubscriber.Equals(default))
+                throw new CollectionSubscriberNotFoundException();
+
+            collectionSubscriber.IsAuthorized = true;
+            _applicationDbContext.CollectionSubscribers.Update(collectionSubscriber);
+            await _applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<bool> DeAuthorizeSubscriberOnCollectionAsync(int userId, int collectionId)
+        {
+            await DoesApplicationUserExist(userId);
+            await DoesCollectionExist(collectionId);
+
+            CollectionSubscriber collectionSubscriber =
+                await _applicationDbContext.CollectionSubscribers
+                    .SingleOrDefaultAsync(collSub =>
+                        collSub.CollectionId.Equals(collectionId) &&
+                        collSub.UserId.Equals(userId));
+
+            if (collectionSubscriber.Equals(default))
+                throw new CollectionSubscriberNotFoundException();
+
+            collectionSubscriber.IsAuthorized = false;
+            _applicationDbContext.CollectionSubscribers.Update(collectionSubscriber);
+            await _applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<bool> DeleteCollectionAsync(int userId, int collectionId)
+        {
+            await DoesApplicationUserExist(userId);
+            await DoesCollectionExist(collectionId);
+
+            Collection collection = await _applicationDbContext.Collections.FindAsync(collectionId);
+            if (!collection.UserId.Equals(userId))
+                throw new ApplicationUserIsNotOwnerOfCollectionException();
+
+            _applicationDbContext.Collections.Remove(collection);
+            await _applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<bool> DoesCollectionNameExistAsync(string collectionName)
+        {
+            return await _applicationDbContext.Collections.AnyAsync(collection => collection.Name.Equals(collectionName));
+        }
+        public async Task<Collection> GetCollectionAsync(int collectionId)
+        {
+            await DoesCollectionExist(collectionId);
+            return await _applicationDbContext.Collections.SingleAsync(coll => coll.Id.Equals(collectionId));
+        }
+        public async Task<bool> RemoveFromCollectionAsync(int collectionItemDetailId, int collectionId, int userId)
+        {
+            await DoesApplicationUserExist(userId);
+            await DoesCollectionExist(collectionId);
+            await DoesCollectionItemDetailExist(collectionItemDetailId);
+            bool isOwnerOfCollection = await _applicationDbContext.Collections.AnyAsync(collection =>
+                collection.Id.Equals(collectionId) && collection.UserId.Equals(userId));
+            CollectionItemDetail collectionItemDetail =
+                await _applicationDbContext.CollectionItemDetails.FindAsync(collectionItemDetailId);
+            if (!collectionItemDetail.AddedByUserId.Equals(userId) || !isOwnerOfCollection)
+                throw new ApplicationUserIsNotAuthorizedException();
+            _applicationDbContext.CollectionItemDetails.Remove(collectionItemDetail);
+            await _applicationDbContext.SaveChangesAsync();
+
+            return true;
+        }
+        public async Task<bool> SubscribeToCollectionAsync(int userId, int collectionId)
+        {
+            await DoesApplicationUserExist(userId);
+            await DoesCollectionExist(collectionId);
+            if (await _applicationDbContext.CollectionSubscribers.AnyAsync(collSubscriber =>
+                collSubscriber.CollectionId.Equals(collectionId) && collSubscriber.UserId.Equals(userId)))
+                throw new ApplicationUserIsAlreadySubscribedException();
+            CollectionSubscriber collectionSubscriber = new CollectionSubscriber
+            {
+                CollectionId = collectionId,
+                UserId = userId
+            };
+            _applicationDbContext.CollectionSubscribers.Add(collectionSubscriber);
+            await _applicationDbContext.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> UnSubscribeFromCollectionAsync(int userId, int collectionId)
+        {
+            await DoesApplicationUserExist(userId);
+            await DoesCollectionExist(collectionId);
+            if (!await _applicationDbContext.CollectionSubscribers.AnyAsync(collSubscriber =>
+                collSubscriber.CollectionId.Equals(collectionId) && collSubscriber.UserId.Equals(userId)))
+                throw new ApplicationUserIsNotSubscribedException();
+            CollectionSubscriber collectionSubscriber =
+                await _applicationDbContext.CollectionSubscribers.SingleAsync(collectSub =>
+                    collectSub.CollectionId.Equals(collectionId) && collectSub.UserId.Equals(userId));
+            _applicationDbContext.CollectionSubscribers.Remove(collectionSubscriber);
+            await _applicationDbContext.SaveChangesAsync();
+            return true;
+        }
+        private async Task DoesCollectionItemDetailExist(int collectionItemDetailId)
+        {
+            if (!await _applicationDbContext.CollectionItemDetails.AnyAsync(collItemDetail => collItemDetail.Id.Equals(collectionItemDetailId)))
+                throw new CollectionItemDetailNotFoundException();
+        }
+        private async Task DoesCollectionExist(int collectionId)
+        {
+            if (!await _applicationDbContext.Collections.AnyAsync(coll => coll.Id.Equals(collectionId)))
+                throw new CollectionNotFoundException();
+        }
+        private async Task DoesApplicationUserExist(int userId)
+        {
+            if (!await _applicationDbContext.Users.AnyAsync(user => user.Id.Equals(userId)))
+                throw new ApplicationUserNotFoundException();
+        }
+        private async Task<bool> CollectionsAnyByNameExist(Collection collection)
+        {
+            return await _applicationDbContext.Collections.AnyAsync(coll => coll.Name.Equals(collection.Name));
+        }
         private async Task<bool> DoesMemeExistInCollectionAsync(Meme meme, int collectionId)
         {
             Collection selectedCollection = await _applicationDbContext.Collections
@@ -79,51 +208,6 @@ namespace Ultrix.Persistance.Repositories
                 return false;
             return selectedCollection.CollectionItemDetails
                 .Any(collectionItemDetail => collectionItemDetail.MemeId.Equals(meme.Id));
-        }
-
-        public Task<bool> AuthorizeSubscriberOnCollectionAsync(int userId, int collectionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        private async Task<bool> CollectionsAnyByNameExist(Collection collection)
-        {
-            return await _applicationDbContext.Collections.AnyAsync(coll => coll.Name.Equals(collection.Name));
-        }
-
-        public Task<bool> DeAuthorizeSubscriberOnCollectionAsync(int userId, int collectionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> DeleteCollectionAsync(int collectionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<bool> DoesCollectionNameExistAsync(string collectionName)
-        {
-            return await _applicationDbContext.Collections.AnyAsync(collection => collection.Name.Equals(collectionName));
-        }
-
-        public async Task<Collection> GetCollectionAsync(int collectionId)
-        {
-            return await _applicationDbContext.Collections.SingleOrDefaultAsync(collection => collection.Id.Equals(collectionId));
-        }
-
-        public Task<bool> RemoveFromCollectionAsync(string memeId, int collectionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> SubscribeToCollectionAsync(int userId, int collectionId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UnSubscribeFromCollectionAsync(int userId, int collectionId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

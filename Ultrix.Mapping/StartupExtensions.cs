@@ -19,38 +19,19 @@ namespace Ultrix.Mapping
         public static IServiceCollection AddApplicationServices(this IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<ApplicationDbFactory>();
-            serviceCollection.AddTransient<IMemeRepository, MemeRepository>(serviceProvider =>
-            {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
-                return new MemeRepository(applicationDbFactory.CreateNewInstance());
-            });
-            serviceCollection.AddTransient<IEntityValidator<Collection>, CollectionValidator>();
-            serviceCollection.AddTransient<ICollectionRepository, CollectionRepository>(serviceProvider =>
-            {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
-                IEntityValidator<Collection> entityValidator = serviceProvider.GetService<IEntityValidator<Collection>>();
-                return new CollectionRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
-            });
-            serviceCollection.AddTransient<IExternalMemeService, ExternalMemeService>();
-            serviceCollection.AddTransient<ILocalMemeService, LocalMemeService>();
+
+            // TODO: check if this is still needed
             using (ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider())
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 serviceCollection.AddDbContext<ApplicationDbContext>(
-                    options => options.UseSqlServer(applicationDbFactory.GetConnectionString()), 
+                    options => options.UseSqlServer(applicationDbFactory.GetConnectionString()),
                     ServiceLifetime.Transient);
             }
+
             serviceCollection.AddIdentity<ApplicationUser, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            serviceCollection.AddTransient<IUserService, UserService>(serviceProvider =>
-            {
-                UserManager<ApplicationUser> userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
-                SignInManager<ApplicationUser> signInManager = serviceProvider.GetService<SignInManager<ApplicationUser>>();
-                return new UserService(signInManager, userManager);
-            });
-
             // TODO: Move this configuration
             serviceCollection.Configure<IdentityOptions>(options =>
             {
@@ -68,6 +49,50 @@ namespace Ultrix.Mapping
 
                 options.ExpireTimeSpan = TimeSpan.FromDays(3);
             });
+
+            #region Validators
+            serviceCollection.AddTransient<IEntityValidator<Follower>, FollowerValidator>();
+            serviceCollection.AddTransient<IEntityValidator<Collection>, CollectionValidator>();
+            serviceCollection.AddTransient<IEntityValidator<SharedMeme>, SharedMemeValidator>();
+            #endregion Validators
+
+            #region Repositories
+            serviceCollection.AddTransient<IMemeRepository, MemeRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                return new MemeRepository(applicationDbFactory.CreateNewInstance());
+            });
+            serviceCollection.AddTransient<IFollowerRepository, FollowerRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<Follower> entityValidator = serviceProvider.GetService<IEntityValidator<Follower>>();
+                return new FollowerRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+            });
+            serviceCollection.AddTransient<ICollectionRepository, CollectionRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<Collection> entityValidator = serviceProvider.GetService<IEntityValidator<Collection>>();
+                return new CollectionRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+            });
+            serviceCollection.AddTransient<ISharedMemeRepository, SharedMemeRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<SharedMeme> entityValidator = serviceProvider.GetService<IEntityValidator<SharedMeme>>();
+                return new SharedMemeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+            });
+            #endregion Repositories
+
+            #region Services
+            serviceCollection.AddTransient<IExternalMemeService, ExternalMemeService>();
+            serviceCollection.AddTransient<ILocalMemeService, LocalMemeService>();
+            serviceCollection.AddTransient<IUserService, UserService>(serviceProvider =>
+            {
+                UserManager<ApplicationUser> userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
+                SignInManager<ApplicationUser> signInManager = serviceProvider.GetService<SignInManager<ApplicationUser>>();
+                return new UserService(signInManager, userManager);
+            });
+            #endregion Services
+
             return serviceCollection;
         }
     }

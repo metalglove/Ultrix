@@ -11,5 +11,12 @@ namespace Ultrix.Domain.Entities
         public int FollowerUserId { get; set; }
         public virtual ApplicationUser FollowerUser { get; set; }
         public DateTime TimestampFollowed { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj != null && 
+                   UserId.Equals(((Follower)obj).UserId) && 
+                   FollowerUserId.Equals(((Follower)obj).FollowerUserId);
+        }
     }
 }

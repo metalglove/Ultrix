@@ -14,5 +14,13 @@ namespace Ultrix.Domain.Entities
         public virtual Meme Meme { get; set; }
         public bool IsSeen { get; set; }
         public DateTime TimestampShared { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return obj != null && 
+                   ReceiverUserId.Equals(((SharedMeme)obj).ReceiverUserId) &&
+                   SenderUserId.Equals(((SharedMeme)obj).SenderUserId) &&
+                   MemeId.Equals(((SharedMeme)obj).MemeId);
+        }
     }
 }
