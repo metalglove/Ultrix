@@ -1,4 +1,4 @@
-﻿namespace Ultrix.Application.Enumerations
+﻿namespace Ultrix.Domain.Enumerations
 {
     public enum SeenStatus
     {

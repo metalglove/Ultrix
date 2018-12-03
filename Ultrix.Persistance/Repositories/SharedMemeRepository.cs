@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Ultrix.Application.Enumerations;
+using Ultrix.Domain.Enumerations;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 using Ultrix.Persistance.Contexts;

@@ -45,9 +45,6 @@
   <Comment CommentText="Ultrix.Persistance.Repositories">
     <Position X="19.208" Y="2.403" Height="0.415" Width="2.173" />
   </Comment>
-  <Comment CommentText="Ultrix.Application.Enumerations">
-    <Position X="6.471" Y="13.475" Height="0.415" Width="2.632" />
-  </Comment>
   <Comment CommentText="Ultrix.Presentation">
     <Position X="22.25" Y="0.5" Height="0.415" Width="4.817" />
   </Comment>
@@ -59,6 +56,9 @@
   </Comment>
   <Comment CommentText="Ultrix.Mapping">
     <Position X="28" Y="0.5" Height="0.415" Width="2.169" />
+  </Comment>
+  <Comment CommentText="Ultrix.Domain.Enumerations">
+    <Position X="0.5" Y="9.265" Height="0.415" Width="2.133" />
   </Comment>
   <Class Name="Ultrix.Domain.Entities.Collection" Collapsed="true">
     <Position X="0.5" Y="8.5" Width="1.5" />
@@ -223,10 +223,6 @@
     <Position X="11" Y="3.25" Width="1.75" />
     <TypeIdentifier />
     <Lollipop Position="0.2" />
-  </Class>
-  <Class Name="Ultrix.Application.Enumerations.SeenStatus" Collapsed="true">
-    <Position X="6.5" Y="14.25" Width="1.5" />
-    <TypeIdentifier />
   </Class>
   <Class Name="Ultrix.Presentation.Controllers.AccountController" Collapsed="true">
     <Position X="22.25" Y="1.5" Width="1.75" />

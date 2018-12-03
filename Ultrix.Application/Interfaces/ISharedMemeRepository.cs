@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ultrix.Application.Enumerations;
 using Ultrix.Domain.Entities;
+using Ultrix.Domain.Enumerations;
 
 namespace Ultrix.Application.Interfaces
 {
