@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
-namespace Ultrix.Domain.Entities.Authentication
+namespace Ultrix.Domain.Entities
 {
     public class ApplicationUser : IdentityUser<int>
     {

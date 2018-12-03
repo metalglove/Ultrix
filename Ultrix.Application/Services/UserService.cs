@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Ultrix.Application.Interfaces;
-using Ultrix.Domain.Entities.Authentication;
+using Ultrix.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
 using Microsoft.AspNetCore.Authentication;

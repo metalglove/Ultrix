@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Comment CommentText="Ultrix.Domain">
+    <Position X="0.5" Y="0.5" Height="0.415" Width="2.135" />
+  </Comment>
+  <Comment CommentText="Ultrix.Domain.Entities">
+    <Position X="0.5" Y="1.005" Height="0.415" Width="2.133" />
+  </Comment>
+  <Comment CommentText="Ultrix.Application">
+    <Position X="3.688" Y="0.507" Height="0.415" Width="6.383" />
+  </Comment>
+  <Comment CommentText="Ultrix.Application.Interfaces">
+    <Position X="3.75" Y="2.5" Height="0.415" Width="2.632" />
+  </Comment>
+  <Comment CommentText="Ultrix.Application.Validators">
+    <Position X="3.739" Y="10.242" Height="0.415" Width="2.426" />
+  </Comment>
+  <Comment CommentText="Ultrix.Application.Exceptions">
+    <Position X="6.5" Y="1" Height="0.415" Width="3.562" />
+  </Comment>
+  <Comment CommentText="Ultrix.Application.Services">
+    <Position X="3.708" Y="1.001" Height="0.415" Width="2.71" />
+  </Comment>
+  <Comment CommentText="Ultrix.Infrastructure">
+    <Position X="11" Y="0.5" Height="0.415" Width="3.776" />
+  </Comment>
+  <Comment CommentText="Ultrix.Infrastructure.Services">
+    <Position X="10.989" Y="1.037" Height="0.415" Width="1.878" />
+  </Comment>
+  <Comment CommentText="Ultrix.Infrastructure.Utilities">
+    <Position X="12.972" Y="1.048" Height="0.415" Width="1.791" />
+  </Comment>
+  <Comment CommentText="Ultrix.Persistance">
+    <Position X="15.5" Y="0.5" Height="0.415" Width="5.886" />
+  </Comment>
+  <Comment CommentText="Ultrix.Persistance.Contexts">
+    <Position X="15.489" Y="1.037" Height="0.415" Width="3.527" />
+  </Comment>
+  <Comment CommentText="Ultrix.Persistance.Extensions">
+    <Position X="19.212" Y="1.038" Height="0.415" Width="2.169" />
+  </Comment>
+  <Comment CommentText="Ultrix.Persistance.Infrastructure">
+    <Position X="15.497" Y="2.383" Height="0.415" Width="3.569" />
+  </Comment>
+  <Comment CommentText="Ultrix.Persistance.Repositories">
+    <Position X="19.208" Y="2.403" Height="0.415" Width="2.173" />
+  </Comment>
+  <Comment CommentText="Ultrix.Application.Enumerations">
+    <Position X="6.471" Y="13.475" Height="0.415" Width="2.632" />
+  </Comment>
+  <Comment CommentText="Ultrix.Presentation">
+    <Position X="22.25" Y="0.5" Height="0.415" Width="4.817" />
+  </Comment>
+  <Comment CommentText="Ultrix.Presentation.Controllers">
+    <Position X="22.259" Y="1.016" Height="0.415" Width="2.169" />
+  </Comment>
+  <Comment CommentText="Ultrix.Presentation.ViewModels">
+    <Position X="24.547" Y="1.031" Height="0.415" Width="2.504" />
+  </Comment>
+  <Comment CommentText="Ultrix.Mapping">
+    <Position X="28" Y="0.5" Height="0.415" Width="2.169" />
+  </Comment>
+  <Class Name="Ultrix.Domain.Entities.Collection" Collapsed="true">
+    <Position X="0.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.CollectionItemDetail" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.CollectionSubscriber" Collapsed="true">
+    <Position X="0.5" Y="2.25" Width="1.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.Comment" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.Follower" Collapsed="true">
+    <Position X="0.5" Y="7" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.Meme" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.MemeLike" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.SharedMeme" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.UserDetail" Collapsed="true">
+    <Position X="0.5" Y="4" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Services.UserService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Application.Validators.CollectionValidator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="13" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Application.Validators.FollowerValidator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="11" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Application.Validators.SharedMemeValidator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="12" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Persistance.Contexts.ApplicationDbContext" Collapsed="true">
+    <Position X="15.5" Y="1.5" Width="3.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Persistance.Infrastructure.ApplicationDbFactory" Collapsed="true" HideInheritanceLine="true">
+    <Position X="15.5" Y="3" Width="3.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Persistance.Repositories.CollectionRepository" Collapsed="true">
+    <Position X="19.25" Y="4.25" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Persistance.Repositories.FollowerRepository" Collapsed="true">
+    <Position X="19.25" Y="5.25" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Persistance.Repositories.MemeRepository" Collapsed="true">
+    <Position X="19.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Persistance.Repositories.SharedMemeRepository" Collapsed="true">
+    <Position X="19.25" Y="3.25" Width="2" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.ApplicationUserIsAlreadySubscribedException" Collapsed="true">
+    <Position X="6.5" Y="4.5" Width="3.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.ApplicationUserIsNotAuthorizedException" Collapsed="true">
+    <Position X="6.5" Y="3.5" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.ApplicationUserIsNotOwnerOfCollectionException" Collapsed="true">
+    <Position X="6.5" Y="1.5" Width="3.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.ApplicationUserIsNotSubscribedException" Collapsed="true">
+    <Position X="6.5" Y="2.5" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.ApplicationUserNotFoundException" Collapsed="true">
+    <Position X="6.5" Y="5.5" Width="2.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.CollectionItemDetailNotFoundException" Collapsed="true">
+    <Position X="6.5" Y="6.5" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.CollectionNotFoundException" Collapsed="true">
+    <Position X="6.5" Y="7.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.CollectionSubscriberNotFoundException" Collapsed="true">
+    <Position X="6.5" Y="8.5" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.FollowerAlreadyExistsException" Collapsed="true">
+    <Position X="6.5" Y="9.5" Width="2.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.FollowerNotFoundException" Collapsed="true">
+    <Position X="6.5" Y="10.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.GettingMemeFailedException" Collapsed="true">
+    <Position X="6.5" Y="12.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Exceptions.SavingMemeFailedException" Collapsed="true">
+    <Position X="6.5" Y="11.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Infrastructure.Utilities.WebServiceBase" Collapsed="true">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Persistance.Extensions.ModelBuilderExtensions" Collapsed="true">
+    <Position X="19.25" Y="1.5" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Persistance.Infrastructure.DesignTimeDbContextFactoryBase&lt;TContext&gt;" Collapsed="true">
+    <Position X="15.5" Y="4.25" Width="3" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Domain.Entities.ApplicationUser" Collapsed="true">
+    <Position X="0.5" Y="3" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Application.Validators.MemeValidator" Collapsed="true">
+    <Position X="3.75" Y="14" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Infrastructure.Services.ExternalMemeService" Collapsed="true" HideInheritanceLine="true">
+    <Position X="11" Y="2" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Infrastructure.Services.LocalMemeService" Collapsed="true">
+    <Position X="11" Y="3.25" Width="1.75" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Ultrix.Application.Enumerations.SeenStatus" Collapsed="true">
+    <Position X="6.5" Y="14.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Ultrix.Presentation.Controllers.AccountController" Collapsed="true">
+    <Position X="22.25" Y="1.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAABIAAAAUAAAAAAA=</HashCode>
+      <FileName>Controllers\AccountController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.Controllers.CollectionController" Collapsed="true">
+    <Position X="22.25" Y="2.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAEAAABAAAAAABAAAAAAAAAAAAAAAAAEAAUEAA=</HashCode>
+      <FileName>Controllers\CollectionController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.Controllers.MemeController" Collapsed="true">
+    <Position X="22.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAEASAAAAAAAAAAAAAAAAAAAAAAAAAAEIA=</HashCode>
+      <FileName>Controllers\MemeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.ViewModels.Account.LoginViewModel" Collapsed="true" HideInheritanceLine="true">
+    <Position X="24.5" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAACAAIAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Account\LoginViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.ViewModels.Collection_.CollectionCarouselViewModel" Collapsed="true">
+    <Position X="24.5" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Collection_\CollectionCarouselViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.ViewModels.Collection_.CollectionViewModel" Collapsed="true">
+    <Position X="24.5" Y="5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Collection_\CollectionViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.ViewModels.Collection_.CreateCollectionViewModel" Collapsed="true" HideInheritanceLine="true">
+    <Position X="24.5" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Collection_\CreateCollectionViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.ViewModels.Collection_.MyCollectionsViewModel" Collapsed="true">
+    <Position X="24.5" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\Collection_\MyCollectionsViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.ViewModels.AntiForgeryTokenViewModelBase" Collapsed="true">
+    <Position X="24.5" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\AntiForgeryTokenViewModelBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Presentation.ViewModels.ErrorViewModel" Collapsed="true">
+    <Position X="24.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\ErrorViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ultrix.Mapping.StartupExtensions" Collapsed="true">
+    <Position X="28" Y="1" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Interface Name="Ultrix.Application.Interfaces.IUserService" Collapsed="true">
+    <Position X="3.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.ISharedMemeRepository" Collapsed="true">
+    <Position X="3.75" Y="4.5" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.IMemeService" Collapsed="true">
+    <Position X="3.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.IMemeRepository" Collapsed="true">
+    <Position X="3.75" Y="6" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.ILocalMemeService" Collapsed="true" HideInheritanceLine="true">
+    <Position X="3.75" Y="8.25" Width="1.75" />
+    <InheritanceLine Type="Ultrix.Application.Interfaces.IMemeService" IsHidden="true" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.IFollowerRepository" Collapsed="true">
+    <Position X="3.75" Y="3.75" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.IExternalMemeService" Collapsed="true" HideInheritanceLine="true">
+    <Position X="3.75" Y="9.25" Width="1.75" />
+    <InheritanceLine Type="Ultrix.Application.Interfaces.IMemeService" IsHidden="true" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.IEntityValidator&lt;T&gt;" Collapsed="true">
+    <Position X="3.75" Y="3" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="Ultrix.Application.Interfaces.ICollectionRepository" Collapsed="true">
+    <Position X="3.75" Y="5.25" Width="1.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

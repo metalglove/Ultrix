@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Ultrix.Domain.Entities;
-using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Persistance.Extensions;
 
 namespace Ultrix.Persistance.Contexts

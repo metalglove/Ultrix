@@ -1,5 +1,5 @@
-﻿using Ultrix.Application.Interfaces;
-using Ultrix.Application.Validators.Exceptions;
+﻿using Ultrix.Application.Exceptions;
+using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 
 namespace Ultrix.Application.Validators

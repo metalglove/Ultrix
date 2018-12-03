@@ -1,6 +1,4 @@
 ﻿using System;
-using Ultrix.Domain.Entities.Authentication;
-
 namespace Ultrix.Domain.Entities
 {
     public class SharedMeme

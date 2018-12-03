@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
-using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Presentation.ViewModels.Account;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 

@@ -9,6 +9,6 @@ namespace Ultrix.Application.Interfaces
         Task<Meme> GetMemeAsync(string memeId);
         Task<bool> SaveMemeAsync(Meme meme);
         Task<bool> SaveMemesAsync(IEnumerable<Meme> memes);
-        Task<bool> DoesMemeExistAsync(Meme meme);
+        Task<bool> DoesMemeExistAsync(string memeId);
     }
 }

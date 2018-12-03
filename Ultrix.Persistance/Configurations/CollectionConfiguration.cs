@@ -4,7 +4,7 @@ using Ultrix.Domain.Entities;
 
 namespace Ultrix.Persistance.Configurations
 {
-    public class CollectionConfiguration : IEntityTypeConfiguration<Collection>
+    internal class CollectionConfiguration : IEntityTypeConfiguration<Collection>
     {
         public void Configure(EntityTypeBuilder<Collection> builder)
         {

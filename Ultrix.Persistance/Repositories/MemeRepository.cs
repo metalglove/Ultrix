@@ -12,10 +12,12 @@ namespace Ultrix.Persistance.Repositories
     public class MemeRepository : IMemeRepository
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IEntityValidator<Meme> _memeValidator;
 
-        public MemeRepository(ApplicationDbContext applicationDbContext)
+        public MemeRepository(ApplicationDbContext applicationDbContext, IEntityValidator<Meme> memeValidator)
         {
             _applicationDbContext = applicationDbContext;
+            _memeValidator = memeValidator;
         }
 
         public async Task<Meme> GetMemeAsync(string memeId)
@@ -25,6 +27,7 @@ namespace Ultrix.Persistance.Repositories
         }
         public async Task<bool> SaveMemeAsync(Meme meme)
         {
+            _memeValidator.Validate(meme);
             await _applicationDbContext.Memes.AddAsync(meme);
             int saveResult = await _applicationDbContext.SaveChangesAsync();
             bool saveSuccess;
@@ -53,9 +56,9 @@ namespace Ultrix.Persistance.Repositories
             }
             return saveSuccess;
         }
-        public async Task<bool> DoesMemeExistAsync(Meme meme)
+        public async Task<bool> DoesMemeExistAsync(string memeId)
         {
-            return await _applicationDbContext.Memes.AnyAsync(memeInDb => memeInDb.Id.Equals(meme.Id));
+            return await _applicationDbContext.Memes.AnyAsync(memeInDb => memeInDb.Id.Equals(memeId));
         }
     }
 }

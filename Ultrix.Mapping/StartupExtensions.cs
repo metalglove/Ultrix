@@ -6,8 +6,7 @@ using Ultrix.Application.Interfaces;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
-using Ultrix.Domain.Entities.Authentication;
-using Ultrix.Infrastructure;
+using Ultrix.Infrastructure.Services;
 using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
@@ -54,13 +53,15 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<IEntityValidator<Follower>, FollowerValidator>();
             serviceCollection.AddTransient<IEntityValidator<Collection>, CollectionValidator>();
             serviceCollection.AddTransient<IEntityValidator<SharedMeme>, SharedMemeValidator>();
+            serviceCollection.AddTransient<IEntityValidator<Meme>, MemeValidator>();
             #endregion Validators
 
             #region Repositories
             serviceCollection.AddTransient<IMemeRepository, MemeRepository>(serviceProvider =>
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
-                return new MemeRepository(applicationDbFactory.CreateNewInstance());
+                IEntityValidator<Meme> entityValidator = serviceProvider.GetService<IEntityValidator<Meme>>();
+                return new MemeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
             serviceCollection.AddTransient<IFollowerRepository, FollowerRepository>(serviceProvider =>
             {

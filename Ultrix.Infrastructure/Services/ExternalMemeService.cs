@@ -6,7 +6,7 @@ using Ultrix.Domain.Entities;
 using Newtonsoft.Json;
 using Ultrix.Infrastructure.Extensions;
 
-namespace Ultrix.Infrastructure
+namespace Ultrix.Infrastructure.Services
 {
     public class ExternalMemeService : WebServiceBase, IExternalMemeService
     {

@@ -9,7 +9,7 @@ using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 using Ultrix.Infrastructure.Extensions;
 
-namespace Ultrix.Infrastructure
+namespace Ultrix.Infrastructure.Services
 {
     public class LocalMemeService : ILocalMemeService
     {
@@ -27,7 +27,7 @@ namespace Ultrix.Infrastructure
         {
             // TODO: multi-thread fetch memes?..
             Meme meme = await GetMemeAsync();
-            while (await _memeRepository.DoesMemeExistAsync(meme))
+            while (await _memeRepository.DoesMemeExistAsync(meme.Id))
             {
                 meme = await GetMemeAsync();
             }
@@ -83,7 +83,6 @@ namespace Ultrix.Infrastructure
             {
                 meme.VideoUrl = videoUrl;
             }
-            //meme.TimestampAdded = DateTime.Now;
             return meme;
         }
         private static async Task<bool> HasVideoUrlAsync(string videoUrl)

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
-using Ultrix.Domain.Entities.Authentication;
+using Ultrix.Domain.Entities;
 
 namespace Ultrix.Application.Interfaces
 {

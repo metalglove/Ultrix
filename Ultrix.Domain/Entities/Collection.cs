@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Ultrix.Domain.Entities.Authentication;
 
 namespace Ultrix.Domain.Entities
 {

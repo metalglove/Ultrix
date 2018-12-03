@@ -20,4 +20,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Entities\Authentication\" />
+  </ItemGroup>
+
 </Project>

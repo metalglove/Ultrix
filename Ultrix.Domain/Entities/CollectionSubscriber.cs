@@ -1,6 +1,4 @@
-﻿using Ultrix.Domain.Entities.Authentication;
-
-namespace Ultrix.Domain.Entities
+﻿namespace Ultrix.Domain.Entities
 {
     public class CollectionSubscriber
     {

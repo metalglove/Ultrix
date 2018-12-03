@@ -4,7 +4,7 @@ using Ultrix.Domain.Entities;
 
 namespace Ultrix.Persistance.Configurations
 {
-    public class MemeConfiguration : IEntityTypeConfiguration<Meme>
+    internal class MemeConfiguration : IEntityTypeConfiguration<Meme>
     {
         public void Configure(EntityTypeBuilder<Meme> builder)
         {
