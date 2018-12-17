@@ -6,8 +6,9 @@ namespace Ultrix.Application.Interfaces
 {
     public interface IFollowerRepository
     {
-        Task FollowUserAsync(Follower follower);
-        Task UnFollowUserAsync(Follower follower);
-        Task<IEnumerable<Follower>> GetFollowersAsync(int userId);
+        Task<bool> FollowUserAsync(Follower follower);
+        Task<bool> UnFollowUserAsync(Follower follower);
+        Task<List<Follower>> GetFollowersByUserIdAsync(int userId);
+        Task<List<Follower>> GetFollowingsByUserIdAsync(int userId);
     }
 }

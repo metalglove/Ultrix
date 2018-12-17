@@ -49,7 +49,7 @@ namespace Ultrix.Presentation
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            
             
             app.UseMvc(routes =>
             {
@@ -57,6 +57,7 @@ namespace Ultrix.Presentation
                     name: "default",
                     template: "{controller=Meme}/{action=Index}/");
             });
+            app.UseCookiePolicy();
         }
     }
 }

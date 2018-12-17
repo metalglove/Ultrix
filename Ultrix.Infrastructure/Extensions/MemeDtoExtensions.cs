@@ -1,12 +1,12 @@
-﻿using Ultrix.Domain.Entities;
+﻿using Ultrix.Application.DTOs;
 
 namespace Ultrix.Infrastructure.Extensions
 {
-    internal static class MemeExtensions
+    internal static class MemeDtoExtensions
     {
         private const string NineGagGagUrl = "http://9gag.com/gag/";
 
-        internal static string GetMemeIdFromUrl(this Meme meme)
+        internal static string GetMemeIdFromUrl(this MemeDto meme)
         {
             return meme.PageUrl.Replace(NineGagGagUrl, "");
         }

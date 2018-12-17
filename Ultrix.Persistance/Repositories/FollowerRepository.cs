@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -20,28 +21,48 @@ namespace Ultrix.Persistance.Repositories
             _followerValidator = followerValidator;
         }
 
-        public async Task FollowUserAsync(Follower follower)
+        public async Task<bool> FollowUserAsync(Follower follower)
         {
             _followerValidator.Validate(follower);
             if (await _applicationDbContext.Followers.ContainsAsync(follower))
                 throw new FollowerAlreadyExistsException();
             _applicationDbContext.Followers.Add(follower);
-            await _applicationDbContext.SaveChangesAsync();
+            int saveResult = await _applicationDbContext.SaveChangesAsync();
+            bool saveSuccess;
+            try
+            {
+                saveSuccess = Convert.ToBoolean(saveResult);
+            }
+            catch (Exception)
+            {
+                throw new FollowingUserFailedException();
+            }
+            return saveSuccess;
         }
-
-        public async Task UnFollowUserAsync(Follower follower)
+        public async Task<bool> UnFollowUserAsync(Follower follower)
         {
             if (!await _applicationDbContext.Followers.ContainsAsync(follower))
                 throw new FollowerNotFoundException();
             _applicationDbContext.Followers.Remove(follower);
-            await _applicationDbContext.SaveChangesAsync();
+            int saveResult = await _applicationDbContext.SaveChangesAsync();
+            bool saveSuccess;
+            try
+            {
+                saveSuccess = Convert.ToBoolean(saveResult);
+            }
+            catch (Exception)
+            {
+                throw new UnFollowingUserFailedException();
+            }
+            return saveSuccess;
         }
-
-        public async Task<IEnumerable<Follower>> GetFollowersAsync(int userId)
+        public async Task<List<Follower>> GetFollowersByUserIdAsync(int userId)
         {
-            if (await _applicationDbContext.Followers.AnyAsync(follower => follower.UserId.Equals(userId)))
-                return default;
             return await _applicationDbContext.Followers.Where(follower => follower.UserId.Equals(userId)).ToListAsync();
+        }
+        public async Task<List<Follower>> GetFollowingsByUserIdAsync(int userId)
+        {
+            return await _applicationDbContext.Followers.Where(follower => follower.FollowerUserId.Equals(userId)).ToListAsync();
         }
     }
 }

@@ -130,6 +130,16 @@ namespace Ultrix.Persistance.Repositories
         {
             return await _applicationDbContext.Collections.AnyAsync(collection => collection.Name.Equals(collectionName));
         }
+
+        public async Task<bool> DoesCollectionExistAsync(int collectionId)
+        {
+            return await _applicationDbContext.Collections.AnyAsync(collection => collection.Id.Equals(collectionId));
+        }
+        public async Task<bool> DoesMemeExistInCollectionAsync(string memeId, int collectionId)
+        {
+            Collection collection = await _applicationDbContext.Collections.FindAsync(collectionId);
+            return collection.CollectionItemDetails.Any(collectionItemDetail => collectionItemDetail.MemeId.Equals(memeId));
+        }
         public async Task<Collection> GetCollectionAsync(int collectionId)
         {
             await DoesCollectionExist(collectionId);
@@ -181,20 +191,26 @@ namespace Ultrix.Persistance.Repositories
             await _applicationDbContext.SaveChangesAsync();
             return true;
         }
-        private async Task DoesCollectionItemDetailExist(int collectionItemDetailId)
+        private async Task<bool> DoesCollectionItemDetailExist(int collectionItemDetailId)
         {
             if (!await _applicationDbContext.CollectionItemDetails.AnyAsync(collItemDetail => collItemDetail.Id.Equals(collectionItemDetailId)))
                 throw new CollectionItemDetailNotFoundException();
+            else
+                return true;
         }
-        private async Task DoesCollectionExist(int collectionId)
+        private async Task<bool> DoesCollectionExist(int collectionId)
         {
             if (!await _applicationDbContext.Collections.AnyAsync(coll => coll.Id.Equals(collectionId)))
                 throw new CollectionNotFoundException();
+            else
+                return true;
         }
-        private async Task DoesApplicationUserExist(int userId)
+        private async Task<bool> DoesApplicationUserExist(int userId)
         {
             if (!await _applicationDbContext.Users.AnyAsync(user => user.Id.Equals(userId)))
                 throw new ApplicationUserNotFoundException();
+            else
+                return true;
         }
         private async Task<bool> CollectionsAnyByNameExist(Collection collection)
         {

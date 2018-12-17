@@ -2,27 +2,27 @@
 using System.Threading.Tasks;
 using Ultrix.Application.Interfaces;
 using Ultrix.Infrastructure.Utilities;
-using Ultrix.Domain.Entities;
 using Newtonsoft.Json;
 using Ultrix.Infrastructure.Extensions;
+using Ultrix.Application.DTOs;
 
 namespace Ultrix.Infrastructure.Services
 {
-    public class ExternalMemeService : WebServiceBase, IExternalMemeService
+    public class ExternalMemeFetcherService : WebServiceBase, IExternalMemeFetcherService
     {
         private static readonly Uri UltrixMemeApi = new Uri("http://ultrix.nl/Api/");
 
-        public ExternalMemeService() : base(UltrixMemeApi)
+        public ExternalMemeFetcherService() : base(UltrixMemeApi)
         {
 
         }
 
-        public async Task<Meme> GetRandomMemeAsync()
+        public async Task<MemeDto> GetRandomMemeAsync()
         {
             while (true)
             {
                 string memeAsJson = await GetAsync("RandomMeme.php");
-                Meme meme = JsonConvert.DeserializeObject<Meme>(memeAsJson, new MemeConverter());
+                MemeDto meme = JsonConvert.DeserializeObject<MemeDto>(memeAsJson, new MemeConverter());
                 meme.Id = meme.GetMemeIdFromUrl();
                 if (meme.Title == null) continue;
                 return meme;

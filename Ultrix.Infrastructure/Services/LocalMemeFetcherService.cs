@@ -1,39 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using HtmlAgilityPack;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using HtmlAgilityPack;
+using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
-using Ultrix.Domain.Entities;
 using Ultrix.Infrastructure.Extensions;
 
 namespace Ultrix.Infrastructure.Services
 {
-    public class LocalMemeService : ILocalMemeService
+    public class LocalMemeFetcherService : ILocalMemeFetcherService
     {
         private const string NineGagRandomUrl = "http://9gag.com/random/";
         private const string NineGagPhotoCacheUrl = "http://img-9gag-fun.9cache.com/photo/";
         private const string Mp4Tag = "_460sv.mp4";
-        private readonly IMemeRepository _memeRepository;
 
-        public LocalMemeService(IMemeRepository memeRepository)
+        public async Task<MemeDto> GetRandomMemeAsync()
         {
-            _memeRepository = memeRepository;
+            return await GetMemeAsync();
         }
-
-        public async Task<Meme> GetRandomMemeAsync()
-        {
-            // TODO: multi-thread fetch memes?..
-            Meme meme = await GetMemeAsync();
-            while (await _memeRepository.DoesMemeExistAsync(meme.Id))
-            {
-                meme = await GetMemeAsync();
-            }
-            return meme;
-        }
-        private async Task<Meme> GetMemeAsync()
+        private async Task<MemeDto> GetMemeAsync()
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -56,9 +44,9 @@ namespace Ultrix.Infrastructure.Services
                         node.Attributes["property"].Value.StartsWith("og:") &&
                         node.Attributes["content"] != null);
         }
-        private static async Task<Meme> ExtractMemeFromMetaNodesAsync(IEnumerable<HtmlNode> collection)
+        private static async Task<MemeDto> ExtractMemeFromMetaNodesAsync(IEnumerable<HtmlNode> collection)
         {
-            Meme meme = new Meme();
+            MemeDto meme = new MemeDto();
             foreach (HtmlNode htmlNode in collection)
             {
                 string content = htmlNode.Attributes["content"].DeEntitizeValue;

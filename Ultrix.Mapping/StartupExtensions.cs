@@ -81,16 +81,33 @@ namespace Ultrix.Mapping
                 IEntityValidator<SharedMeme> entityValidator = serviceProvider.GetService<IEntityValidator<SharedMeme>>();
                 return new SharedMemeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
+            serviceCollection.AddTransient<IUserRepository, UserRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                return new UserRepository(applicationDbFactory.CreateNewInstance());
+            });
             #endregion Repositories
 
             #region Services
-            serviceCollection.AddTransient<IExternalMemeService, ExternalMemeService>();
-            serviceCollection.AddTransient<ILocalMemeService, LocalMemeService>();
+            serviceCollection.AddTransient<IExternalMemeFetcherService, ExternalMemeFetcherService>();
+            serviceCollection.AddTransient<ILocalMemeFetcherService, LocalMemeFetcherService>();
+            serviceCollection.AddTransient<IMemeService, MemeService>(serviceProvider =>
+            {
+                IMemeRepository memeRepository = serviceProvider.GetService<IMemeRepository>();
+                ILocalMemeFetcherService memeFetcherService = serviceProvider.GetService<ILocalMemeFetcherService>();
+                return new MemeService(memeFetcherService, memeRepository);
+            });
             serviceCollection.AddTransient<IUserService, UserService>(serviceProvider =>
             {
+                IUserRepository userRepository = serviceProvider.GetService<IUserRepository>();
                 UserManager<ApplicationUser> userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
                 SignInManager<ApplicationUser> signInManager = serviceProvider.GetService<SignInManager<ApplicationUser>>();
-                return new UserService(signInManager, userManager);
+                return new UserService(signInManager, userManager, userRepository);
+            });
+            serviceCollection.AddTransient<IFollowerService, FollowerService>(serviceProvider =>
+            {
+                IFollowerRepository followerRepository = serviceProvider.GetService<IFollowerRepository>();
+                return new FollowerService(followerRepository);
             });
             #endregion Services
 

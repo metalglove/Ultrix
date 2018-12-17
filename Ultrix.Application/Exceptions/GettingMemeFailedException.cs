@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Ultrix.Application.Exceptions
 {
+    [Serializable]
     public class GettingMemeFailedException : Exception
     {
         public GettingMemeFailedException()

@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Meme>
+﻿@model IEnumerable<MemeDto>
 
 @{
     ViewData["Title"] = "Home";
 }
 
 <div class="infinite-scroll">
-    @foreach (Meme meme in Model)
+    @foreach (MemeDto meme in Model)
     {
         await Html.RenderPartialAsync("Meme", meme);
     }

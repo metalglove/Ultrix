@@ -35,28 +35,50 @@ namespace Ultrix.Presentation.Controllers
             Collection collection = await _collectionRepository.GetCollectionAsync(id.Value);
             if (collection.Equals(default))
                 return BadRequest();
-            else
-                return View("Collection", new CollectionViewModel(collection, false));
+            return View("Collection", new CollectionViewModel(collection, false));
         }
         [Route("CreateCollection"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCollectionAsync([FromBody] CreateCollectionViewModel createCollectionViewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return Json(new {IsCreated = false});
+            if (await _collectionRepository.DoesCollectionNameExistAsync(createCollectionViewModel.Name))
+                return Json(new { IsCreated = false });
+
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Collection collection = new Collection
             {
-                if (await _collectionRepository.DoesCollectionNameExistAsync(createCollectionViewModel.Name))
-                    return Json(new { IsCreated = false });
+                Name = createCollectionViewModel.Name,
+                UserId = Convert.ToInt32(userId)
+            };
 
-                string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                Collection collection = new Collection
-                {
-                    Name = createCollectionViewModel.Name,
-                    UserId = Convert.ToInt32(userId)
-                };
-
-                if (await _collectionRepository.CreateCollectionAsync(collection))
-                    return Json(new { IsCreated = true });
-            }
+            if (await _collectionRepository.CreateCollectionAsync(collection))
+                return Json(new { IsCreated = true });
             return Json(new { IsCreated = false });
+        }
+        [Route("AddMemeToCollection"), Authorize, HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddMemeToCollectionAsync(AddMemeToCollectionViewModel addMemeToCollectionViewModel)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { IsCreated = false, Message = "ModelState is not valid." });
+
+            string memeId = addMemeToCollectionViewModel.MemeId;
+            int collectionId = addMemeToCollectionViewModel.CollectionId;
+
+            if (!await _memeRepository.DoesMemeExistAsync(memeId))
+                return Json(new { IsCreated = false, Message = "Meme does not exist." });
+
+            if (!await _collectionRepository.DoesCollectionExistAsync(collectionId))
+                return Json(new { IsCreated = false, Message = "Collection does not exist." });
+
+            if (!await _collectionRepository.DoesMemeExistInCollectionAsync(memeId, collectionId))
+                return Json(new { IsCreated = false, Message = "Duplicate" });
+
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            Meme meme = await _memeRepository.GetMemeAsync(addMemeToCollectionViewModel.MemeId);
+            await _collectionRepository.AddToCollectionAsync(meme, collectionId, userId);
+
+            return Json(new { IsCreated = true });
         }
         [Route("MyCollections"), Authorize, HttpGet]
         public async Task<IActionResult> MyCollectionsAsync()
@@ -91,25 +113,7 @@ namespace Ultrix.Presentation.Controllers
             return Json(new { IsCreated = false });
         }
 
-        [Route("AddMemeToCollection")]
-        public async Task<IActionResult> AddMemeToCollectionAsync()
-        {
-            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            Meme meme = await _memeRepository.GetMemeAsync("aPYWWvV");
-            await _collectionRepository.AddToCollectionAsync(meme, 1, userId);
-
-            Meme meme2 = await _memeRepository.GetMemeAsync("arG4qNd");
-            await _collectionRepository.AddToCollectionAsync(meme2, 1, userId);
-
-            Meme meme3 = await _memeRepository.GetMemeAsync("az9Lr5K");
-            await _collectionRepository.AddToCollectionAsync(meme3, 1, userId);
-
-            Meme meme4 = await _memeRepository.GetMemeAsync("aVYWpyy");
-            await _collectionRepository.AddToCollectionAsync(meme4, 1, userId);
-
-            return Content("ok", "text/html");
-        }
+        
         #endregion Dev
     }
 }

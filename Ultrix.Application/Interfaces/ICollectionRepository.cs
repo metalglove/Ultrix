@@ -7,6 +7,8 @@ namespace Ultrix.Application.Interfaces
     public interface ICollectionRepository
     {
         Task<bool> DoesCollectionNameExistAsync(string collectionName);
+        Task<bool> DoesCollectionExistAsync(int collectionId);
+        Task<bool> DoesMemeExistInCollectionAsync(string memeId, int collectionId);
         Task<Collection> GetCollectionAsync(int collectionId);
         Task<List<Collection>> GetAllCollectionsAsync();
         Task<List<Collection>> GetMyCollectionsAsync(int userId);
