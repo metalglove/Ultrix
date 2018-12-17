@@ -11,7 +11,7 @@ namespace Ultrix.Application.Interfaces
         Task<List<MemeDto>> GetRandomMemesAsync(int count);
         Task<bool> LikeMemeAsync(MemeLikeDto memeLikeDto);
         Task<bool> UnLikeMemeAsync(string memeId, int userId);
-        Task<bool> DisLikeMemeAsync(MemeLikeDto memeLikeDto);
-        Task<bool> UnDisLikeMemeAsync(string memeId, int userId);
+        Task<bool> DislikeMemeAsync(MemeLikeDto memeLikeDto);
+        Task<bool> UnDislikeMemeAsync(string memeId, int userId);
     }
 }

@@ -26,18 +26,17 @@
                     {
                         List<CollectionDTO> collections = new List<CollectionDTO>(); // TempData.Peek<List<CollectionDTO>>("collections");
                         List<FollowingDto> mutualFollowings = new List<FollowingDto>(); // TempData.Peek<List<FollowingDTO>>("mutualFollowings");
-
-                        <form class="col s1" method="post" id="thumb_upForm">
+                        <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <input type="hidden" id="IsLike" name="IsLike" value="true" />
-                            <input type="hidden" id="IsLiked" name="IsLiked=" value="false" />
-                            <i class="material-icons meme-icon" onclick="sendForm('like')">thumb_up</i>
+                            <input type="hidden" id='@(Model.Id + "IsLiked")' name="IsLiked" value="false" />
+                            <i class="material-icons meme-icon" id='@(Model.Id + "LikeIcon")' onclick="sendLike('@(Model.Id + "LikeForm")')">thumb_up</i>
                         </form>
-                        <form class="col s1" method="post" id="thumb_downForm">
+                        <form class="col s1" method="post" id='@(Model.Id + "DislikeForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <input type="hidden" id="IsLike" name="IsLike" value="false" />
-                            <input type="hidden" id="IsLiked" name="IsLiked=" value="false" />
-                            <i class="material-icons meme-icon" onclick="sendForm('dislike')">thumb_down</i>
+                            <input type="hidden" id="IsDisliked" name="IsDisliked" value="false" />
+                            <i class="material-icons meme-icon" id='@(Model.Id + "DislikeIcon")' onclick="sendDislike('@(Model.Id + "DislikeForm")')">thumb_down</i>
                         </form>
 
                         <div class="input-field col s3">
@@ -78,50 +77,5 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('select').formSelect();
-    });
-
-    function sendForm(name) {
-        var form;
-        if (name === 'like')
-            form = getFormData($('#thumb_upForm'));
-        else if (name === 'dislike')
-            form = getFormData($('#thumb_downForm'));
-        else {
-            console.log("sendForm failed: " + name);
-            return;
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/Like",
-            contentType: "application/json; charset=utf-8",
-            headers: {
-                RequestVerificationToken:
-                    $('input:hidden[name="__RequestVerificationToken"]').val()
-            },
-            data: JSON.stringify(form),
-            success: function (data) {
-                if (data.success === true) {
-                    $('#thumbUp').show(); // update icon ?
-                }
-                else {
-                    console.log(data.Message);
-                    $('#thumbUpErrorMsg').show();
-                }
-            },
-            error: function () {
-                console.log("thumb_upForm resulted faulty..");
-            }
-        });
-    }
-        function getFormData($form) {
-            var unindexedArray = $form.serializeArray();
-            var indexedArray = {};
-
-            $.map(unindexedArray, function (n, i) {
-                indexedArray[n['name']] = n['value'];
-            });
-
-            return indexedArray;
-        }
+    }); 
 </script>

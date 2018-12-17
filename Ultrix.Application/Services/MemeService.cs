@@ -18,7 +18,7 @@ namespace Ultrix.Application.Services
             _memeRepository = memeRepository;
         }
 
-        public async Task<bool> DisLikeMemeAsync(MemeLikeDto memeLikeDto)
+        public async Task<bool> DislikeMemeAsync(MemeLikeDto memeLikeDto)
         {
             MemeLike memeLike = DtoToEntityConverter.Convert<MemeLike, MemeLikeDto>(memeLikeDto);
             return await _memeRepository.DisLikeMemeAsync(memeLike);
@@ -53,7 +53,7 @@ namespace Ultrix.Application.Services
             MemeLike memeLike = DtoToEntityConverter.Convert<MemeLike, MemeLikeDto>(memeLikeDto);
             return await _memeRepository.LikeMemeAsync(memeLike);
         }
-        public async Task<bool> UnDisLikeMemeAsync(string memeId, int userId)
+        public async Task<bool> UnDislikeMemeAsync(string memeId, int userId)
         {
             return await _memeRepository.UnDisLikeMemeAsync(memeId, userId);
         }

@@ -50,30 +50,54 @@ namespace Ultrix.Presentation.Controllers
             MemeLikeDto memeLikeDto = memeLikeViewModel.GetMemeLikeDto(userId);
             if(await _memeService.LikeMemeAsync(memeLikeDto))
             {
-                return Json(new { success = true, Message = "Meme is liked." });
+                return Json(new { success = true, Liked = true });
             }
 
-            //if (await _memeRepository.DoesMemeExistAsync(memeId))
-            //    return Json(new { success = false, Message = "Meme does not exist." });
-
-            //return isLike
-            //    ? isLiked
-            //        ? await _memeRepository.LikeMemeAsync(memeId)
-            //            ? Json(new { success = true, Message = "Meme is liked." })
-            //            : Json(new { success = false, Message = "Meme is not liked." })
-            //        : await _memeRepository.UnLikeMemeAsync(memeId)
-            //            ? Json(new { success = true, Message = "Meme is unliked." })
-            //            : Json(new { success = false, Message = "Meme is not unliked." })
-            //    : isLiked
-            //        ? await _memeRepository.DisLikeMemeAsync(memeId)
-            //                ? Json(new { success = true, Message = "Meme is disliked." })
-            //                : Json(new { success = false, Message = "Meme is not disliked." })
-            //        : await _memeRepository.UnDisLikeMemeAsync(memeId)
-            //            ? Json(new { success = true, Message = "Meme is undisliked." })
-            //            : Json(new { success = false, Message = "Meme is not undisliked." });
-            return Json(new { success = false, Message = "Meme does not exist." });
+            return Json(new { success = false, Message = "Something happened.." });
         }
+        [Route("UnLike"), HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnLikeAsync([FromBody] MemeLikeViewModel memeLikeViewModel)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, Message = "Invalid" });
 
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (await _memeService.UnLikeMemeAsync(memeLikeViewModel.MemeId, userId))
+            {
+                return Json(new { success = true, Liked = false });
+            }
+
+            return Json(new { success = false, Message = "Something happened.." });
+        }
+        [Route("Dislike"), HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> DislikeAsync([FromBody] MemeLikeViewModel memeLikeViewModel)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, Message = "Invalid" });
+
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            MemeLikeDto memeLikeDto = memeLikeViewModel.GetMemeLikeDto(userId);
+            if (await _memeService.DislikeMemeAsync(memeLikeDto))
+            {
+                return Json(new { success = true, Disliked = true });
+            }
+
+            return Json(new { success = false, Message = "Something happened.." });
+        }
+        [Route("UnDislike"), HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnDislikeAsync([FromBody] MemeLikeViewModel memeLikeViewModel)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, Message = "Invalid" });
+
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (await _memeService.UnLikeMemeAsync(memeLikeViewModel.MemeId, userId))
+            {
+                return Json(new { success = true, Disliked = false });
+            }
+
+            return Json(new { success = false, Message = "Something happened.." });
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
