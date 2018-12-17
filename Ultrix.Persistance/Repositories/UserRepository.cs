@@ -18,11 +18,17 @@ namespace Ultrix.Persistance.Repositories
 
         public async Task<int> GetUserIdByUserNameAsync(string userName)
         {
-            // TODO: user not found exception?
             ApplicationUser usr = await _applicationDbContext.Users.FirstOrDefaultAsync(user => user.UserName.Equals(userName));
-            if (userName == default)
+            if (usr == default)
                 throw new ApplicationUserNotFoundException();
             return usr.Id;
+        }
+        public async Task<string> GetUserNameByUserIdAsync(int userId)
+        {
+            ApplicationUser usr = await _applicationDbContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
+            if (usr == default)
+                throw new ApplicationUserNotFoundException();
+            return usr.UserName;
         }
     }
 }

@@ -24,8 +24,8 @@
                 <div>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        List<CollectionDTO> collections = new List<CollectionDTO>(); // TempData.Peek<List<CollectionDTO>>("collections");
-                        List<FollowingDto> mutualFollowings = new List<FollowingDto>(); // TempData.Peek<List<FollowingDTO>>("mutualFollowings");
+                        List<CollectionDTO> collections = TempData.Peek<List<CollectionDTO>>("collections");
+                        List<FollowingDto> mutualFollowings = TempData.Peek<List<FollowingDto>>("mutualFollowings");
                         <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <input type="hidden" id="IsLike" name="IsLike" value="true" />
@@ -38,18 +38,20 @@
                             <input type="hidden" id="IsDisliked" name="IsDisliked" value="false" />
                             <i class="material-icons meme-icon" id='@(Model.Id + "DislikeIcon")' onclick="sendDislike('@(Model.Id + "DislikeForm")')">thumb_down</i>
                         </form>
-
-                        <div class="input-field col s3">
-                            <select id="friendSelect">
-                                <option value="" disabled selected>Friend..</option>
-                                @foreach (FollowingDto following in mutualFollowings)
-                                {
-                                    <option value="@following.Id">@following.Username</option>
-                                }
-                            </select>
-                            <label>Share with a friend</label>
-                        </div>
-                        <i class="material-icons col s1 meme-icon">share</i>
+                        <form method="post" id='@(Model.Id + "FriendSelectForm")'>
+                            <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id"/>
+                            <div class="input-field col s3">
+                                <select id="friendSelect" name="MutualId">
+                                    <option value="" disabled selected>Friend..</option>
+                                    @foreach (FollowingDto following in mutualFollowings)
+                                    {
+                                        <option value="@following.Id">@following.Username</option>
+                                    }
+                                </select>
+                                <label>Share with a friend</label>
+                            </div>
+                            <i class="material-icons col s1 meme-icon" onclick="shareMemeToFriend('@(Model.Id + "FriendSelectForm")')">share</i>
+                        </form>                       
                         <div class="input-field col s3">
                             <select id="collectionSelect">
                                 <option value="" disabled selected>Collection..</option>

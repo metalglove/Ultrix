@@ -38,7 +38,7 @@
                 }
                 else
                 {
-                    await Html.RenderPartialAsync("../Account/Login", new LoginViewModel { ReturnUrl = Url.Action("IndexAsync", "Meme") });
+                    await Html.RenderPartialAsync("../Account/Login");
                 }
                 <ul id="nav-mobile" class="side-nav hide-on-large-only hide-on-med-only show-on-small">
                     <li>@Html.ActionLink("Home", "IndexAsync", "Meme")</li>

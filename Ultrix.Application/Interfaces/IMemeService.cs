@@ -13,5 +13,6 @@ namespace Ultrix.Application.Interfaces
         Task<bool> UnLikeMemeAsync(string memeId, int userId);
         Task<bool> DislikeMemeAsync(MemeLikeDto memeLikeDto);
         Task<bool> UnDislikeMemeAsync(string memeId, int userId);
+        Task<SharedMemeResultDto> ShareMemeToFriendAsync(SharedMemeDto sharedMemeDto);
     }
 }

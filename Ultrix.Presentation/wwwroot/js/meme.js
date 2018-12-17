@@ -77,13 +77,34 @@ function sendDislike(formId) {
         }
     });
 }
-function getFormData($form) {
-    var unIndexedArray = $form.serializeArray();
-    var indexedArray = {};
 
-    $.map(unIndexedArray, function (n, i) {
-        indexedArray[n["name"]] = n["value"];
+function shareMemeToFriend(formId) {
+    var form = getFormData($("#" + formId));
+    if (form["MutualId"] == undefined) {
+        M.toast({ html: "Select a friend from the friends select menu first." });
+        return;
+    }
+    var url = "/ShareMemeToFriend";
+
+    $.ajax({
+        type: "POST",
+        url: url,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        data: JSON.stringify(form),
+        success: function (data) {
+            if (data.success === true) {
+                M.toast({ html: "Successfully Shared to " + data.to + "!" });
+            }
+            else {
+                M.toast({ html: "Something happened, try again later..." });
+            }
+        },
+        error: function () {
+            console.log("shareMemeToFriend form resulted faulty..");
+        }
     });
-
-    return indexedArray;
 }

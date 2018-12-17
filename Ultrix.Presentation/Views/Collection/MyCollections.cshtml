@@ -2,13 +2,13 @@
 
 <h2>My collections</h2>
 
-@foreach (Collection myCollection in Model.MyCollections)
+@foreach (CollectionDto myCollection in Model.MyCollections)
 {
     await Html.RenderPartialAsync("CollectionCarousel", new CollectionCarouselViewModel(myCollection, false));
 }
 
 <h2>My subscribed collections</h2>
-@foreach (Collection mySubscribedCollection in Model.SubscribedCollections)
+@foreach (CollectionDto mySubscribedCollection in Model.SubscribedCollections)
 {
     await Html.RenderPartialAsync("CollectionCarousel", new CollectionCarouselViewModel(mySubscribedCollection, true));
 }

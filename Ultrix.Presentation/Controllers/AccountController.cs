@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
-using Ultrix.Domain.Entities;
 using Ultrix.Presentation.DTOs;
 using Ultrix.Presentation.Utilities;
 using Ultrix.Presentation.ViewModels.Account;
@@ -20,26 +17,29 @@ namespace Ultrix.Presentation.Controllers
     {
         private readonly IUserService _userService;
         private readonly IFollowerService _followerService;
-        private readonly ICollectionRepository _collectionRepository;
+        private readonly ICollectionService _collectionService;
 
-        public AccountController(IUserService userService, IFollowerService followerService, ICollectionRepository collectionRepository)
+        public AccountController(
+            IUserService userService, 
+            IFollowerService followerService, 
+            ICollectionService collectionService)
         {
             _userService = userService;
             _followerService = followerService;
-            _collectionRepository = collectionRepository;
+            _collectionService = collectionService;
         }
 
-        [Route("Register")]
-        public async Task<IActionResult> CreateUserAsync()
+        [Route("Register"), HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterViewModel registerViewModel)
         {
-            IdentityResult createIdentityResult = await _userService.CreateUserAsync(new ApplicationUser
-            {
-                UserName = "Metalglove",
-                Email = "metalglove@ultrix.nl",
-                UserDetail = new UserDetail { ProfilePictureData = "test" }
-            }, "password");
+            if (!ModelState.IsValid)
+                return Json(new { success = false });
 
-            return Content(createIdentityResult.Succeeded ? "User was created" : "User creation failed", "text/html");
+            RegisterUserDto registerUserDto = registerViewModel.GetApplicationUserDto();
+            IdentityResult createIdentityResult = await _userService.RegisterUserAsync(registerUserDto);
+            return Json(createIdentityResult.Succeeded 
+                ? new { success = true } 
+                : new { success = false });
         }
 
         [Route("Logout"), Authorize]
@@ -54,16 +54,17 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> LoginUserAsync([FromBody] LoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new {authenticated = false});
+                return Json(new { success = false });
 
             await _userService.SignOutAsync(HttpContext);
-            SignInResult signInResult = await _userService.SignInAsync(loginViewModel.Username, loginViewModel.Password);
+            LoginUserDto loginUserDto = loginViewModel.GetLoginUserDto();
+            SignInResult signInResult = await _userService.SignInAsync(loginUserDto);
 
             if (!signInResult.Succeeded)
-                return Json(new {authenticated = false});
+                return Json(new { success = false });
 
-            int userId = await _userService.GetUserIdByUserName(loginViewModel.Username);
-            List<CollectionDTO> collectionDTOs = (await _collectionRepository.GetMyCollectionsAsync(userId))
+            int userId = await _userService.GetUserIdByUserNameAsync(loginViewModel.Username);
+            List<CollectionDTO> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
                 .Select(collection => new CollectionDTO { Name = collection.Name, Id = collection.Id })
                 .ToList();
             List<FollowingDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
@@ -72,9 +73,7 @@ namespace Ultrix.Presentation.Controllers
             TempData.Put("mutualFollowings", mutualFollowingsDTOs);
             TempData.Keep("mutualFollowings");
 
-            return !string.IsNullOrEmpty(loginViewModel.ReturnUrl) && Url.IsLocalUrl(loginViewModel.ReturnUrl)
-                ? Json(new { authenticated = true, returnurl = loginViewModel.ReturnUrl })
-                : Json(new { authenticated = true });
+            return Json(new { success = true, loggedin = true });
         }
 
         [Authorize]

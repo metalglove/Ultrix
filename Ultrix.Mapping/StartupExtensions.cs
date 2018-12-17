@@ -94,8 +94,16 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<IMemeService, MemeService>(serviceProvider =>
             {
                 IMemeRepository memeRepository = serviceProvider.GetService<IMemeRepository>();
+                ISharedMemeRepository sharedMemeRepository = serviceProvider.GetService<ISharedMemeRepository>();
                 ILocalMemeFetcherService memeFetcherService = serviceProvider.GetService<ILocalMemeFetcherService>();
-                return new MemeService(memeFetcherService, memeRepository);
+                IUserService userService = serviceProvider.GetService<IUserService>();
+                return new MemeService(memeFetcherService, memeRepository, sharedMemeRepository, userService);
+            });
+            serviceCollection.AddTransient<ICollectionService, CollectionService>(serviceProvider =>
+            {
+                IMemeRepository memeRepository = serviceProvider.GetService<IMemeRepository>();
+                ICollectionRepository collectionRepository = serviceProvider.GetService<ICollectionRepository>();
+                return new CollectionService(collectionRepository, memeRepository);
             });
             serviceCollection.AddTransient<IUserService, UserService>(serviceProvider =>
             {

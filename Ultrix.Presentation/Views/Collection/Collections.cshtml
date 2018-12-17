@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Collection>
+﻿@model IEnumerable<CollectionDto>
 @{
     ViewData["Title"] = "Collections";
 }
 
 <h2>Collections</h2>
 
-@foreach (Collection collection in Model)
+@foreach (CollectionDto collection in Model)
 {
     await Html.RenderPartialAsync("CollectionCarousel", new CollectionCarouselViewModel(collection, true));
 }

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Ultrix.Application.DTOs;
 
 namespace Ultrix.Presentation.ViewModels.Collection_
 {
@@ -9,5 +10,10 @@ namespace Ultrix.Presentation.ViewModels.Collection_
          MaxLength(250, ErrorMessage = "The length must be less than {1} characters."),
          DataType(DataType.Text)]
         public string Name { get; set; }
+
+        public CollectionDto GetCollectionDto(int userId)
+        {
+            return new CollectionDto { Name = Name, UserId = userId };
+        }
     }
 }

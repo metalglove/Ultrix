@@ -4,9 +4,9 @@ using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Authentication;
+using Ultrix.Application.Converters;
+using Ultrix.Application.DTOs;
 
 namespace Ultrix.Application.Services
 {
@@ -26,14 +26,16 @@ namespace Ultrix.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<IdentityResult> CreateUserAsync(ApplicationUser applicationUser, string password)
+        public async Task<IdentityResult> RegisterUserAsync(RegisterUserDto registerUserDto)
         {
-            return await _userManager.CreateAsync(applicationUser, password);
+            ApplicationUser applicationUser = DtoToEntityConverter.Convert<ApplicationUser, RegisterUserDto>(registerUserDto);
+            applicationUser.UserDetail = new UserDetail { ProfilePictureData = "test" };
+            applicationUser.Email = "test@test.nl";
+            return await _userManager.CreateAsync(applicationUser, registerUserDto.Password);
         }
-
-        public async Task<SignInResult> SignInAsync(string userName, string password)
+        public async Task<SignInResult> SignInAsync(LoginUserDto loginUserDto)
         {
-            return await _signInManager.PasswordSignInAsync(userName, password, true, false);
+            return await _signInManager.PasswordSignInAsync(loginUserDto.Username, loginUserDto.Password, true, false);
         }
         public async Task SignOutAsync(HttpContext httpContext)
         {
@@ -49,7 +51,11 @@ namespace Ultrix.Application.Services
                 httpContext.User = null;
             }
         }
-        public async Task<int> GetUserIdByUserName(string username)
+        public async Task<string> GetUserNameByUserIdAsync(int userId)
+        {
+            return await _userRepository.GetUserNameByUserIdAsync(userId);
+        }
+        public async Task<int> GetUserIdByUserNameAsync(string username)
         {
             return await _userRepository.GetUserIdByUserNameAsync(username);
         }

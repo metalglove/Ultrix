@@ -3,22 +3,22 @@ using Ultrix.Application.DTOs;
 
 namespace Ultrix.Presentation.ViewModels.Account
 {
-    public class LoginViewModel : AntiForgeryTokenViewModelBase
+    public class RegisterViewModel : AntiForgeryTokenViewModelBase
     {
-        [Required(ErrorMessage = "Please enter a username."), 
-         MinLength(3, ErrorMessage = "The length must be at least {1} characters."), 
+        [Required(ErrorMessage = "Please enter a username."),
+         MinLength(3, ErrorMessage = "The length must be at least {1} characters."),
          MaxLength(20, ErrorMessage = "The length must be less than {1} characters."),
          DataType(DataType.Text)]
         public string Username { get; set; }
-        [Required(ErrorMessage = "Please enter a password."), 
+        [Required(ErrorMessage = "Please enter a password."),
          MinLength(5, ErrorMessage = "The length must be less than {1} characters."),
          MaxLength(255, ErrorMessage = "The length must be less than {1} characters."),
          DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public LoginUserDto GetLoginUserDto()
+        public RegisterUserDto GetApplicationUserDto()
         {
-            return new LoginUserDto { Username = Username, Password = Password };
+            return new RegisterUserDto { UserName = Username, Password = Password };
         }
     }
 }

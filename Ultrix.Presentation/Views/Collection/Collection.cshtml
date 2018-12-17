@@ -3,7 +3,7 @@
 <h2>@Model.Collection.Name</h2>
 
 <div>
-    @foreach (CollectionItemDetail collectionItemDetail in Model.Collection.CollectionItemDetails)
+    @foreach (CollectionItemDetailDto collectionItemDetail in Model.Collection.CollectionItemDetails)
     {
         await Html.RenderPartialAsync("../Meme/Meme", collectionItemDetail.Meme);
     }

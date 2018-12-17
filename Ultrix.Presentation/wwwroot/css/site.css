@@ -136,3 +136,8 @@ img, video {
     display: grid;
     margin: auto;
 }
+.login-register-grid-container {
+    display: block;
+    grid-template-columns: auto;
+    padding: 5px;
+}

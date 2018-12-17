@@ -1,13 +1,17 @@
-﻿@model LoginViewModel
-
-<ul id="userMenu" class="dropdown-content wider" style="overflow: hidden!important">
-    <li> 
-        <h5 class="indigo-text" style="text-align: center">Login</h5>
-        <div class="section"></div>
-
+﻿<ul id="userMenu" class="dropdown-content wider" style="overflow: hidden!important">
+    <li>
+        <div class="login-register-grid-container">
+            <div class="row">
+                <button class="btn col s5" style="text-align: center" onclick="switchFormTo('Login')">Login</button>
+                <div class="col s2"></div>
+                <button class="btn col s5" style="text-align: center" onclick="switchFormTo('Register')">Register</button>
+            </div>
+        </div>
+        
         <div class="container">
             <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
-                <form class="col s12" method="post" id="loginForm">
+                <div id="formBanner" class="indigo-text" style="text-align: center; font-size: 50px; margin-top: 10px; margin-bottom: 30px;"> Login </div>
+                <form class="col s12" method="post" id="credentialsForm">
                     <div class="row">
                         <div class="col s12">
                             <div id="errorMsg" style="color: red;">Credentials are incorrect!</div>
@@ -16,21 +20,21 @@
 
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="Username" class="validate" type="text" asp-for="Username" />
-                            <label asp-for="Username">Enter your username</label>
+                            <input id="Username" name="Username" class="validate" type="text"/>
+                            <label for="Username">Enter your username</label>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="Password" class="validate" type="password" asp-for="Password" />
-                            <label asp-for="Password">Enter your password</label>
+                            <input id="Password" name="Password" class="validate" type="password"/>
+                            <label for="Password">Enter your password</label>
                         </div>
                     </div>
 
-                    <br />
+                    <br/>
                     <div class="row">
-                        <input type="submit" class="col s12 btn btn waves-effect indigo" value="Login"/>
+                        <input id="submitButton" type="submit" class="col s12 btn btn waves-effect indigo" value="Login"/>
                     </div>
                 </form>
             </div>
@@ -38,12 +42,28 @@
     </li>
 </ul>
 <script type="text/javascript">
+    var url = "/Login";
+
+    function switchFormTo(switchTo) {
+        if (switchTo === "Login") {
+            url = "/Login";
+            $("#formBanner").text(switchTo);
+            $("#submitButton").val(switchTo);
+        } else if (switchTo === "Register") {
+            url = "/Register";
+            $("#formBanner").text(switchTo);
+            $("#submitButton").val(switchTo);
+        } else {
+            M.toast({ html: "Something happened, try again later..." });
+        }
+    }
     $(document).ready(function () {
         $('#errorMsg').hide();
-        $('#loginForm').on("submit", function (event) {
+        url = "/Login";
+        $('#credentialsForm').on("submit", function (event) {
             $.ajax({
                 type: "POST",
-                url: "/Login",
+                url: url,
                 contentType: "application/json; charset=utf-8",
                 headers: {
                     RequestVerificationToken:
@@ -51,31 +71,24 @@
                 },
                 data: JSON.stringify(getFormData($(this))),
                 success: function (data) {
-                    if (data.authenticated === true) {
-                        if (data.returnurl !== undefined)
-                            window.location.href = data.returnurl;
-                        else
-                            window.location.href = '/';
+                    if (data.success === true) {
+                        if (data.loggedin) {
+                            M.toast({ html: "Login successful, redirecting to home page.." });
+
+                        } else {
+                            M.toast({ html: "Register successful, redirecting to home page..!" });
+                        }
+                        window.location.href = '/'; // refresh page..
                     }
                     else {
                         $('#errorMsg').show();
                     }
                 },
                 error: function () {
-                    console.log("LoginForm resulted faulty..");
+                    console.log("credentialsForm resulted faulty..");
                 }
             });
             event.preventDefault();
         });
     });
-    function getFormData($form) {
-        var unindexedArray = $form.serializeArray();
-        var indexedArray = {};
-
-        $.map(unindexedArray, function (n, i) {
-            indexedArray[n['name']] = n['value'];
-        });
-
-        return indexedArray;
-    }
 </script>

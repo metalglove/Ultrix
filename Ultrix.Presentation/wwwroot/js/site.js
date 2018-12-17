@@ -14,3 +14,14 @@ document.addEventListener("DOMContentLoaded",
                 });
         });
     });
+
+function getFormData($form) {
+    var unIndexedArray = $form.serializeArray();
+    var indexedArray = {};
+
+    $.map(unIndexedArray, function (n, i) {
+        indexedArray[n["name"]] = n["value"];
+    });
+
+    return indexedArray;
+}

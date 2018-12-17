@@ -11,11 +11,19 @@ namespace Ultrix.Application.Services
     {
         private readonly IMemeFetcherService _memeFetcherService;
         private readonly IMemeRepository _memeRepository;
+        private readonly ISharedMemeRepository _sharedMemeRepository;
+        private readonly IUserService _userService;
 
-        public MemeService(ILocalMemeFetcherService localMemeFetcherService, IMemeRepository memeRepository)
+        public MemeService(
+            ILocalMemeFetcherService localMemeFetcherService, 
+            IMemeRepository memeRepository, 
+            ISharedMemeRepository sharedMemeRepository,
+            IUserService userService)
         {
             _memeFetcherService = localMemeFetcherService;
             _memeRepository = memeRepository;
+            _sharedMemeRepository = sharedMemeRepository;
+            _userService = userService;
         }
 
         public async Task<bool> DislikeMemeAsync(MemeLikeDto memeLikeDto)
@@ -52,6 +60,16 @@ namespace Ultrix.Application.Services
         {
             MemeLike memeLike = DtoToEntityConverter.Convert<MemeLike, MemeLikeDto>(memeLikeDto);
             return await _memeRepository.LikeMemeAsync(memeLike);
+        }
+        public async Task<SharedMemeResultDto> ShareMemeToFriendAsync(SharedMemeDto sharedMemeDto)
+        {
+            SharedMeme sharedMeme = DtoToEntityConverter.Convert<SharedMeme, SharedMemeDto>(sharedMemeDto);
+            string username = await _userService.GetUserNameByUserIdAsync(sharedMeme.ReceiverUserId);
+
+            if (await _sharedMemeRepository.ShareMemeToUserAsync(sharedMeme))
+                return new SharedMemeResultDto { ReceiverUsername = username, Success = true };
+
+            return new SharedMemeResultDto { ReceiverUsername = username, Success = false };
         }
         public async Task<bool> UnDislikeMemeAsync(string memeId, int userId)
         {
