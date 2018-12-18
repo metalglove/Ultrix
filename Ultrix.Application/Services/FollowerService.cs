@@ -26,26 +26,26 @@ namespace Ultrix.Application.Services
             Follower follower = DtoToEntityConverter.Convert<Follower, FollowerDto>(followerDto);
             return await _followerRepository.FollowUserAsync(follower);
         }
-        public async Task<List<FollowerDto>> GetFollowersByUserIdAsync(int userId)
+        public async Task<IEnumerable<FollowerDto>> GetFollowersByUserIdAsync(int userId)
         {
-            List<Follower> followers = await _followerRepository.GetFollowersByUserIdAsync(userId);
-            return followers.Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+            IEnumerable<Follower> followers = await _followerRepository.GetFollowersByUserIdAsync(userId);
+            return followers.Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower));
         }
-        public async Task<List<FollowerDto>> GetFollowingsByUserIdAsync(int userId)
+        public async Task<IEnumerable<FollowerDto>> GetFollowingsByUserIdAsync(int userId)
         {
-            List<Follower> followings = await _followerRepository.GetFollowingsByUserIdAsync(userId);
-            return followings.Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+            IEnumerable<Follower> followings = await _followerRepository.GetFollowingsByUserIdAsync(userId);
+            return followings.Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower));
         }
-        public async Task<List<FollowingDto>> GetMutualFollowingsByUserIdAsync(int userId)
+        public async Task<IEnumerable<FollowingDto>> GetMutualFollowingsByUserIdAsync(int userId)
         {
-            List<Follower> followings = await _followerRepository.GetFollowingsByUserIdAsync(userId);
-            List<Follower> followers = await _followerRepository.GetFollowersByUserIdAsync(userId);
+            IEnumerable<Follower> followings = await _followerRepository.GetFollowingsByUserIdAsync(userId);
+            IEnumerable<Follower> followers = await _followerRepository.GetFollowersByUserIdAsync(userId);
             return followers.Join(followings, follower => follower.UserId, following => following.FollowerUserId,
                 (follower, following) => following).Select(follower => new FollowingDto
                 {
                     Id = follower.FollowerUserId,
                     Username = follower.FollowerUser.UserName
-                }).ToList();
+                });
         }
     }
 }

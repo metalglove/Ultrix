@@ -1,12 +1,12 @@
 ﻿function sendLike(formId) {
     var form = getFormData($("#" + formId));
-    var url = "/Like";
+    var likeUrl = "/Like";
     if (form["IsLiked"] === "true")
-        url = "/UnLike";
+        likeUrl = "/UnLike";
 
     $.ajax({
         type: "POST",
-        url: url,
+        url: likeUrl,
         contentType: "application/json; charset=utf-8",
         headers: {
             RequestVerificationToken:
@@ -40,13 +40,13 @@
 
 function sendDislike(formId) {
     var form = getFormData($("#" + formId));
-    var url = "/Dislike";
+    var dislikeUrl = "/Dislike";
     if (form["IsDisliked"] === "true")
-        url = "/UnDislike";
+        dislikeUrl = "/UnDislike";
 
     $.ajax({
         type: "POST",
-        url: url,
+        url: dislikeUrl,
         contentType: "application/json; charset=utf-8",
         headers: {
             RequestVerificationToken:
@@ -84,11 +84,11 @@ function shareMemeToFriend(formId) {
         M.toast({ html: "Select a friend from the friends select menu first." });
         return;
     }
-    var url = "/ShareMemeToFriend";
+    var shareMemeUrl = "/ShareMemeToFriend";
 
     $.ajax({
         type: "POST",
-        url: url,
+        url: shareMemeUrl,
         contentType: "application/json; charset=utf-8",
         headers: {
             RequestVerificationToken:

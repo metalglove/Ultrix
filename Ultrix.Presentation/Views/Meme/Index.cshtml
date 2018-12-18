@@ -27,10 +27,11 @@
     <script src="~/js/lazyLoading.js"></script>
 
     <script type="text/javascript">
-        $(function () {
+        const memeUrl = "@this.Url.Action("MemeAsync", "Meme")";
+        $(document).ready(async function () {
             $("div#loading").hide();
+            await loadData(memeUrl);
         });
-        var url = '@this.Url.Action("MemeAsync")';
         $(window).scroll(scrollHandler);
     </script>
 }

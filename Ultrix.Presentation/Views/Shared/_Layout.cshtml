@@ -84,6 +84,18 @@
             </div>
         </div>
     </footer>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.get("VerifyTempData", "", function (data) {
+                if (data.success === true) {
+                    if (data.refresh === true) {
+                        window.location.href = '/';
+                    }
+                    console.log("Verified TempData");
+                }
+            }, "json");
+        });
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

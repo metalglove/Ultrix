@@ -42,15 +42,15 @@
     </li>
 </ul>
 <script type="text/javascript">
-    var url = "/Login";
+    var loginUrl = "/Login";
 
     function switchFormTo(switchTo) {
         if (switchTo === "Login") {
-            url = "/Login";
+            loginUrl = "/Login";
             $("#formBanner").text(switchTo);
             $("#submitButton").val(switchTo);
         } else if (switchTo === "Register") {
-            url = "/Register";
+            loginUrl = "/Register";
             $("#formBanner").text(switchTo);
             $("#submitButton").val(switchTo);
         } else {
@@ -59,11 +59,11 @@
     }
     $(document).ready(function () {
         $('#errorMsg').hide();
-        url = "/Login";
+        loginUrl = "/Login";
         $('#credentialsForm').on("submit", function (event) {
             $.ajax({
                 type: "POST",
-                url: url,
+                url: loginUrl,
                 contentType: "application/json; charset=utf-8",
                 headers: {
                     RequestVerificationToken:

@@ -46,7 +46,6 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> LogoutAsync(string returnUrl)
         {
             await _userService.SignOutAsync(HttpContext);
-
             return RedirectToAction("IndexAsync", "Meme");
         }
 
@@ -64,23 +63,31 @@ namespace Ultrix.Presentation.Controllers
                 return Json(new { success = false });
 
             int userId = await _userService.GetUserIdByUserNameAsync(loginViewModel.Username);
-            List<CollectionDTO> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
-                .Select(collection => new CollectionDTO { Name = collection.Name, Id = collection.Id })
-                .ToList();
-            List<FollowingDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
-            TempData.Put("collections", collectionDTOs);
+            IEnumerable<CollectionDTO> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
+                .Select(collection => new CollectionDTO { Name = collection.Name, Id = collection.Id });
+            IEnumerable<FollowingDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
+            TempData.Put("collections", collectionDTOs.ToList());
             TempData.Keep("collections");
-            TempData.Put("mutualFollowings", mutualFollowingsDTOs);
+            TempData.Put("mutualFollowings", mutualFollowingsDTOs.ToList());
             TempData.Keep("mutualFollowings");
 
             return Json(new { success = true, loggedin = true });
         }
 
-        [Authorize]
-        [Route("private")]
-        public IActionResult Private()
+        [Route("VerifyTempData"), HttpGet]
+        public async Task<IActionResult> VerifyTempDataAsync()
         {
-            return Content($"This is a private area. Welcome {HttpContext.User.Identity.Name}", "text/html");
+            if (User.Identity.IsAuthenticated)
+            {
+                TempData.Peek("collections", out List<CollectionDTO> collections);
+                TempData.Peek("mutualFollowings", out List<FollowingDto> mutualFollowings);
+
+                if (collections != null && mutualFollowings != null)
+                    return Json(new { success = true, refresh = false });
+                await _userService.SignOutAsync(HttpContext);
+                return Json(new { success = true, refresh = true });  
+            }
+            return Json(new { success = false, refresh = false });
         }
     }
 }

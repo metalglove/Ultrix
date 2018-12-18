@@ -47,13 +47,11 @@ namespace Ultrix.Application.Services
             await _memeRepository.SaveMemeAsync(meme);
             return memeDto;
         }
-        public async Task<List<MemeDto>> GetRandomMemesAsync(int count = 4)
+        public async Task<IEnumerable<MemeDto>> GetRandomMemesAsync(int count = 4)
         {
-            List<MemeDto> memes = new List<MemeDto>();
+            IList<MemeDto> memes = new List<MemeDto>();
             for (int i = 0; i < count; i++)
-            {
                 memes.Add(await GetRandomMemeAsync());
-            }
             return memes;
         }
         public async Task<bool> LikeMemeAsync(MemeLikeDto memeLikeDto)

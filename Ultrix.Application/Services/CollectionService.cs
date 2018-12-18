@@ -19,11 +19,10 @@ namespace Ultrix.Application.Services
             _memeRepository = memeRepository;
         }
 
-        public async Task<List<CollectionDto>> GetAllCollectionsAsync()
+        public async Task<IEnumerable<CollectionDto>> GetAllCollectionsAsync()
         {
-            List<Collection> collections = await _collectionRepository.GetAllCollectionsAsync();
-            return collections
-                .Select(EntityToDtoConverter.Convert<CollectionDto, Collection>).ToList();
+            IEnumerable<Collection> collections = await _collectionRepository.GetAllCollectionsAsync();
+            return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }
         public async Task<CollectionDto> GetCollectionByIdAsync(int collectionId)
         {
@@ -34,7 +33,7 @@ namespace Ultrix.Application.Services
         {
             if (await _collectionRepository.DoesCollectionNameExistAsync(collectionDto.Name))
                 return false;
-            Collection collection = DtoToEntityConverter.Convert<Collection, CollectionDto>(collectionDto);//
+            Collection collection = DtoToEntityConverter.Convert<Collection, CollectionDto>(collectionDto);
             return await _collectionRepository.CreateCollectionAsync(collection);
         }
         public async Task<bool> AddToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto)
@@ -52,15 +51,15 @@ namespace Ultrix.Application.Services
             return await _collectionRepository.AddToCollectionAsync(meme, addMemeToCollectionDto.CollectionId,
                 addMemeToCollectionDto.UserId);
         }
-        public async Task<List<CollectionDto>> GetMyCollectionsAsync(int userId)
+        public async Task<IEnumerable<CollectionDto>> GetMyCollectionsAsync(int userId)
         {
-            List<Collection> collections = await _collectionRepository.GetMyCollectionsAsync(userId);
-            return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>).ToList();
+            IEnumerable<Collection> collections = await _collectionRepository.GetMyCollectionsAsync(userId);
+            return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }
-        public async Task<List<CollectionDto>> GetMySubscribedCollectionsAsync(int userId)
+        public async Task<IEnumerable<CollectionDto>> GetMySubscribedCollectionsAsync(int userId)
         {
             List<Collection> collections = await _collectionRepository.GetMySubscribedCollectionsAsync(userId);
-            return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>).ToList();
+            return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }
     }
 }

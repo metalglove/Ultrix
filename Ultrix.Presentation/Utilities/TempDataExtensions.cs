@@ -14,10 +14,16 @@ namespace Ultrix.Presentation.Utilities
             tempData.TryGetValue(key, out object o);
             return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
         }
-        public static T Peek<T>(this ITempDataDictionary tempData, string key) where T : class
+        public static bool Peek<T>(this ITempDataDictionary tempData, string key, out T item) where T : class
         {
             object o = tempData.Peek(key);
-            return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
+            if (o == null)
+            {
+                item = null;
+                return false;
+            }
+            item = JsonConvert.DeserializeObject<T>((string)o);
+            return true;
         }
     }
 }

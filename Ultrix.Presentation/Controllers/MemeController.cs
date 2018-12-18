@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
@@ -23,8 +25,9 @@ namespace Ultrix.Presentation.Controllers
         [Route("")]
         public async Task<IActionResult> IndexAsync()
         {
-            IEnumerable<MemeDto> memes = await _memeService.GetRandomMemesAsync(4);
-            return View("Index", memes);
+            //IEnumerable<MemeDto> memes = await _memeService.GetRandomMemesAsync(3);
+            //return View("Index", memes.ToList());
+            return View("Index", new List<MemeDto>());
         }
 
         [Route("Meme")]
@@ -40,7 +43,7 @@ namespace Ultrix.Presentation.Controllers
             return View("Trending");
         }
 
-        [Route("Like"), HttpPost, ValidateAntiForgeryToken]
+        [Route("Like"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> LikeAsync([FromBody] MemeLikeViewModel memeLikeViewModel)
         {
             if (!ModelState.IsValid)
@@ -55,7 +58,7 @@ namespace Ultrix.Presentation.Controllers
 
             return Json(new { success = false, message = "Something happened.." });
         }
-        [Route("UnLike"), HttpPost, ValidateAntiForgeryToken]
+        [Route("UnLike"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UnLikeAsync([FromBody] MemeLikeViewModel memeLikeViewModel)
         {
             if (!ModelState.IsValid)
@@ -69,7 +72,7 @@ namespace Ultrix.Presentation.Controllers
 
             return Json(new { success = false, message = "Something happened.." });
         }
-        [Route("Dislike"), HttpPost, ValidateAntiForgeryToken]
+        [Route("Dislike"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> DislikeAsync([FromBody] MemeLikeViewModel memeLikeViewModel)
         {
             if (!ModelState.IsValid)
@@ -84,7 +87,7 @@ namespace Ultrix.Presentation.Controllers
 
             return Json(new { success = false, message = "Something happened.." });
         }
-        [Route("UnDislike"), HttpPost, ValidateAntiForgeryToken]
+        [Route("UnDislike"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> UnDislikeAsync([FromBody] MemeLikeViewModel memeLikeViewModel)
         {
             if (!ModelState.IsValid)
@@ -98,7 +101,7 @@ namespace Ultrix.Presentation.Controllers
 
             return Json(new { success = false, message = "Something happened.." });
         }
-        [Route("ShareMemeToFriend"), HttpPost, ValidateAntiForgeryToken]
+        [Route("ShareMemeToFriend"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> ShareMemeToFriendAsync([FromBody] ShareMemeViewModel shareMemeViewModel)
         {
             if (!ModelState.IsValid)
