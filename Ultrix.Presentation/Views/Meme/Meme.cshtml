@@ -24,9 +24,9 @@
                 <div>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        List<CollectionDTO> collections = TempData.Peek<List<CollectionDTO>>("collections");
-                        List<FollowingDto> mutualFollowings = TempData.Peek<List<FollowingDto>>("mutualFollowings");
-                        <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
+                        List<CollectionDTO> collections = new List<CollectionDTO>(); //TempData.Peek<List<CollectionDTO>>("collections");
+                        List<FollowingDto> mutualFollowings = new List<FollowingDto>();// TempData.Peek<List<FollowingDto>>("mutualFollowings");
+                         <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <input type="hidden" id="IsLike" name="IsLike" value="true" />
                             <input type="hidden" id='@(Model.Id + "IsLiked")' name="IsLiked" value="false" />

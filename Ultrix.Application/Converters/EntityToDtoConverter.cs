@@ -16,26 +16,31 @@ namespace Ultrix.Application.Converters
             IList<PropertyInfo> dtoProperties = new List<PropertyInfo>(typeof(TDto).GetProperties());
             foreach (PropertyInfo property in dtoProperties)
             {
-                Type type = property.PropertyType;
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+                Type propertyType = property.PropertyType;
+                if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(List<>))
                 {
-                    Type dtoItemType = type.GetGenericArguments()[0];
-                    dynamic list = entity.GetType().GetProperty(property.Name).GetValue(entity);
-                    Type listGenericType = typeof(List<>);
-                    dynamic listOfDtoItemType = listGenericType.MakeGenericType(dtoItemType);
-                    IList instance = (IList)Activator.CreateInstance(listOfDtoItemType);
+                    Type dtoItemType = propertyType.GetGenericArguments()[0];
+                    IList genericListInstance = CreateGenericListOfType(dtoItemType);
+                    dynamic list = typeof(TEntity).GetProperty(property.Name).GetValue(entity);
                     foreach (object item in list)
                     {
-                        Type actualType = ((IProxyTargetAccessor) item).DynProxyGetTarget().GetType().BaseType;
-                        instance.Add(Convert(dtoItemType, actualType, item));
+                        Type actualType = ((IProxyTargetAccessor)item).DynProxyGetTarget().GetType().BaseType;
+                        genericListInstance.Add(Convert(dtoItemType, actualType, item));
                     }
-                    property.SetValue(dto, instance);
+                    property.SetValue(dto, genericListInstance);
                     continue;
                 }
                 object value = entity.GetType().GetProperty(property.Name).GetValue(entity);
                 property.SetValue(dto, value);
             }
             return dto;
+        }
+
+        private static IList CreateGenericListOfType(Type itemType)
+        {
+            Type listGenericType = typeof(List<>);
+            dynamic listOfItemType = listGenericType.MakeGenericType(itemType);
+            return (IList)Activator.CreateInstance(listOfItemType);
         }
 
         private static object Convert(Type dtoItemType, Type entityType, object entity)
@@ -48,16 +53,14 @@ namespace Ultrix.Application.Converters
                 if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
                 {
                     Type newDtoItemType = type.GetGenericArguments()[0];
+                    IList genericListInstance = CreateGenericListOfType(newDtoItemType);
                     dynamic list = entityType.GetProperty(property.Name).GetValue(entity);
-                    Type listGenericType = typeof(List<>);
-                    dynamic listOfDtoItemType = listGenericType.MakeGenericType(newDtoItemType);
-                    dynamic instance = Activator.CreateInstance(listOfDtoItemType);
                     foreach (dynamic item in list)
                     {
                         Type actualType = ((IProxyTargetAccessor)item).DynProxyGetTarget().GetType();
-                        instance.Add(Convert(newDtoItemType, actualType, item));
+                        genericListInstance.Add(Convert(newDtoItemType, actualType, item));
                     }
-                    property.SetValue(dto, instance);
+                    property.SetValue(dto, genericListInstance);
                     continue;
                 }
 
