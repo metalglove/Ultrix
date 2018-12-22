@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
@@ -7,7 +10,7 @@ using Ultrix.Persistance.Contexts;
 
 namespace Ultrix.Persistance.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : IRepository<ApplicationUser>
     {
         private readonly ApplicationDbContext _applicationDbContext;
 
@@ -16,19 +19,37 @@ namespace Ultrix.Persistance.Repositories
             _applicationDbContext = applicationDbContext;
         }
 
-        public async Task<int> GetUserIdByUserNameAsync(string userName)
+        public Task<bool> CreateAsync(ApplicationUser entity)
         {
-            ApplicationUser usr = await _applicationDbContext.Users.FirstOrDefaultAsync(user => user.UserName.Equals(userName));
-            if (usr == default)
-                throw new ApplicationUserNotFoundException();
-            return usr.Id;
+            // The user manager handles creating users.
+            throw new NotImplementedException();
         }
-        public async Task<string> GetUserNameByUserIdAsync(int userId)
+        public Task<bool> DeleteAsync(ApplicationUser entity)
         {
-            ApplicationUser usr = await _applicationDbContext.Users.FirstOrDefaultAsync(user => user.Id.Equals(userId));
-            if (usr == default)
+            throw new NotImplementedException();
+        }
+        public Task<bool> ExistsAsync(Expression<Func<ApplicationUser, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<IEnumerable<ApplicationUser>> FindManyByExpressionAsync(Expression<Func<ApplicationUser, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<ApplicationUser> FindSingleByExpressionAsync(Expression<Func<ApplicationUser, bool>> predicate)
+        {
+            ApplicationUser applicationUser = await _applicationDbContext.Users.SingleOrDefaultAsync(predicate);
+            if (applicationUser == default)
                 throw new ApplicationUserNotFoundException();
-            return usr.UserName;
+            return applicationUser;
+        }
+        public Task<IEnumerable<ApplicationUser>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+        public Task<bool> UpdateAsync(ApplicationUser entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

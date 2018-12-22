@@ -14,12 +14,12 @@ namespace Ultrix.Application.Services
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<ApplicationUser> _userRepository;
 
         public UserService(
             SignInManager<ApplicationUser> signInManager, 
             UserManager<ApplicationUser> userManager, 
-            IUserRepository userRepository)
+            IRepository<ApplicationUser> userRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -53,11 +53,16 @@ namespace Ultrix.Application.Services
         }
         public async Task<string> GetUserNameByUserIdAsync(int userId)
         {
-            return await _userRepository.GetUserNameByUserIdAsync(userId);
+            // ApplicationUser applicationUser = await _userManager.FindByIdAsync(); 
+            // TODO: UserManager uses string as identifier. Would need to create a new UserManager from scratch to implement with int.
+            ApplicationUser applicationUser = await _userRepository.FindSingleByExpressionAsync(user => user.Id.Equals(userId));
+            return applicationUser.UserName;
         }
         public async Task<int> GetUserIdByUserNameAsync(string username)
         {
-            return await _userRepository.GetUserIdByUserNameAsync(username);
+            ApplicationUser applicationUser = await _userManager.FindByNameAsync(username); 
+            //ApplicationUser applicationUser = await _userRepository.FindSingleByExpressionAsync(user => user.UserName.Equals(username));
+            return applicationUser.Id;
         }
     }
 }

@@ -10,56 +10,39 @@ namespace Ultrix.Application.Services
 {
     public class CollectionService : ICollectionService
     {
-        private readonly ICollectionRepository _collectionRepository;
-        private readonly IMemeRepository _memeRepository;
+        private readonly IRepository<Collection> _collectionRepository;
 
-        public CollectionService(ICollectionRepository collectionRepository, IMemeRepository memeRepository)
+        public CollectionService(IRepository<Collection> collectionRepository)
         {
             _collectionRepository = collectionRepository;
-            _memeRepository = memeRepository;
         }
 
         public async Task<IEnumerable<CollectionDto>> GetAllCollectionsAsync()
         {
-            IEnumerable<Collection> collections = await _collectionRepository.GetAllCollectionsAsync();
+            IEnumerable<Collection> collections = await _collectionRepository.GetAllAsync();
             return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }
         public async Task<CollectionDto> GetCollectionByIdAsync(int collectionId)
         {
-            Collection collection = await _collectionRepository.GetCollectionAsync(collectionId);
-            return EntityToDtoConverter.Convert<CollectionDto, Collection>(collection);
+            Collection actualCollection = await _collectionRepository.FindSingleByExpressionAsync(collection => collection.Id.Equals(collectionId));
+            return EntityToDtoConverter.Convert<CollectionDto, Collection>(actualCollection);
         }
         public async Task<bool> CreateCollectionAsync(CollectionDto collectionDto)
         {
-            if (await _collectionRepository.DoesCollectionNameExistAsync(collectionDto.Name))
+            if (await _collectionRepository.ExistsAsync(collection => collection.Name.Equals(collectionDto.Name)))
                 return false;
-            Collection collection = DtoToEntityConverter.Convert<Collection, CollectionDto>(collectionDto);
-            return await _collectionRepository.CreateCollectionAsync(collection);
-        }
-        public async Task<bool> AddToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto)
-        {
-            if (!await _memeRepository.DoesMemeExistAsync(addMemeToCollectionDto.MemeId))
-                return false;
-
-            if (!await _collectionRepository.DoesCollectionExistAsync(addMemeToCollectionDto.CollectionId))
-                return false;
-
-            if (!await _collectionRepository.DoesMemeExistInCollectionAsync(addMemeToCollectionDto.MemeId, addMemeToCollectionDto.CollectionId))
-                return false;
-
-            Meme meme = await _memeRepository.GetMemeAsync(addMemeToCollectionDto.MemeId);
-            return await _collectionRepository.AddToCollectionAsync(meme, addMemeToCollectionDto.CollectionId,
-                addMemeToCollectionDto.UserId);
+            Collection actualCollection = DtoToEntityConverter.Convert<Collection, CollectionDto>(collectionDto);
+            return await _collectionRepository.CreateAsync(actualCollection);
         }
         public async Task<IEnumerable<CollectionDto>> GetMyCollectionsAsync(int userId)
         {
-            IEnumerable<Collection> collections = await _collectionRepository.GetMyCollectionsAsync(userId);
+            IEnumerable<Collection> collections = await _collectionRepository.FindManyByExpressionAsync(collection => collection.UserId.Equals(userId));
             return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }
-        public async Task<IEnumerable<CollectionDto>> GetMySubscribedCollectionsAsync(int userId)
+        public async Task<bool> DeleteCollectionAsync(int userId, int collectionId)
         {
-            List<Collection> collections = await _collectionRepository.GetMySubscribedCollectionsAsync(userId);
-            return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
+            Collection actualCollection = await _collectionRepository.FindSingleByExpressionAsync(collection => collection.Id.Equals(collectionId) && collection.UserId.Equals(userId));
+            return await _collectionRepository.DeleteAsync(actualCollection);
         }
     }
 }

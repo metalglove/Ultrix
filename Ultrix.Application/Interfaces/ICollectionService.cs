@@ -9,8 +9,7 @@ namespace Ultrix.Application.Interfaces
         Task<IEnumerable<CollectionDto>> GetAllCollectionsAsync();
         Task<CollectionDto> GetCollectionByIdAsync(int collectionId);
         Task<bool> CreateCollectionAsync(CollectionDto collectionDto);
-        Task<bool> AddToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto);
         Task<IEnumerable<CollectionDto>> GetMyCollectionsAsync(int userId);
-        Task<IEnumerable<CollectionDto>> GetMySubscribedCollectionsAsync(int userId);
+        Task<bool> DeleteCollectionAsync(int userId, int collectionId);
     }
 }

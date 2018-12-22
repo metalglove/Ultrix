@@ -1,5 +1,4 @@
-﻿@using Ultrix.Presentation.DTOs
-@model MemeDto
+﻿@model MemeDto
 
 <div class="row">
     <div class="center-align">
@@ -24,7 +23,7 @@
                 <div>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        TempData.Peek("collections", out List<CollectionDTO> collections);
+                        TempData.Peek("collections", out List<ShareCollectionDto> collections);
                         TempData.Peek("mutualFollowings", out List<FollowingDto> mutualFollowings);
                          <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
@@ -55,9 +54,10 @@
                         <div class="input-field col s3">
                             <select id="collectionSelect">
                                 <option value="" disabled selected>Collection..</option>
-                                @foreach (CollectionDTO collection in collections)
+                                @foreach (ShareCollectionDto collection in collections)
                                 {
                                     <option value="@collection.Id">@collection.Name</option>
+                                }
                                 }
                             </select>
                             <label>Add to a collection</label>

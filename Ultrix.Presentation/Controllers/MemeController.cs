@@ -16,10 +16,17 @@ namespace Ultrix.Presentation.Controllers
     public class MemeController : Controller
     {
         private readonly IMemeService _memeService;
+        private readonly IMemeSharingService _memeSharingService;
+        private readonly IMemeLikingService _memeLikingService;
 
-        public MemeController(IMemeService memeService)
+        public MemeController(
+            IMemeService memeService, 
+            IMemeSharingService memeSharingService,
+            IMemeLikingService memeLikingService)
         {
             _memeService = memeService;
+            _memeSharingService = memeSharingService;
+            _memeLikingService = memeLikingService;
         }
 
         [Route("")]
@@ -51,7 +58,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             MemeLikeDto memeLikeDto = memeLikeViewModel.GetMemeLikeDto(userId);
-            if(await _memeService.LikeMemeAsync(memeLikeDto))
+            if(await _memeLikingService.LikeMemeAsync(memeLikeDto))
             {
                 return Json(new { success = true, liked = true });
             }
@@ -65,7 +72,7 @@ namespace Ultrix.Presentation.Controllers
                 return Json(new { success = false, message = "Invalid" });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (await _memeService.UnLikeMemeAsync(memeLikeViewModel.MemeId, userId))
+            if (await _memeLikingService.UnLikeMemeAsync(memeLikeViewModel.MemeId, userId))
             {
                 return Json(new { success = true, liked = false });
             }
@@ -80,7 +87,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             MemeLikeDto memeLikeDto = memeLikeViewModel.GetMemeLikeDto(userId);
-            if (await _memeService.DislikeMemeAsync(memeLikeDto))
+            if (await _memeLikingService.DislikeMemeAsync(memeLikeDto))
             {
                 return Json(new { success = true, disliked = true });
             }
@@ -94,7 +101,7 @@ namespace Ultrix.Presentation.Controllers
                 return Json(new { success = false, message = "Invalid" });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (await _memeService.UnDislikeMemeAsync(memeLikeViewModel.MemeId, userId))
+            if (await _memeLikingService.UnDislikeMemeAsync(memeLikeViewModel.MemeId, userId))
             {
                 return Json(new { success = true, disliked = false });
             }
@@ -109,7 +116,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             SharedMemeDto sharedMemeDto = shareMemeViewModel.GetSharedMemeDto(userId);
-            SharedMemeResultDto sharedMemeResultDto = await _memeService.ShareMemeToFriendAsync(sharedMemeDto);
+            SharedMemeResultDto sharedMemeResultDto = await _memeSharingService.ShareMemeToMutualFollowerAsync(sharedMemeDto);
             return sharedMemeResultDto.Success 
                 ? Json(new { success = true, to = sharedMemeResultDto.ReceiverUsername }) 
                 : Json(new { success = false, message = "Something happened.." });

@@ -64,7 +64,7 @@ namespace Ultrix.Application.Converters
                     continue;
                 }
 
-                // TODO: also check if the property name is not equal to a Entity by chance... so maybe try to check for standard types?
+                // TODO: also check if the property name is not equal to an Entity by chance... so maybe try to check for standard types?
                 if (typeof(DtoToEntityConverter).Assembly.GetTypes().Any(t => t.Name.Equals(property.Name + "Dto")))
                 {
                     Type newEntityType = typeof(ApplicationUser).Assembly.GetTypes().First(t => t.Name.Equals(property.Name.Replace("Dto", "")));

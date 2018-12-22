@@ -1,6 +1,6 @@
-﻿namespace Ultrix.Presentation.DTOs
+﻿namespace Ultrix.Application.DTOs
 {
-    public class CollectionDTO
+    public class ShareCollectionDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

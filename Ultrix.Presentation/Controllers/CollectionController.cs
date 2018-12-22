@@ -13,10 +13,17 @@ namespace Ultrix.Presentation.Controllers
     public class CollectionController : Controller
     {
         private readonly ICollectionService _collectionService;
+        private readonly ICollectionItemDetailService _collectionItemDetailService;
+        private readonly ICollectionSubscriberService _collectionSubscriberService;
 
-        public CollectionController(ICollectionService collectionService)
+        public CollectionController(
+            ICollectionService collectionService, 
+            ICollectionItemDetailService collectionItemDetailService, 
+            ICollectionSubscriberService collectionSubscriberService)
         {
             _collectionService = collectionService;
+            _collectionItemDetailService = collectionItemDetailService;
+            _collectionSubscriberService = collectionSubscriberService;
         }
 
         [Route("Collections")]
@@ -56,7 +63,7 @@ namespace Ultrix.Presentation.Controllers
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             AddMemeToCollectionDto addMemeToCollectionDto =
                 addMemeToCollectionViewModel.GetAddMemeToCollectionDto(userId);
-            return await _collectionService.AddToCollectionAsync(addMemeToCollectionDto)
+            return await _collectionItemDetailService.AddMemeToCollectionAsync(addMemeToCollectionDto)
                 ? Json(new {IsCreated = true})
                 : Json(new {IsCreated = false});
         }
@@ -65,7 +72,7 @@ namespace Ultrix.Presentation.Controllers
         {
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             IEnumerable<CollectionDto> myCollections = await _collectionService.GetMyCollectionsAsync(userId);
-            IEnumerable<CollectionDto> subscribedCollections = await _collectionService.GetMySubscribedCollectionsAsync(userId);
+            IEnumerable<CollectionDto> subscribedCollections = await _collectionSubscriberService.GetMySubscribedCollectionsAsync(userId);
             MyCollectionsViewModel myCollectionViewModel = new MyCollectionsViewModel(myCollections, subscribedCollections);
             return View("MyCollections", myCollectionViewModel);
         }

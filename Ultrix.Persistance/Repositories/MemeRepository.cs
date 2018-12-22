@@ -10,7 +10,7 @@ using Ultrix.Persistance.Contexts;
 
 namespace Ultrix.Persistance.Repositories
 {
-    public class MemeRepository : IMemeRepository
+    public class MemeRepository : IRepository<Meme>
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IEntityValidator<Meme> _memeValidator;
@@ -21,15 +21,12 @@ namespace Ultrix.Persistance.Repositories
             _memeValidator = memeValidator;
         }
 
-        public async Task<Meme> GetMemeAsync(string memeId)
+        public async Task<bool> CreateAsync(Meme entity)
         {
-            Meme fetchedMeme = await _applicationDbContext.Memes.SingleOrDefaultAsync(meme => meme.Id.Equals(memeId));
-            return !fetchedMeme.Equals(default(Meme)) ? fetchedMeme : throw new GettingMemeFailedException();
-        }
-        public async Task<bool> SaveMemeAsync(Meme meme)
-        {
-            _memeValidator.Validate(meme);
-            await _applicationDbContext.Memes.AddAsync(meme);
+            _memeValidator.Validate(entity);
+            if (await _applicationDbContext.Memes.ContainsAsync(entity))
+                throw new MemeAlreadyExistsException();
+            await _applicationDbContext.Memes.AddAsync(entity);
             int saveResult = await _applicationDbContext.SaveChangesAsync();
             bool saveSuccess;
             try
@@ -38,65 +35,16 @@ namespace Ultrix.Persistance.Repositories
             }
             catch (Exception)
             {
-                throw new SavingMemeFailedException();
+                throw new CreatingMemeFailedException();
             }
             return saveSuccess;
         }
-        public async Task<bool> SaveMemesAsync(IEnumerable<Meme> memes)
-        {
-            await _applicationDbContext.Memes.AddRangeAsync(memes);
-            int saveResult = await _applicationDbContext.SaveChangesAsync();
-            bool saveSuccess;
-            try
-            {
-                saveSuccess = Convert.ToBoolean(saveResult);
-            }
-            catch (Exception)
-            {
-                throw new SavingMemeFailedException();
-            }
-            return saveSuccess;
-        }
-        public async Task<bool> DoesMemeExistAsync(string memeId)
-        {
-            return await _applicationDbContext.Memes.AnyAsync(memeInDb => memeInDb.Id.Equals(memeId));
-        }
-        public async Task<bool> LikeMemeAsync(MemeLike memeLike)
-        {
-            Expression<Func<MemeLike, bool>> predicate = ml => ml.MemeId.Equals(memeLike.MemeId) && ml.UserId.Equals(memeLike.UserId);
-            if (await _applicationDbContext.MemeLikes.AnyAsync(predicate))
-            {
-                MemeLike ExistingMemeLike = await _applicationDbContext.MemeLikes.FirstAsync(predicate);
-                if (ExistingMemeLike.IsLike)
-                    return true;
-                else
-                    ExistingMemeLike.IsLike = false;
-                _applicationDbContext.MemeLikes.Update(ExistingMemeLike);
-            }
-            else
-            {
-                await _applicationDbContext.MemeLikes.AddAsync(memeLike);
-            }
-            
-            int saveResult = await _applicationDbContext.SaveChangesAsync();
-            bool saveSuccess;
-            try
-            {
-                saveSuccess = Convert.ToBoolean(saveResult);
-            }
-            catch (Exception)
-            {
-                throw new LikingMemeFailedException();
-            }
-            return saveSuccess;
-        }
-        public async Task<bool> UnLikeMemeAsync(string memeId, int userId)
-        {
-            MemeLike memeLike = await _applicationDbContext.MemeLikes.FirstOrDefaultAsync(ml => ml.MemeId.Equals(memeId) && ml.UserId.Equals(userId));
-            if (memeLike == default)
-                throw new MemeLikeNotFoundException();
 
-            _applicationDbContext.MemeLikes.Remove(memeLike);
+        public async Task<bool> DeleteAsync(Meme entity)
+        {
+            if (!await _applicationDbContext.Memes.ContainsAsync(entity))
+                throw new MemeNotFoundException();
+            _applicationDbContext.Memes.Remove(entity);
             int saveResult = await _applicationDbContext.SaveChangesAsync();
             bool saveSuccess;
             try
@@ -105,56 +53,34 @@ namespace Ultrix.Persistance.Repositories
             }
             catch (Exception)
             {
-                throw new UnLikingMemeFailedException();
+                throw new DeletingMemeFailedException();
             }
             return saveSuccess;
         }
-        public async Task<bool> DisLikeMemeAsync(MemeLike memeLike)
-        {
-            Expression<Func<MemeLike, bool>> predicate = ml => ml.MemeId.Equals(memeLike.MemeId) && ml.UserId.Equals(memeLike.UserId);
-            if (await _applicationDbContext.MemeLikes.AnyAsync(predicate))
-            {
-                MemeLike ExistingMemeLike = await _applicationDbContext.MemeLikes.FirstAsync(predicate);
-                if (!ExistingMemeLike.IsLike)
-                    return true;
-                else
-                    ExistingMemeLike.IsLike = true;
-                _applicationDbContext.MemeLikes.Update(ExistingMemeLike);
-            }
-            else
-            {
-                await _applicationDbContext.MemeLikes.AddAsync(memeLike);
-            }
-            int saveResult = await _applicationDbContext.SaveChangesAsync();
-            bool saveSuccess;
-            try
-            {
-                saveSuccess = Convert.ToBoolean(saveResult);
-            }
-            catch (Exception)
-            {
-                throw new DislikingMemeFailedException();
-            }
-            return saveSuccess;
-        }
-        public async Task<bool> UnDisLikeMemeAsync(string memeId, int userId)
-        {
-            MemeLike memeLike = await _applicationDbContext.MemeLikes.FirstOrDefaultAsync(ml => ml.MemeId.Equals(memeId) && ml.UserId.Equals(userId));
-            if (memeLike == default)
-                throw new MemeLikeNotFoundException();
 
-            _applicationDbContext.MemeLikes.Remove(memeLike);
-            int saveResult = await _applicationDbContext.SaveChangesAsync();
-            bool saveSuccess;
-            try
-            {
-                saveSuccess = Convert.ToBoolean(saveResult);
-            }
-            catch (Exception)
-            {
-                throw new UnDislikingMemeFailedException();
-            }
-            return saveSuccess;
+        public async Task<bool> ExistsAsync(Expression<Func<Meme, bool>> predicate)
+        {
+            return await _applicationDbContext.Memes.AnyAsync(predicate);
+        }
+
+        public Task<IEnumerable<Meme>> FindManyByExpressionAsync(Expression<Func<Meme, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Meme> FindSingleByExpressionAsync(Expression<Func<Meme, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Meme>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> UpdateAsync(Meme entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

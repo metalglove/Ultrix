@@ -9,7 +9,7 @@ namespace Ultrix.Application.Interfaces
         Task<bool> FollowUserAsync(FollowerDto followerDto);
         Task<bool> UnFollowUserAsync(FollowerDto followerDto);
         Task<IEnumerable<FollowerDto>> GetFollowersByUserIdAsync(int userId);
-        Task<IEnumerable<FollowerDto>> GetFollowingsByUserIdAsync(int userId);
+        Task<IEnumerable<FollowerDto>> GetFollowsByUserIdAsync(int userId);
         Task<IEnumerable<FollowingDto>> GetMutualFollowingsByUserIdAsync(int userId);
     }
 }

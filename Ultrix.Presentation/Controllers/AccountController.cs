@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
-using Ultrix.Presentation.DTOs;
 using Ultrix.Presentation.Utilities;
 using Ultrix.Presentation.ViewModels.Account;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
@@ -63,8 +62,8 @@ namespace Ultrix.Presentation.Controllers
                 return Json(new { success = false });
 
             int userId = await _userService.GetUserIdByUserNameAsync(loginViewModel.Username);
-            IEnumerable<CollectionDTO> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
-                .Select(collection => new CollectionDTO { Name = collection.Name, Id = collection.Id });
+            IEnumerable<ShareCollectionDto> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
+                .Select(collection => new ShareCollectionDto { Name = collection.Name, Id = collection.Id });
             IEnumerable<FollowingDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
             TempData.Put("collections", collectionDTOs.ToList());
             TempData.Keep("collections");
@@ -79,7 +78,7 @@ namespace Ultrix.Presentation.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                TempData.Peek("collections", out List<CollectionDTO> collections);
+                TempData.Peek("collections", out List<ShareCollectionDto> collections);
                 TempData.Peek("mutualFollowings", out List<FollowingDto> mutualFollowings);
 
                 if (collections != null && mutualFollowings != null)

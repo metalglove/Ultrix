@@ -54,37 +54,58 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<IEntityValidator<Collection>, CollectionValidator>();
             serviceCollection.AddTransient<IEntityValidator<SharedMeme>, SharedMemeValidator>();
             serviceCollection.AddTransient<IEntityValidator<Meme>, MemeValidator>();
+            serviceCollection.AddTransient<IEntityValidator<MemeLike>, MemeLikeValidator>();
+            serviceCollection.AddTransient<IEntityValidator<CollectionItemDetail>, CollectionItemDetailValidator>();
+            serviceCollection.AddTransient<IEntityValidator<CollectionSubscriber>, CollectionSubscriberValidator>();
             #endregion Validators
 
             #region Repositories
-            serviceCollection.AddTransient<IMemeRepository, MemeRepository>(serviceProvider =>
+            serviceCollection.AddTransient<IRepository<Meme>, MemeRepository>(serviceProvider =>
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 IEntityValidator<Meme> entityValidator = serviceProvider.GetService<IEntityValidator<Meme>>();
                 return new MemeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
-            serviceCollection.AddTransient<IFollowerRepository, FollowerRepository>(serviceProvider =>
+            serviceCollection.AddTransient<IRepository<Follower>, FollowerRepository>(serviceProvider =>
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 IEntityValidator<Follower> entityValidator = serviceProvider.GetService<IEntityValidator<Follower>>();
                 return new FollowerRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
-            serviceCollection.AddTransient<ICollectionRepository, CollectionRepository>(serviceProvider =>
+            serviceCollection.AddTransient<IRepository<Collection>, CollectionRepository>(serviceProvider =>
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 IEntityValidator<Collection> entityValidator = serviceProvider.GetService<IEntityValidator<Collection>>();
                 return new CollectionRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
-            serviceCollection.AddTransient<ISharedMemeRepository, SharedMemeRepository>(serviceProvider =>
+            serviceCollection.AddTransient<IRepository<SharedMeme>, SharedMemeRepository>(serviceProvider =>
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 IEntityValidator<SharedMeme> entityValidator = serviceProvider.GetService<IEntityValidator<SharedMeme>>();
                 return new SharedMemeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
-            serviceCollection.AddTransient<IUserRepository, UserRepository>(serviceProvider =>
+            serviceCollection.AddTransient<IRepository<ApplicationUser>, UserRepository>(serviceProvider =>
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 return new UserRepository(applicationDbFactory.CreateNewInstance());
+            });
+            serviceCollection.AddTransient<IRepository<MemeLike>, MemeLikeRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<MemeLike> entityValidator = serviceProvider.GetService<IEntityValidator<MemeLike>>();
+                return new MemeLikeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+            });
+            serviceCollection.AddTransient<IRepository<CollectionItemDetail>, CollectionItemDetailRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<CollectionItemDetail> entityValidator = serviceProvider.GetService<IEntityValidator<CollectionItemDetail>>();
+                return new CollectionItemDetailRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+            });
+            serviceCollection.AddTransient<IRepository<CollectionSubscriber>, CollectionSubscriberRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<CollectionSubscriber> entityValidator = serviceProvider.GetService<IEntityValidator<CollectionSubscriber>>();
+                return new CollectionSubscriberRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
             #endregion Repositories
 
@@ -93,29 +114,49 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<ILocalMemeFetcherService, LocalMemeFetcherService>();
             serviceCollection.AddTransient<IMemeService, MemeService>(serviceProvider =>
             {
-                IMemeRepository memeRepository = serviceProvider.GetService<IMemeRepository>();
-                ISharedMemeRepository sharedMemeRepository = serviceProvider.GetService<ISharedMemeRepository>();
+                IRepository<Meme> memeRepository = serviceProvider.GetService<IRepository<Meme>>();
                 ILocalMemeFetcherService memeFetcherService = serviceProvider.GetService<ILocalMemeFetcherService>();
-                IUserService userService = serviceProvider.GetService<IUserService>();
-                return new MemeService(memeFetcherService, memeRepository, sharedMemeRepository, userService);
+                return new MemeService(memeFetcherService, memeRepository);
             });
             serviceCollection.AddTransient<ICollectionService, CollectionService>(serviceProvider =>
             {
-                IMemeRepository memeRepository = serviceProvider.GetService<IMemeRepository>();
-                ICollectionRepository collectionRepository = serviceProvider.GetService<ICollectionRepository>();
-                return new CollectionService(collectionRepository, memeRepository);
+                IRepository<Collection> collectionRepository = serviceProvider.GetService<IRepository<Collection>>();
+                return new CollectionService(collectionRepository);
             });
             serviceCollection.AddTransient<IUserService, UserService>(serviceProvider =>
             {
-                IUserRepository userRepository = serviceProvider.GetService<IUserRepository>();
+                IRepository<ApplicationUser> userRepository = serviceProvider.GetService<IRepository<ApplicationUser>>();
                 UserManager<ApplicationUser> userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
                 SignInManager<ApplicationUser> signInManager = serviceProvider.GetService<SignInManager<ApplicationUser>>();
                 return new UserService(signInManager, userManager, userRepository);
             });
             serviceCollection.AddTransient<IFollowerService, FollowerService>(serviceProvider =>
             {
-                IFollowerRepository followerRepository = serviceProvider.GetService<IFollowerRepository>();
+                IRepository<Follower> followerRepository = serviceProvider.GetService<IRepository<Follower>>();
                 return new FollowerService(followerRepository);
+            });
+            serviceCollection.AddTransient<IMemeSharingService, MemeSharingService>(serviceProvider =>
+            {
+                IRepository<SharedMeme> sharedMemeRepository = serviceProvider.GetService<IRepository<SharedMeme>>();
+                IRepository<ApplicationUser> userRepository = serviceProvider.GetService<IRepository<ApplicationUser>>();
+                return new MemeSharingService(sharedMemeRepository, userRepository);
+            });
+            serviceCollection.AddTransient<IMemeLikingService, MemeLikingService>(serviceProvider =>
+            {
+                IRepository<MemeLike> memeLikeRepository = serviceProvider.GetService<IRepository<MemeLike>>();
+                return new MemeLikingService(memeLikeRepository);
+            });
+            serviceCollection.AddTransient<ICollectionItemDetailService, CollectionItemDetailService>(serviceProvider =>
+            {
+                IRepository<CollectionItemDetail> collectionItemDetailRepository = serviceProvider.GetService<IRepository<CollectionItemDetail>>();
+                IRepository<Collection> collectionRepository = serviceProvider.GetService<IRepository<Collection>>();
+                IRepository<Meme> memeRepository = serviceProvider.GetService<IRepository<Meme>>();
+                return new CollectionItemDetailService(collectionItemDetailRepository, collectionRepository, memeRepository);
+            });
+            serviceCollection.AddTransient<ICollectionSubscriberService, CollectionSubscriberService>(serviceProvider =>
+            {
+                IRepository<CollectionSubscriber> collectionSubscriberRepository = serviceProvider.GetService<IRepository<CollectionSubscriber>>();
+                return new CollectionSubscriberService(collectionSubscriberRepository);
             });
             #endregion Services
 
