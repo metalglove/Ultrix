@@ -57,6 +57,7 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<IEntityValidator<MemeLike>, MemeLikeValidator>();
             serviceCollection.AddTransient<IEntityValidator<CollectionItemDetail>, CollectionItemDetailValidator>();
             serviceCollection.AddTransient<IEntityValidator<CollectionSubscriber>, CollectionSubscriberValidator>();
+            serviceCollection.AddTransient<IEntityValidator<ApplicationUser>, ApplicationUserValidator>();
             #endregion Validators
 
             #region Repositories
@@ -87,7 +88,8 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<IRepository<ApplicationUser>, UserRepository>(serviceProvider =>
             {
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
-                return new UserRepository(applicationDbFactory.CreateNewInstance());
+                IEntityValidator<ApplicationUser> entityValidator = serviceProvider.GetService<IEntityValidator<ApplicationUser>>();
+                return new UserRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<MemeLike>, MemeLikeRepository>(serviceProvider =>
             {

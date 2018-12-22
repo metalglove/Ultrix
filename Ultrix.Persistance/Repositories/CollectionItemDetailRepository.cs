@@ -1,34 +1,33 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
+using Ultrix.Persistance.Abstractions;
 using Ultrix.Persistance.Contexts;
 
 namespace Ultrix.Persistance.Repositories
 {
-    public class CollectionItemDetailRepository : IRepository<CollectionItemDetail>
+    public class CollectionItemDetailRepository : RepositoryBase<CollectionItemDetail>
     {
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IEntityValidator<CollectionItemDetail> _collectionItemDetailValidator;
 
-        public CollectionItemDetailRepository(ApplicationDbContext applicationDbContext, IEntityValidator<CollectionItemDetail> collectionItemDetailValidator)
+        public CollectionItemDetailRepository(ApplicationDbContext applicationDbContext, IEntityValidator<CollectionItemDetail> collectionItemDetailValidator) : base(applicationDbContext, collectionItemDetailValidator)
         {
             _applicationDbContext = applicationDbContext;
             _collectionItemDetailValidator = collectionItemDetailValidator;
         }
 
-        public async Task<bool> CreateAsync(CollectionItemDetail entity)
+        public async override Task<bool> CreateAsync(CollectionItemDetail entity)
         {
+            // TODO: verify if this works
             _collectionItemDetailValidator.Validate(entity);
             if (await _applicationDbContext.CollectionItemDetails.AnyAsync(collectionItemDetail =>
             collectionItemDetail.CollectionId.Equals(entity.CollectionId) &&
             collectionItemDetail.MemeId.Equals(entity.MemeId)))
-                throw new CollectionItemDetailAlreadyExistsException();
+                throw new EntityAlreadyExistsException($"The entity of type {typeof(CollectionItemDetail).Name} already exists.");
             _applicationDbContext.CollectionItemDetails.Add(entity);
             int saveResult = await _applicationDbContext.SaveChangesAsync();
             bool saveSuccess;
@@ -38,17 +37,18 @@ namespace Ultrix.Persistance.Repositories
             }
             catch (Exception)
             {
-                throw new CreatingCollectionItemDetailFailedException();
+                throw new CreatingEntityFailedException($"The entity of type {typeof(CollectionItemDetail).Name} could not be created.");
             }
             return saveSuccess;
         }
-        public async Task<bool> DeleteAsync(CollectionItemDetail entity)
+        public async override Task<bool> DeleteAsync(CollectionItemDetail entity)
         {
+            // TODO: verify if this works
             if (!await _applicationDbContext.CollectionItemDetails.AnyAsync(collectionItemDetail => 
             collectionItemDetail.CollectionId.Equals(entity.CollectionId) &&
             collectionItemDetail.MemeId.Equals(entity.MemeId) &&
             collectionItemDetail.AddedByUserId.Equals(entity.AddedByUserId)))
-                throw new CollectionItemDetailNotFoundException();
+                throw new EntityNotFoundException($"The entity of type {typeof(CollectionItemDetail).Name} could not be found.");
             _applicationDbContext.CollectionItemDetails.Remove(entity);
             int saveResult = await _applicationDbContext.SaveChangesAsync();
             bool saveSuccess;
@@ -58,33 +58,9 @@ namespace Ultrix.Persistance.Repositories
             }
             catch (Exception)
             {
-                throw new DeletingCollectionItemDetailFailedException();
+                throw new DeletingEntityFailedException($"The entity of type {typeof(CollectionItemDetail).Name} could not be deleted.");
             }
             return saveSuccess;
-        }
-        public async Task<bool> ExistsAsync(Expression<Func<CollectionItemDetail, bool>> predicate)
-        {
-            return await _applicationDbContext.CollectionItemDetails.AnyAsync(predicate);
-        }
-        public async Task<IEnumerable<CollectionItemDetail>> FindManyByExpressionAsync(Expression<Func<CollectionItemDetail, bool>> predicate)
-        {
-            return await _applicationDbContext.CollectionItemDetails.Where(predicate).ToListAsync();
-        }
-        public async Task<CollectionItemDetail> FindSingleByExpressionAsync(Expression<Func<CollectionItemDetail, bool>> predicate)
-        {
-            CollectionItemDetail collectionItemDetail = await _applicationDbContext.CollectionItemDetails.SingleOrDefaultAsync(predicate);
-            if (collectionItemDetail == default)
-                throw new CollectionItemDetailNotFoundException();
-            return collectionItemDetail;
-        }
-        public async Task<IEnumerable<CollectionItemDetail>> GetAllAsync()
-        {
-            return await _applicationDbContext.CollectionItemDetails.ToListAsync();
-        }
-
-        public Task<bool> UpdateAsync(CollectionItemDetail entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }
