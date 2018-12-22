@@ -58,14 +58,13 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> AddMemeToCollectionAsync([FromBody] AddMemeToCollectionViewModel addMemeToCollectionViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { IsCreated = false, Message = "ModelState is not valid." });
+                return Json(new { Success = false, Message = "Something happend try again later.." });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             AddMemeToCollectionDto addMemeToCollectionDto =
                 addMemeToCollectionViewModel.GetAddMemeToCollectionDto(userId);
-            return await _collectionItemDetailService.AddMemeToCollectionAsync(addMemeToCollectionDto)
-                ? Json(new {IsCreated = true})
-                : Json(new {IsCreated = false});
+
+            return Json(await _collectionItemDetailService.AddMemeToCollectionAsync(addMemeToCollectionDto));
         }
         [Route("MyCollections"), Authorize, HttpGet]
         public async Task<IActionResult> MyCollectionsAsync()

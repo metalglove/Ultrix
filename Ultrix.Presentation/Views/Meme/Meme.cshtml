@@ -50,19 +50,21 @@
                                 <label>Share with a friend</label>
                             </div>
                             <i class="material-icons col s1 meme-icon" onclick="shareMemeToFriend('@(Model.Id + "FriendSelectForm")')">share</i>
-                        </form>                       
-                        <div class="input-field col s3">
-                            <select id="collectionSelect">
-                                <option value="" disabled selected>Collection..</option>
-                                @foreach (ShareCollectionDto collection in collections)
-                                {
-                                    <option value="@collection.Id">@collection.Name</option>
-                                }
-                                }
-                            </select>
-                            <label>Add to a collection</label>
-                        </div>
-                        <i class="material-icons col s1 meme-icon">add_box</i>
+                        </form> 
+                        <form method="post" id='@(Model.Id + "CollectionSelectForm")'>
+                            <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
+                            <div class="input-field col s3">
+                                <select id="collectionSelect" name="collectionId">
+                                    <option value="" disabled selected>Collection..</option>
+                                    @foreach (ShareCollectionDto collection in collections)
+                                    {
+                                        <option value="@collection.Id">@collection.Name</option>
+                                    }
+                                </select>
+                                <label>Add to a collection</label>
+                            </div>
+                            <i class="material-icons col s1 meme-icon" onclick="addMemeToCollection('@(Model.Id + "CollectionSelectForm")')">add_box</i>
+                        </form>
                         <i class="material-icons col s1 offset-s1 meme-icon">forum</i>
                     }
                     else

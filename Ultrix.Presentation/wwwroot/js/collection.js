@@ -1,5 +1,9 @@
 ﻿function addMemeToCollection(formId) {
     var form = getFormData($("#" + formId));
+    if (form["collectionId"] == undefined) {
+        M.toast({ html: "Select a collection from the collections select menu first." });
+        return;
+    }
     var addMemeUrl = "/AddMemeToCollection";
 
     $.ajax({
@@ -12,16 +16,7 @@
         },
         data: JSON.stringify(form),
         success: function (data) {
-            if (data.success === true) {
-                if (data.added === true) {
-                    M.toast({ html: "Successfully Added to " + data.collectionName + "!" });
-                } else {
-                    M.toast({ html: "Something happened, try again later..." });
-                }
-            }
-            else {
-                M.toast({ html: "Something happened, try again later..." });
-            }
+            M.toast({ html: data.message });
         },
         error: function () {
             console.log("AddMemeToCollection form resulted faulty..");

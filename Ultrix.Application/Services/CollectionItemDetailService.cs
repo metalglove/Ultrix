@@ -15,23 +15,29 @@ namespace Ultrix.Application.Services
         public CollectionItemDetailService(
             IRepository<CollectionItemDetail> collectionItemDetailRepository, 
             IRepository<Collection> collectionRepository,
-            IRepository<Meme> memeRepository
-            )
+            IRepository<Meme> memeRepository)
         {
             _collectionItemDetailRepository = collectionItemDetailRepository;
             _collectionRepository = collectionRepository;
             _memeRepository = memeRepository;
         }
 
-        public async Task<bool> AddMemeToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto)
+        public async Task<AddMemeToCollectionResultDto> AddMemeToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto)
         {
+            AddMemeToCollectionResultDto addMemeToCollectionResultDto = new AddMemeToCollectionResultDto();
             if (!await _memeRepository.ExistsAsync(meme => meme.Id.Equals(addMemeToCollectionDto.MemeId)))
-                return false;
+            {
+                addMemeToCollectionResultDto.Message = "Meme does not exist.";
+                return addMemeToCollectionResultDto;
+            }
 
-            if (!await _collectionItemDetailRepository.ExistsAsync(collectionItemDetail => 
+            if (await _collectionItemDetailRepository.ExistsAsync(collectionItemDetail => 
             collectionItemDetail.MemeId.Equals(addMemeToCollectionDto.MemeId) && 
             collectionItemDetail.CollectionId.Equals(addMemeToCollectionDto.CollectionId)))
-                return false;
+            {
+                addMemeToCollectionResultDto.Message = "Meme already exists in the collection.";
+                return addMemeToCollectionResultDto;
+            }
 
             CollectionItemDetail actualCollectionItemDetail = new CollectionItemDetail
             {
@@ -39,7 +45,17 @@ namespace Ultrix.Application.Services
                 CollectionId = addMemeToCollectionDto.CollectionId,
                 MemeId = addMemeToCollectionDto.MemeId
             };
-            return await _collectionItemDetailRepository.CreateAsync(actualCollectionItemDetail);
+
+            if (await _collectionItemDetailRepository.CreateAsync(actualCollectionItemDetail))
+            {
+                addMemeToCollectionResultDto.Success = true;
+                addMemeToCollectionResultDto.Message = "Succesfully added meme to the collection.";
+            }
+            else
+            {
+                addMemeToCollectionResultDto.Message = "Failed to add meme to the collection.";
+            }
+            return addMemeToCollectionResultDto;
         }
 
         public async Task<bool> RemoveMemeFromCollectionAsync(RemoveMemeFromCollectionDto removeMemeFromCollectionDto)
