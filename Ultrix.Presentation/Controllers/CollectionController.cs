@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
+using Ultrix.Presentation.Utilities;
 using Ultrix.Presentation.ViewModels.Collection_;
 
 namespace Ultrix.Presentation.Controllers
@@ -46,13 +48,11 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> CreateCollectionAsync([FromBody] CreateCollectionViewModel createCollectionViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new {IsCreated = false});
+                return Json(new {Success = false, Message = "Something happend try again later.." });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             CollectionDto collection = createCollectionViewModel.GetCollectionDto(userId);
-            return await _collectionService.CreateCollectionAsync(collection)
-                ? Json(new {IsCreated = true})
-                : Json(new {IsCreated = false});
+            return Json(await _collectionService.CreateCollectionAsync(collection));
         }
         [Route("AddMemeToCollection"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> AddMemeToCollectionAsync([FromBody] AddMemeToCollectionViewModel addMemeToCollectionViewModel)

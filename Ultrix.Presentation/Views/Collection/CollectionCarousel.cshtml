@@ -2,7 +2,7 @@
 
 <h3>@Model.Collection.Name</h3>
 <div class="collection-grid-container">
-    <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:980px;height:150px;overflow:hidden;visibility:hidden;">
+    <div id='@(Model.Collection.Id + "jssor_1")' style="position:relative;margin:0 auto;top:0px;left:0px;width:980px;height:150px;overflow:hidden;visibility:hidden;">
         <!-- Loading Screen -->
         <div data-u="loading" class="jssorl-009-spin" style="position:absolute;top:0px;left:0px;width:100%;height:100%;text-align:center;background-color:rgba(0,0,0,0.7);">
             <img style="margin-top:-19px;position:relative;top:50%;width:38px;height:38px;" src="~/images/spin.png" />
@@ -39,17 +39,17 @@
     </div>
     @if (Model.IsSubscribable)
     {
-    <div class="button-container">
-        @Html.ActionLink("View collection", "CollectionAsync", "Collection", new { id = Model.Collection.Id }, new { @class = "waves-effect waves-light btn" })
-    </div>
+        <div class="button-container">
+            @Html.ActionLink("View collection", "CollectionAsync", "Collection", new { id = Model.Collection.Id }, new { @class = "waves-effect waves-light btn" })
+        </div>
     }
     else
     {
-    <div class="button-grid-container">
-        <a class="waves-effect waves-light btn">Delete collection</a>
-        <a class="waves-effect waves-light btn">Manage collection</a>
-        @Html.ActionLink("View collection", "CollectionAsync", "Collection", new { id = Model.Collection.Id }, new { @class = "waves-effect waves-light btn" })
-    </div>
+        <div class="button-grid-container">
+            <a class="waves-effect waves-light btn">Delete collection</a>
+            <a class="waves-effect waves-light btn">Manage collection</a>
+            @Html.ActionLink("View collection", "CollectionAsync", "Collection", new { id = Model.Collection.Id }, new { @class = "waves-effect waves-light btn" })
+        </div>
     }
 </div>
 
@@ -72,7 +72,7 @@
             }
         };
 
-        var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
+        var jssor_1_slider = new $JssorSlider$('@(Model.Collection.Id + "jssor_1")', jssor_1_options);
 
         /*#region responsive code begin*/
 

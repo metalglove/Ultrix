@@ -1,14 +1,46 @@
 ﻿@model MyCollectionsViewModel
 
 <h2>My collections</h2>
-
+<hr />
+<a class="waves-effect waves-light btn modal-trigger" href="#CreateCollectionModal">Create a new collection</a>
+<div class="modal" id="CreateCollectionModal">
+    <div class="modal-content">
+        <div class="col s12 m3">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text">
+                    <span class="card-title">Create a new collection</span>
+                    <form id="CreateCollectionForm" method="post">
+                        <div class="input-field inline" style="margin-top: unset; margin-bottom: unset;">
+                            <input id="CollectionName" name="CollectionName" class="validate" type="text" />
+                            <label for="CollectionName">Name</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-action">
+                    <button class="btn" onclick="createCollection()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Done</a>
+        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+    </div>
+</div>
 @foreach (CollectionDto myCollection in Model.MyCollections)
 {
     await Html.RenderPartialAsync("CollectionCarousel", new CollectionCarouselViewModel(myCollection, false));
 }
 
 <h2>My subscribed collections</h2>
+<hr />
 @foreach (CollectionDto mySubscribedCollection in Model.SubscribedCollections)
 {
     await Html.RenderPartialAsync("CollectionCarousel", new CollectionCarouselViewModel(mySubscribedCollection, true));
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.modal').modal();
+    });
+</script>

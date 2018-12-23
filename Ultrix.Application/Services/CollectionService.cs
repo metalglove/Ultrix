@@ -27,12 +27,23 @@ namespace Ultrix.Application.Services
             Collection actualCollection = await _collectionRepository.FindSingleByExpressionAsync(collection => collection.Id.Equals(collectionId));
             return EntityToDtoConverter.Convert<CollectionDto, Collection>(actualCollection);
         }
-        public async Task<bool> CreateCollectionAsync(CollectionDto collectionDto)
+        public async Task<CreateCollectionResultDto> CreateCollectionAsync(CollectionDto collectionDto)
         {
+            CreateCollectionResultDto createCollectionResultDto = new CreateCollectionResultDto();
             if (await _collectionRepository.ExistsAsync(collection => collection.Name.Equals(collectionDto.Name)))
-                return false;
+            {
+                createCollectionResultDto.Message = $"A collection with the name {collectionDto.Name} already exists.";
+                return createCollectionResultDto;
+            }
             Collection actualCollection = DtoToEntityConverter.Convert<Collection, CollectionDto>(collectionDto);
-            return await _collectionRepository.CreateAsync(actualCollection);
+            if (await _collectionRepository.CreateAsync(actualCollection))
+            {
+                createCollectionResultDto.Success = true;
+                createCollectionResultDto.Message = "The collection is created succesfully.";
+                return createCollectionResultDto;
+            }
+            createCollectionResultDto.Message = "Something happened try again later..";
+            return createCollectionResultDto;
         }
         public async Task<IEnumerable<CollectionDto>> GetMyCollectionsAsync(int userId)
         {
