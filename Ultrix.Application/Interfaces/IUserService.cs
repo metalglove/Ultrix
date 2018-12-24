@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ultrix.Application.DTOs;
 
@@ -12,5 +13,6 @@ namespace Ultrix.Application.Interfaces
         Task SignOutAsync(HttpContext httpContext);
         Task<string> GetUserNameByUserIdAsync(int userId);
         Task<int> GetUserIdByUserNameAsync(string userName);
+        Task<IEnumerable<ApplicationUserDto>> GetUsersAsync();
     }
 }

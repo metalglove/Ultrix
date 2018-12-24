@@ -30,6 +30,16 @@ namespace Ultrix.Application.Converters
                     property.SetValue(dto, genericListInstance);
                     continue;
                 }
+
+                if (typeof(DtoToEntityConverter).Assembly.GetTypes().Any(t => t.Name.Equals(property.Name + "Dto")))
+                {
+                    Type newEntityType = typeof(ApplicationUser).Assembly.GetTypes().First(t => t.Name.Equals(property.Name.Replace("Dto", "")));
+                    object entityObject = typeof(TEntity).GetProperty(property.Name).GetValue(entity, null);
+                    object result = Convert(property.PropertyType, newEntityType, entityObject);
+                    property.SetValue(dto, result);
+                    continue;
+                }
+
                 object value = entity.GetType().GetProperty(property.Name).GetValue(entity);
                 property.SetValue(dto, value);
             }

@@ -7,6 +7,8 @@ using System;
 using Microsoft.AspNetCore.Authentication;
 using Ultrix.Application.Converters;
 using Ultrix.Application.DTOs;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Ultrix.Application.Services
 {
@@ -63,6 +65,11 @@ namespace Ultrix.Application.Services
             ApplicationUser applicationUser = await _userManager.FindByNameAsync(username); 
             //ApplicationUser applicationUser = await _userRepository.FindSingleByExpressionAsync(user => user.UserName.Equals(username));
             return applicationUser.Id;
+        }
+        public async Task<IEnumerable<ApplicationUserDto>> GetUsersAsync()
+        {
+            IEnumerable<ApplicationUser> users = await _userRepository.GetAllAsync();
+            return users.Select(EntityToDtoConverter.Convert<ApplicationUserDto, ApplicationUser>);
         }
     }
 }

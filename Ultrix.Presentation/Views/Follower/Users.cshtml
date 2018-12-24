@@ -1,0 +1,9 @@
+﻿@model UsersViewModel
+
+<ul class="collection">
+    @foreach (ApplicationUserDto applicationUserDto in Model.Users)
+    {
+        await Html.RenderPartialAsync("User", new UserViewModel(applicationUserDto, false));
+    }
+</ul>
+
