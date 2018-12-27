@@ -108,3 +108,29 @@ function shareMemeToFriend(formId) {
         }
     });
 }
+
+function markAsSeen(formId) {
+    var form = getFormData($("#" + formId));
+    if (form["Id"] == undefined) {
+        M.toast({ html: "Something happend try again later." });
+        return;
+    }
+    var markMemeAsSeenUrl = "/MarkMemeAsSeen";
+
+    $.ajax({
+        type: "POST",
+        url: markMemeAsSeenUrl,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        data: JSON.stringify(form),
+        success: function (data) {
+            M.toast({ html: data.message });
+        },
+        error: function () {
+            console.log("MarkMemeAsSeen form resulted faulty..");
+        }
+    });
+}

@@ -20,13 +20,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.filenesting.json = .filenesting.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Mapping", "Ultrix.Mapping\Ultrix.Mapping.csproj", "{695A0D89-69E0-49B3-AFA6-7D1ACE2DFB5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Mapping", "Ultrix.Mapping\Ultrix.Mapping.csproj", "{695A0D89-69E0-49B3-AFA6-7D1ACE2DFB5D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Persistance", "Ultrix.Persistance\Ultrix.Persistance.csproj", "{1D1826BC-A188-483A-96E2-DFF518A8B7F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Persistance", "Ultrix.Persistance\Ultrix.Persistance.csproj", "{1D1826BC-A188-483A-96E2-DFF518A8B7F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Infrastructure", "Ultrix.Infrastructure\Ultrix.Infrastructure.csproj", "{5C090C5E-7968-4732-B117-F940EA62C6D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Infrastructure", "Ultrix.Infrastructure\Ultrix.Infrastructure.csproj", "{5C090C5E-7968-4732-B117-F940EA62C6D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Domain", "Ultrix.Domain\Ultrix.Domain.csproj", "{BCA7573A-E9B5-4378-9142-FCA4D9D4D0B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Domain", "Ultrix.Domain\Ultrix.Domain.csproj", "{BCA7573A-E9B5-4378-9142-FCA4D9D4D0B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

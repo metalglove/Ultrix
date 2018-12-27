@@ -1,0 +1,10 @@
+﻿@model SharedMemesViewModel
+
+<h2>Shared Memes</h2>
+<hr />
+<ul class="collection">
+    @foreach (SharedMemeDto sharedMemeDto in Model.SharedMemes)
+    {
+        await Html.RenderPartialAsync("SharedMeme", sharedMemeDto);
+    }
+</ul>

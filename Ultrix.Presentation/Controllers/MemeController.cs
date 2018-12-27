@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
+using Ultrix.Domain.Enumerations;
 using Ultrix.Presentation.ViewModels;
 using Ultrix.Presentation.ViewModels.Meme;
 
@@ -121,6 +121,33 @@ namespace Ultrix.Presentation.Controllers
                 ? Json(new { success = true, to = sharedMemeResultDto.ReceiverUsername }) 
                 : Json(new { success = false, message = "Something happened.." });
         }
+        [Route("SharedMemes"), Authorize, HttpGet]
+        public async Task<IActionResult> SharedMemesAsync()
+        {
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            IEnumerable<SharedMemeDto> sharedMemes = await _memeSharingService.GetSharedMemesAsync(userId, SeenStatus.Any);
+            return View("SharedMemes", new SharedMemesViewModel(sharedMemes));
+        }
+        [Route("Meme/{id}"), HttpGet]
+        public async Task<IActionResult> MemeByIdAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                return NotFound();
+            MemeDto meme = await _memeService.GetMemeAsync(id);
+            return View("SharedMemeExpanded", meme);
+        }
+        [Route("MarkMemeAsSeen"), Authorize, HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> MarkMemeAsSeenAsync([FromBody] MarkMemeAsSeenViewModel markMemeAsSeenViewModel)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { Success = false, Message = "Something happened try again later.." });
+
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            SharedMemeDto sharedMemeDto = markMemeAsSeenViewModel.GetSharedMemeDto(userId);
+            SharedMemeMarkAsSeenDto sharedMemeMarkAsSeenDto = await _memeSharingService.MarkSharedMemeAsSeenAsync(sharedMemeDto);
+            return Json(sharedMemeMarkAsSeenDto);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

@@ -21,10 +21,10 @@ namespace Ultrix.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<SharedMemeDto>> GetSharedMemeDtos(int userId, SeenStatus seenStatus)
+        public async Task<IEnumerable<SharedMemeDto>> GetSharedMemesAsync(int userId, SeenStatus seenStatus)
         {
             IEnumerable<SharedMeme> sharedMemes;
-            if (seenStatus.Equals(SeenStatus.Any))
+            if (!seenStatus.Equals(SeenStatus.Any))
                 sharedMemes = await _sharedMemeRepository.FindManyByExpressionAsync(
                 sharedMeme => sharedMeme.ReceiverUserId.Equals(userId) &&
                 Convert.ToInt32(sharedMeme.IsSeen).Equals((int)seenStatus));
@@ -34,11 +34,32 @@ namespace Ultrix.Application.Services
             return sharedMemes.Select(EntityToDtoConverter.Convert<SharedMemeDto, SharedMeme>);
         }
 
-        public async Task<bool> MarkSharedMemeAsSeenAsync(SharedMemeDto sharedMeme)
+        public async Task<SharedMemeMarkAsSeenDto> MarkSharedMemeAsSeenAsync(SharedMemeDto sharedMeme)
         {
-            SharedMeme sharedMemeEntity = DtoToEntityConverter.Convert<SharedMeme, SharedMemeDto>(sharedMeme);
+            SharedMemeMarkAsSeenDto sharedMemeMarkAsSeenDto = new SharedMemeMarkAsSeenDto();
+            sharedMemeMarkAsSeenDto.Message = "Something happened try again later..";
+
+            if (!await _sharedMemeRepository.ExistsAsync(sm => sm.Id.Equals(sharedMeme.Id)))
+            {
+                sharedMemeMarkAsSeenDto.Message = "Something happened try again later..";
+                return sharedMemeMarkAsSeenDto;
+            }
+
+            SharedMeme sharedMemeEntity = await _sharedMemeRepository.FindSingleByExpressionAsync(sm => sm.Id.Equals(sharedMeme.Id));
+            if (sharedMemeEntity.IsSeen)
+            {
+                sharedMemeMarkAsSeenDto.Message = "The shared meme is already marked as seen.";
+                return sharedMemeMarkAsSeenDto;
+            }
+
             sharedMemeEntity.IsSeen = true;
-            return await _sharedMemeRepository.UpdateAsync(sharedMemeEntity);
+
+            if (await _sharedMemeRepository.UpdateAsync(sharedMemeEntity))
+            {
+                sharedMemeMarkAsSeenDto.Success = true;
+                sharedMemeMarkAsSeenDto.Message = "Succesfully marked the shared meme as seen.";
+            }
+            return sharedMemeMarkAsSeenDto;
         }
 
         public async Task<SharedMemeResultDto> ShareMemeToMutualFollowerAsync(SharedMemeDto sharedMemeDto)

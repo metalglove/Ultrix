@@ -1,0 +1,23 @@
+﻿@model SharedMemeDto
+
+<li class="collection-item avatar">
+    <img src="@Model.Meme.ImageUrl" alt="meme image" class="circle">
+    <span class="title">@Model.Meme.Title</span>
+    <p>
+        Meme shared by @Model.SenderUser.UserName
+        <br>
+        Date: @Model.TimestampShared.ToString()
+    </p>
+    <a class="btn" href='@("Meme/" + Model.MemeId)'>View</a>
+    @if (Model.IsSeen)
+    {
+        <i class="material-icons">check</i>
+    }
+    else
+    {
+         <form class="col s1" method="post" id='@(Model.Id + "MarkAsSeenForm")'>
+            <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+            <i class="material-icons" onclick="markAsSeen('@(Model.Id + "MarkAsSeenForm")')">clear</i>
+        </form>
+    }
+</li>
