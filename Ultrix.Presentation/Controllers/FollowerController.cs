@@ -14,13 +14,16 @@ namespace Ultrix.Presentation.Controllers
     {
         private readonly IUserService _userService;
         private readonly IFollowerService _followerService;
+        private readonly ITempDataService _tempDataService;
 
         public FollowerController(
             IUserService userService,
-            IFollowerService followerService)
+            IFollowerService followerService,
+            ITempDataService tempDataService)
         {
             _userService = userService;
             _followerService = followerService;
+            _tempDataService = tempDataService;
         }
 
         [Route("Users"), HttpGet, Authorize]
@@ -44,7 +47,9 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> FollowingsAsync()
         {
             // who the user follows
-            throw new NotImplementedException();
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            IEnumerable<FollowerDto> followers = await _followerService.GetFollowsByUserIdAsync(userId);
+            return View("Followings", new FollowingsViewModel(followers));
         }
 
         [Route("MutualFollowings"), HttpGet, Authorize]
@@ -65,6 +70,7 @@ namespace Ultrix.Presentation.Controllers
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = followViewModel.GetFollowerDto(userId);
             FollowResultDto followResultDto = await _followerService.FollowUserAsync(follower);
+            await _tempDataService.UpdateTempDataAsync(TempData, userId);
             return Json(followResultDto);
         }
         [Route("UnFollow"), HttpPost, Authorize, ValidateAntiForgeryToken]
@@ -76,6 +82,7 @@ namespace Ultrix.Presentation.Controllers
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = unFollowViewModel.GetFollowerDto(userId);
             UnFollowResultDto unFollowResultDto = await _followerService.UnFollowUserAsync(follower);
+            await _tempDataService.UpdateTempDataAsync(TempData, userId);
             return Json(unFollowResultDto);
         }
     }

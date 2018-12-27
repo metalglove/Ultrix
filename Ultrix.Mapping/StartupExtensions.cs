@@ -162,6 +162,12 @@ namespace Ultrix.Mapping
                 IRepository<CollectionSubscriber> collectionSubscriberRepository = serviceProvider.GetService<IRepository<CollectionSubscriber>>();
                 return new CollectionSubscriberService(collectionSubscriberRepository);
             });
+            serviceCollection.AddTransient<ITempDataService, TempDataService>(serviceProvider =>
+            {
+                ICollectionService collectionService = serviceProvider.GetService<ICollectionService>();
+                IFollowerService followerService = serviceProvider.GetService<IFollowerService>();
+                return new TempDataService(collectionService, followerService);
+            });
             #endregion Services
 
             return serviceCollection;

@@ -1,6 +1,6 @@
-﻿@model UsersViewModel
+﻿@model FollowingsViewModel
 
-<h2>Users</h2>
+<h2>Followers</h2>
 <hr />
 <div class="row">
     <a class="col s3 offset-s3" href="Users">
@@ -16,13 +16,12 @@
         <div class="btn">Mutual followers</div>
     </a>
     <div class="col s1">
-        Results: @Model.Users.Count()
+        Results: @Model.Followings.Count()
     </div>
 </div>
 <ul class="collection">
-    @foreach (FilteredApplicationUserDto filteredApplicationUserDto in Model.Users)
+    @foreach (FollowerDto followerDto in Model.Followings)
     {
-        await Html.RenderPartialAsync("User", filteredApplicationUserDto);
+        await Html.RenderPartialAsync("Following", followerDto);
     }
 </ul>
-

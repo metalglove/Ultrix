@@ -17,18 +17,18 @@ namespace Ultrix.Presentation.Controllers
         private readonly ICollectionService _collectionService;
         private readonly ICollectionItemDetailService _collectionItemDetailService;
         private readonly ICollectionSubscriberService _collectionSubscriberService;
-        private readonly IFollowerService _followerService;
+        private readonly ITempDataService _tempDataService;
 
         public CollectionController(
             ICollectionService collectionService, 
             ICollectionItemDetailService collectionItemDetailService, 
             ICollectionSubscriberService collectionSubscriberService,
-            IFollowerService followerService)
+            ITempDataService tempDataService)
         {
             _collectionService = collectionService;
             _collectionItemDetailService = collectionItemDetailService;
             _collectionSubscriberService = collectionSubscriberService;
-            _followerService = followerService;
+            _tempDataService = tempDataService;
         }
 
         [Route("Collections")]
@@ -57,14 +57,7 @@ namespace Ultrix.Presentation.Controllers
             CollectionDto collectionDto = createCollectionViewModel.GetCollectionDto(userId);
             CreateCollectionResultDto collectionResult = await _collectionService.CreateCollectionAsync(collectionDto);
 
-            // TODO: create a TempDataService ?
-            IEnumerable<ShareCollectionDto> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
-                .Select(collection => new ShareCollectionDto { Name = collection.Name, Id = collection.Id });
-            IEnumerable<FollowerDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
-            TempData.Put("collections", collectionDTOs.ToList());
-            TempData.Keep("collections");
-            TempData.Put("mutualFollowings", mutualFollowingsDTOs.ToList());
-            TempData.Keep("mutualFollowings");
+            await _tempDataService.UpdateTempDataAsync(TempData, userId);
 
             return base.Json(collectionResult);
         }

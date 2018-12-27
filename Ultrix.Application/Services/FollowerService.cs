@@ -67,25 +67,30 @@ namespace Ultrix.Application.Services
         {
             IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             IEnumerable<Follower> followers = await _followerRepository.FindManyByExpressionAsync(follower => follower.UserId.Equals(userId));
-            IEnumerable<FollowerDto> sortedFollowers = followers
-                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower))
+            List<FollowerDto> followerDtos = followers
+                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+            _ = followerDtos
                 .Where(follower => followings.Any(following => following.UserId.Equals(follower.FollowerUserId)))
-                .Select(follower => { follower.IsFollowed = true; return follower; });
-            return sortedFollowers;
+                .Select(follower => { follower.IsFollowed = true; return follower; }).ToList();
+            return followerDtos;
         }
         public async Task<IEnumerable<FollowerDto>> GetFollowsByUserIdAsync(int userId)
         {
             // TODO: check naming followings or follows,. etc
             IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
-            return followings.Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower));
+            List<FollowerDto> followerDtos = followings
+                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+            return followerDtos.Select(follower => { follower.IsFollowed = true; return follower; });
         }
         public async Task<IEnumerable<FollowerDto>> GetMutualFollowingsByUserIdAsync(int userId)
         {
             IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             IEnumerable<Follower> followers = await _followerRepository.FindManyByExpressionAsync(follower => follower.UserId.Equals(userId));
-
-            return followers.Join(followings, follower => follower.UserId, following => following.FollowerUserId,
-                (follower, following) => following).Select(EntityToDtoConverter.Convert<FollowerDto, Follower>);
+            List<FollowerDto> followerDtos = followers
+                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+            return followerDtos
+                .Where(follower => followings.Any(following => following.UserId.Equals(follower.FollowerUserId)))
+                .Select(follower => { follower.IsFollowed = true; return follower; });
         }
     }
 }
