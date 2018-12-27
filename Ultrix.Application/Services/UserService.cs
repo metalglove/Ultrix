@@ -17,15 +17,18 @@ namespace Ultrix.Application.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IRepository<ApplicationUser> _userRepository;
+        private readonly IRepository<Follower> _followerRepository;
 
         public UserService(
-            SignInManager<ApplicationUser> signInManager, 
-            UserManager<ApplicationUser> userManager, 
-            IRepository<ApplicationUser> userRepository)
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            IRepository<ApplicationUser> userRepository,
+            IRepository<Follower> followerRepository)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _userRepository = userRepository;
+            _followerRepository = followerRepository;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(RegisterUserDto registerUserDto)
@@ -66,10 +69,13 @@ namespace Ultrix.Application.Services
             //ApplicationUser applicationUser = await _userRepository.FindSingleByExpressionAsync(user => user.UserName.Equals(username));
             return applicationUser.Id;
         }
-        public async Task<IEnumerable<ApplicationUserDto>> GetUsersAsync()
+        public async Task<IEnumerable<FilteredApplicationUserDto>> GetUsersAsync(int userId)
         {
             IEnumerable<ApplicationUser> users = await _userRepository.GetAllAsync();
-            return users.Select(EntityToDtoConverter.Convert<ApplicationUserDto, ApplicationUser>);
+            IEnumerable<ApplicationUserDto> usersDtos = users.Where(user => user.Id != userId)
+                .Select(EntityToDtoConverter.Convert<ApplicationUserDto, ApplicationUser>);
+            IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
+            return usersDtos.Select(userDto => new FilteredApplicationUserDto { ApplicationUserDto = userDto, IsFollowed = followings.Any(following => following.UserId.Equals(userDto.Id)) });
         }
     }
 }

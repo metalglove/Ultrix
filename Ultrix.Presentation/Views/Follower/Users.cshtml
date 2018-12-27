@@ -1,9 +1,19 @@
 ﻿@model UsersViewModel
 
+<h2>Users</h2>
+<hr />
+<div class="row">
+    <a class="col s3 offset-s8" href="Followers">
+        <div class="btn">Go to followers</div>
+    </a>
+    <div class="col s1">
+        Results: @Model.Users.Count()
+    </div>
+</div>
 <ul class="collection">
-    @foreach (ApplicationUserDto applicationUserDto in Model.Users)
+    @foreach (FilteredApplicationUserDto filteredApplicationUserDto in Model.Users)
     {
-        await Html.RenderPartialAsync("User", new UserViewModel(applicationUserDto, false));
+        await Html.RenderPartialAsync("User", filteredApplicationUserDto);
     }
 </ul>
 

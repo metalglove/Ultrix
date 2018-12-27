@@ -128,14 +128,16 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<IUserService, UserService>(serviceProvider =>
             {
                 IRepository<ApplicationUser> userRepository = serviceProvider.GetService<IRepository<ApplicationUser>>();
+                IRepository<Follower> followerRepository = serviceProvider.GetService<IRepository<Follower>>();
                 UserManager<ApplicationUser> userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
                 SignInManager<ApplicationUser> signInManager = serviceProvider.GetService<SignInManager<ApplicationUser>>();
-                return new UserService(signInManager, userManager, userRepository);
+                return new UserService(signInManager, userManager, userRepository, followerRepository);
             });
             serviceCollection.AddTransient<IFollowerService, FollowerService>(serviceProvider =>
             {
                 IRepository<Follower> followerRepository = serviceProvider.GetService<IRepository<Follower>>();
-                return new FollowerService(followerRepository);
+                IRepository<ApplicationUser> applicationUserRepository = serviceProvider.GetService<IRepository<ApplicationUser>>();
+                return new FollowerService(followerRepository, applicationUserRepository);
             });
             serviceCollection.AddTransient<IMemeSharingService, MemeSharingService>(serviceProvider =>
             {

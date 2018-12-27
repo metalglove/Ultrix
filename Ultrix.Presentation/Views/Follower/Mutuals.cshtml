@@ -1,0 +1,24 @@
+﻿@model MutualsViewModel
+
+<h2>Mutuals</h2>
+<hr />
+<div class="row">
+    <a class="col s3 offset-s3" href="Users">
+        <div class="btn">Search for other users</div>
+    </a>
+    <a class="col s2" href="Followings">
+        <div class="btn">Users I follow</div>
+    </a>
+    <a class="col s2" href="MutualFollowings">
+        <div class="btn">Mutual followers</div>
+    </a>
+    <div class="col s1">
+        Results: @Model.Followers.Count()
+    </div>
+</div>
+<ul class="collection">
+    @foreach (FollowerDto followerDto in Model.Followers)
+    {
+        await Html.RenderPartialAsync("Follower", followerDto);
+    }
+</ul>

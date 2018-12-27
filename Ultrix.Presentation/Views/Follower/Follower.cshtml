@@ -1,0 +1,18 @@
+﻿@model FollowerDto
+
+<li class="collection-item avatar">
+    <img src="~/images/default_user.jpg" alt="user image" class="circle">
+    <span class="title">@Model.FollowerUser.UserName</span>
+    <p>
+        Likes memes!
+        <br>
+    </p>
+    @if (Model.IsFollowed)
+    {
+        <a href="#!" class="secondary-content"><i class="material-icons">remove_circle</i></a>
+    }
+    else
+    {
+        <a href="#!" class="secondary-content"><i class="material-icons">person_add</i></a>
+    }
+</li>

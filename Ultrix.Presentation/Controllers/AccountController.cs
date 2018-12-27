@@ -65,7 +65,7 @@ namespace Ultrix.Presentation.Controllers
             int userId = await _userService.GetUserIdByUserNameAsync(loginViewModel.Username);
             IEnumerable<ShareCollectionDto> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
                 .Select(collection => new ShareCollectionDto { Name = collection.Name, Id = collection.Id });
-            IEnumerable<FollowingDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
+            IEnumerable<FollowerDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
             TempData.Put("collections", collectionDTOs.ToList());
             TempData.Keep("collections");
             TempData.Put("mutualFollowings", mutualFollowingsDTOs.ToList());
@@ -80,7 +80,7 @@ namespace Ultrix.Presentation.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 TempData.Peek("collections", out List<ShareCollectionDto> collections);
-                TempData.Peek("mutualFollowings", out List<FollowingDto> mutualFollowings);
+                TempData.Peek("mutualFollowings", out List<FollowerDto> mutualFollowings);
 
                 if (collections != null && mutualFollowings != null)
                     return Json(new { success = true, refresh = false });

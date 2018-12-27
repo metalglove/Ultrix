@@ -11,25 +11,67 @@ namespace Ultrix.Application.Services
     public class FollowerService : IFollowerService
     {
         private readonly IRepository<Follower> _followerRepository;
+        private readonly IRepository<ApplicationUser> _applicationUserRepository;
 
-        public FollowerService(IRepository<Follower> followerRepository)
+        public FollowerService(IRepository<Follower> followerRepository, IRepository<ApplicationUser> applicationUserRepository)
         {
             _followerRepository = followerRepository;
+            _applicationUserRepository = applicationUserRepository;
         }
-        public async Task<bool> FollowUserAsync(FollowerDto followerDto)
+
+        public async Task<FollowResultDto> FollowUserAsync(FollowerDto followerDto)
         {
+            FollowResultDto followResultDto = new FollowResultDto();
             Follower follower = DtoToEntityConverter.Convert<Follower, FollowerDto>(followerDto);
-            return await _followerRepository.CreateAsync(follower);
+            string username = (await _applicationUserRepository.FindSingleByExpressionAsync(user => user.Id.Equals(followerDto.UserId))).UserName;
+
+            if (await _followerRepository.ExistsAsync(follow => follow.UserId.Equals(followerDto.UserId) && follow.FollowerUserId.Equals(followerDto.FollowerUserId)))
+            {
+                followResultDto.Message = $"You already follow {username}";
+                return followResultDto;
+            }
+
+            if (await _followerRepository.CreateAsync(follower))
+            {
+                followResultDto.Success = true;
+                followResultDto.Message = $"Succesfully followed {username}";
+                return followResultDto;
+            }
+
+            followResultDto.Message = "Something happened try again later..";
+            return followResultDto;
         }
-        public async Task<bool> UnFollowUserAsync(FollowerDto followerDto)
+        public async Task<UnFollowResultDto> UnFollowUserAsync(FollowerDto followerDto)
         {
+            UnFollowResultDto unFollowResultDto = new UnFollowResultDto();
             Follower follower = DtoToEntityConverter.Convert<Follower, FollowerDto>(followerDto);
-            return await _followerRepository.DeleteAsync(follower);
+            string username = (await _applicationUserRepository.FindSingleByExpressionAsync(user => user.Id.Equals(followerDto.UserId))).UserName;
+
+            if (!await _followerRepository.ExistsAsync(follow => follow.UserId.Equals(followerDto.UserId) && follow.FollowerUserId.Equals(followerDto.FollowerUserId)))
+            {
+                unFollowResultDto.Message = $"you do not have {username} followed";
+                return unFollowResultDto;
+            }
+            Follower actualFollower = await _followerRepository.FindSingleByExpressionAsync(follwr => follwr.UserId.Equals(follower.UserId) && follwr.FollowerUserId.Equals(follower.FollowerUserId));
+            if (await _followerRepository.DeleteAsync(actualFollower))
+            {
+                unFollowResultDto.Success = true;
+                unFollowResultDto.Message = $"Succesfully unfollowed {username}";
+                return unFollowResultDto;
+            }
+
+            unFollowResultDto.Message = "Something happened try again later..";
+            return unFollowResultDto;
         }
         public async Task<IEnumerable<FollowerDto>> GetFollowersByUserIdAsync(int userId)
         {
+            IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             IEnumerable<Follower> followers = await _followerRepository.FindManyByExpressionAsync(follower => follower.UserId.Equals(userId));
-            return followers.Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower));
+            IEnumerable<FollowerDto> sortedFollowers = followers
+                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower))
+                .Where(follower => followings.Any(following => following.UserId.Equals(follower.FollowerUserId)))
+                .Select(follower => { follower.IsFollowed = true; return follower; });
+            return sortedFollowers;
         }
         public async Task<IEnumerable<FollowerDto>> GetFollowsByUserIdAsync(int userId)
         {
@@ -37,17 +79,13 @@ namespace Ultrix.Application.Services
             IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             return followings.Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower));
         }
-        public async Task<IEnumerable<FollowingDto>> GetMutualFollowingsByUserIdAsync(int userId)
+        public async Task<IEnumerable<FollowerDto>> GetMutualFollowingsByUserIdAsync(int userId)
         {
             IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             IEnumerable<Follower> followers = await _followerRepository.FindManyByExpressionAsync(follower => follower.UserId.Equals(userId));
 
             return followers.Join(followings, follower => follower.UserId, following => following.FollowerUserId,
-                (follower, following) => following).Select(follower => new FollowingDto
-                {
-                    Id = follower.FollowerUserId,
-                    Username = follower.FollowerUser.UserName
-                });
+                (follower, following) => following).Select(EntityToDtoConverter.Convert<FollowerDto, Follower>);
         }
     }
 }

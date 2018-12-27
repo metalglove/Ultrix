@@ -13,6 +13,6 @@ namespace Ultrix.Application.Interfaces
         Task SignOutAsync(HttpContext httpContext);
         Task<string> GetUserNameByUserIdAsync(int userId);
         Task<int> GetUserIdByUserNameAsync(string userName);
-        Task<IEnumerable<ApplicationUserDto>> GetUsersAsync();
+        Task<IEnumerable<FilteredApplicationUserDto>> GetUsersAsync(int userId);
     }
 }

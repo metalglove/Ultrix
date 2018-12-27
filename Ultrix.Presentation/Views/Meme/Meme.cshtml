@@ -24,7 +24,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         TempData.Peek("collections", out List<ShareCollectionDto> collections);
-                        TempData.Peek("mutualFollowings", out List<FollowingDto> mutualFollowings);
+                        TempData.Peek("mutualFollowings", out List<FollowerDto> mutualFollowings);
                          <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <input type="hidden" id="IsLike" name="IsLike" value="true" />
@@ -42,9 +42,9 @@
                             <div class="input-field col s3">
                                 <select id="friendSelect" name="MutualId">
                                     <option value="" disabled selected>Friend..</option>
-                                    @foreach (FollowingDto following in mutualFollowings)
+                                    @foreach (FollowerDto following in mutualFollowings)
                                     {
-                                        <option value="@following.Id">@following.Username</option>
+                                        <option value="@following.FollowerUserId">@following.FollowerUser.UserName</option>
                                     }
                                 </select>
                                 <label>Share with a friend</label>

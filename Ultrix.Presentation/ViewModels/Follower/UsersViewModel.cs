@@ -5,9 +5,9 @@ namespace Ultrix.Presentation.ViewModels.Follower
 {
     public class UsersViewModel
     {
-        public IEnumerable<ApplicationUserDto> Users { get; set; }
+        public IEnumerable<FilteredApplicationUserDto> Users { get; set; }
 
-        public UsersViewModel(IEnumerable<ApplicationUserDto> users)
+        public UsersViewModel(IEnumerable<FilteredApplicationUserDto> users)
         {
             Users = users;
         }

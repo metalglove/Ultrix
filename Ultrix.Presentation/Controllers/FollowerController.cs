@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
@@ -22,29 +23,60 @@ namespace Ultrix.Presentation.Controllers
             _followerService = followerService;
         }
 
-        [Route("Users"), HttpGet]
-        public async Task<IActionResult> GetUsers()
+        [Route("Users"), HttpGet, Authorize]
+        public async Task<IActionResult> UsersAsync()
         {
-            IEnumerable<ApplicationUserDto> users = await _userService.GetUsersAsync();
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            IEnumerable<FilteredApplicationUserDto> users = await _userService.GetUsersAsync(userId);
             return View("Users", new UsersViewModel(users));
         }
 
-        [Route("Followers"), HttpGet]
-        public async Task<IActionResult> GetFollowers()
+        [Route("Followers"), HttpGet, Authorize]
+        public async Task<IActionResult> FollowersAsync()
         {
+            // my followers
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            IEnumerable<FollowerDto> followers = await _followerService.GetFollowersByUserIdAsync(userId);
+            return View("Followers", new FollowersViewModel(followers));
+        }
+
+        [Route("Followings"), HttpGet, Authorize]
+        public async Task<IActionResult> FollowingsAsync()
+        {
+            // who the user follows
             throw new NotImplementedException();
         }
 
-        [Route("Followings"), HttpGet]
-        public async Task<IActionResult> GetFollowings()
+        [Route("MutualFollowings"), HttpGet, Authorize]
+        public async Task<IActionResult> MutualFollowingsAsync()
         {
-            throw new NotImplementedException();
+            // when the user also follows the follower, "Mutual"
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            IEnumerable<FollowerDto> followers = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
+            return View("Mutuals", new MutualsViewModel(followers));
         }
 
-        [Route("MutualFollowings"), HttpGet]
-        public async Task<IActionResult> GetMutualFollowings()
+        [Route("Follow"), HttpPost, Authorize, ValidateAntiForgeryToken]
+        public async Task<IActionResult> FollowAsync([FromBody] FollowViewModel followViewModel)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return Json(new { Success = false, Message = "Something happend try again later.." });
+
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            FollowerDto follower = followViewModel.GetFollowerDto(userId);
+            FollowResultDto followResultDto = await _followerService.FollowUserAsync(follower);
+            return Json(followResultDto);
+        }
+        [Route("UnFollow"), HttpPost, Authorize, ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnFollowAsync([FromBody] UnFollowViewModel unFollowViewModel)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { Success = false, Message = "Something happend try again later.." });
+
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            FollowerDto follower = unFollowViewModel.GetFollowerDto(userId);
+            UnFollowResultDto unFollowResultDto = await _followerService.UnFollowUserAsync(follower);
+            return Json(unFollowResultDto);
         }
     }
 }
