@@ -112,7 +112,7 @@ function shareMemeToFriend(formId) {
 function markAsSeen(formId) {
     var form = getFormData($("#" + formId));
     if (form["Id"] == undefined) {
-        M.toast({ html: "Something happend try again later." });
+        M.toast({ html: "Something happened try again later." });
         return;
     }
     var markMemeAsSeenUrl = "/MarkMemeAsSeen";

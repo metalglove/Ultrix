@@ -39,7 +39,7 @@ namespace Ultrix.Application.Services
             if (await _collectionRepository.CreateAsync(actualCollection))
             {
                 createCollectionResultDto.Success = true;
-                createCollectionResultDto.Message = "The collection is created succesfully.";
+                createCollectionResultDto.Message = "The collection is created successfully.";
                 return createCollectionResultDto;
             }
             createCollectionResultDto.Message = "Something happened try again later..";
@@ -51,10 +51,33 @@ namespace Ultrix.Application.Services
             IEnumerable<Collection> collections = await _collectionRepository.FindManyByExpressionAsync(collection => collection.UserId.Equals(userId));
             return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }
-        public async Task<bool> DeleteCollectionAsync(int userId, int collectionId)
+        public async Task<DeleteCollectionResultDto> DeleteCollectionAsync(DeleteCollectionDto deleteCollectionDto)
         {
-            Collection actualCollection = await _collectionRepository.FindSingleByExpressionAsync(collection => collection.Id.Equals(collectionId) && collection.UserId.Equals(userId));
-            return await _collectionRepository.DeleteAsync(actualCollection);
+            DeleteCollectionResultDto deleteCollectionResultDto = new DeleteCollectionResultDto();
+
+            if (!await _collectionRepository.ExistsAsync(collection => collection.Id.Equals(deleteCollectionDto.Id)))
+            {
+                deleteCollectionResultDto.Message = "The collection does not exist.";
+                return deleteCollectionResultDto;
+            }
+
+            if (!await _collectionRepository.ExistsAsync(collection => collection.Id.Equals(deleteCollectionDto.Id) && collection.UserId.Equals(deleteCollectionDto.UserId)))
+            {
+                deleteCollectionResultDto.Message = "The collection does not exist or you are not the owner of the collection.";
+                return deleteCollectionResultDto;
+            }
+
+            Collection actualCollection = await _collectionRepository.FindSingleByExpressionAsync(collection => collection.Id.Equals(deleteCollectionDto.Id) && collection.UserId.Equals(deleteCollectionDto.UserId));
+
+            if (await _collectionRepository.DeleteAsync(actualCollection))
+            {
+                deleteCollectionResultDto.Success = true;
+                deleteCollectionResultDto.Message = "Succesfully deleted the collection.";
+                return deleteCollectionResultDto;
+            }
+
+            deleteCollectionResultDto.Message = "Something happened try again later..";
+            return deleteCollectionResultDto;
         }
     }
 }

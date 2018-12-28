@@ -65,7 +65,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> FollowAsync([FromBody] FollowViewModel followViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { Success = false, Message = "Something happend try again later.." });
+                return Json(new { Success = false, Message = "Something happened try again later.." });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = followViewModel.GetFollowerDto(userId);
@@ -77,7 +77,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> UnFollowAsync([FromBody] UnFollowViewModel unFollowViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { Success = false, Message = "Something happend try again later.." });
+                return Json(new { Success = false, Message = "Something happened try again later.." });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = unFollowViewModel.GetFollowerDto(userId);

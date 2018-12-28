@@ -23,6 +23,34 @@
         }
     });
 }
+function deleteCollection(formId, collectionDiv) {
+    var form = getFormData($("#" + formId));
+    if (form["Id"] == "") {
+        M.toast({ html: "Something happened try again later." });
+        return;
+    }
+    var addMemeUrl = "/DeleteCollection";
+
+    $.ajax({
+        type: "POST",
+        url: addMemeUrl,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        data: JSON.stringify(form),
+        success: function (data) {
+            if (data.success)
+                document.getElementById(collectionDiv).remove();
+
+            M.toast({ html: data.message });
+        },
+        error: function () {
+            console.log("DeleteCollection form resulted faulty..");
+        }
+    });
+}
 function DisplayErrors(errors) {
     for (var i = 0; i < errors.length; i++) {
         $("<label for='" + errors[i].Key + "' class='error'></label>")

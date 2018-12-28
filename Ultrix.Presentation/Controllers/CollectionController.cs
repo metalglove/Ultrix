@@ -49,7 +49,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> CreateCollectionAsync([FromBody] CreateCollectionViewModel createCollectionViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new {Success = false, Message = "Something happend try again later.." });
+                return Json(new {Success = false, Message = "Something happened try again later.." });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             CollectionDto collectionDto = createCollectionViewModel.GetCollectionDto(userId);
@@ -63,7 +63,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> AddMemeToCollectionAsync([FromBody] AddMemeToCollectionViewModel addMemeToCollectionViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { Success = false, Message = "Something happend try again later.." });
+                return Json(new { Success = false, Message = "Something happened try again later.." });
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             AddMemeToCollectionDto addMemeToCollectionDto =
@@ -79,6 +79,20 @@ namespace Ultrix.Presentation.Controllers
             IEnumerable<CollectionDto> subscribedCollections = await _collectionSubscriberService.GetMySubscribedCollectionsAsync(userId);
             MyCollectionsViewModel myCollectionViewModel = new MyCollectionsViewModel(myCollections, subscribedCollections);
             return View("MyCollections", myCollectionViewModel);
+        }
+        [Route("DeleteCollection"), Authorize, HttpPost]
+        public async Task<IActionResult> DeleteCollectionAsync([FromBody] DeleteCollectionViewModel deleteCollectionViewModel)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { Success = false, Message = "Something happened try again later.." });
+
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            DeleteCollectionDto deleteCollectionDto = deleteCollectionViewModel.GetDeleteCollectionDto(userId);
+            DeleteCollectionResultDto deleteCollectionResultDto = await _collectionService.DeleteCollectionAsync(deleteCollectionDto);
+
+            await _tempDataService.UpdateTempDataAsync(TempData, userId);
+
+            return Json(deleteCollectionResultDto);
         }
     }
 }

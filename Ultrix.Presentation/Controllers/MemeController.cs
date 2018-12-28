@@ -30,11 +30,9 @@ namespace Ultrix.Presentation.Controllers
         }
 
         [Route("")]
-        public async Task<IActionResult> IndexAsync()
+        public Task<IActionResult> IndexAsync()
         {
-            //IEnumerable<MemeDto> memes = await _memeService.GetRandomMemesAsync(3);
-            //return View("Index", memes.ToList());
-            return View("Index", new List<MemeDto>());
+            return Task.FromResult((IActionResult)base.View("Index", new List<MemeDto>()));
         }
 
         [Route("Meme")]
@@ -45,9 +43,9 @@ namespace Ultrix.Presentation.Controllers
         }
 
         [Route("Trending")]
-        public async Task<IActionResult> TrendingAsync()
+        public Task<IActionResult> TrendingAsync()
         {
-            return View("Trending");
+            return Task.FromResult((IActionResult)base.View("Trending"));
         }
 
         [Route("Like"), Authorize, HttpPost, ValidateAntiForgeryToken]
