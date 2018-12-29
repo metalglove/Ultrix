@@ -17,21 +17,22 @@ namespace Ultrix.Mapping
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<ApplicationDbFactory>();
+            serviceCollection.AddSingleton<IFactory<ApplicationDbContext>, ApplicationDbFactory>();
 
-            // TODO: check if this is still needed
             using (ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider())
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                // TODO: Needs the connection string from simple builder instead of the factory directly
+                ApplicationDbFactory applicationDbFactory = (ApplicationDbFactory)serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 serviceCollection.AddDbContext<ApplicationDbContext>(
                     options => options.UseSqlServer(applicationDbFactory.GetConnectionString()),
                     ServiceLifetime.Transient);
             }
 
+            // TODO: Create scratch implementation of UserManager
             serviceCollection.AddIdentity<ApplicationUser, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            // TODO: Move this configuration
+
             serviceCollection.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -41,7 +42,6 @@ namespace Ultrix.Mapping
                 options.Password.RequireNonAlphanumeric = false;
             });
 
-            // TODO: Move routing to application layer
             serviceCollection.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Login";
@@ -64,57 +64,57 @@ namespace Ultrix.Mapping
             #region Repositories
             serviceCollection.AddTransient<IRepository<Meme>, MemeRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<Meme> entityValidator = serviceProvider.GetService<IEntityValidator<Meme>>();
-                return new MemeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new MemeRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<Follower>, FollowerRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<Follower> entityValidator = serviceProvider.GetService<IEntityValidator<Follower>>();
-                return new FollowerRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new FollowerRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<Collection>, CollectionRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<Collection> entityValidator = serviceProvider.GetService<IEntityValidator<Collection>>();
-                return new CollectionRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new CollectionRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<SharedMeme>, SharedMemeRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<SharedMeme> entityValidator = serviceProvider.GetService<IEntityValidator<SharedMeme>>();
-                return new SharedMemeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new SharedMemeRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<ApplicationUser>, UserRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<ApplicationUser> entityValidator = serviceProvider.GetService<IEntityValidator<ApplicationUser>>();
-                return new UserRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new UserRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<MemeLike>, MemeLikeRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<MemeLike> entityValidator = serviceProvider.GetService<IEntityValidator<MemeLike>>();
-                return new MemeLikeRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new MemeLikeRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<CollectionItemDetail>, CollectionItemDetailRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<CollectionItemDetail> entityValidator = serviceProvider.GetService<IEntityValidator<CollectionItemDetail>>();
-                return new CollectionItemDetailRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new CollectionItemDetailRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<CollectionSubscriber>, CollectionSubscriberRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<CollectionSubscriber> entityValidator = serviceProvider.GetService<IEntityValidator<CollectionSubscriber>>();
-                return new CollectionSubscriberRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new CollectionSubscriberRepository(applicationDbFactory.Create(), entityValidator);
             });
             serviceCollection.AddTransient<IRepository<Comment>, CommentRepository>(serviceProvider =>
             {
-                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IFactory<ApplicationDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<ApplicationDbContext>>();
                 IEntityValidator<Comment> entityValidator = serviceProvider.GetService<IEntityValidator<Comment>>();
-                return new CommentRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+                return new CommentRepository(applicationDbFactory.Create(), entityValidator);
             });
             #endregion Repositories
 

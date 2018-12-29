@@ -1,4 +1,6 @@
-﻿namespace Ultrix.Application.DTOs
+﻿using System;
+
+namespace Ultrix.Application.DTOs
 {
     public class MemeDto
     {
@@ -7,5 +9,21 @@
         public string ImageUrl { get; set; }
         public string VideoUrl { get; set; }
         public string PageUrl { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is MemeDto)
+            {
+                MemeDto that = obj as MemeDto;
+                return 
+                    this.Id.Equals(that.Id) && 
+                    this.Title.Equals(that.Title) &&
+                    this.ImageUrl.Equals(that.ImageUrl) &&
+                    this.VideoUrl.Equals(that.VideoUrl) &&
+                    this.PageUrl.Equals(that.PageUrl);
+            }
+
+            return false;
+        }
     }
 }

@@ -4,7 +4,7 @@ using Ultrix.Domain.Entities;
 
 namespace Ultrix.Application.Validators
 {
-    public class CollectionValidator: IEntityValidator<Collection>
+    public class CollectionValidator : IEntityValidator<Collection>
     {
         public bool Validate(Collection entity)
         {

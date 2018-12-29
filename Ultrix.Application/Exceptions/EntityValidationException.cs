@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
+
+[assembly: InternalsVisibleTo("Ultrix.Tests")]
 
 namespace Ultrix.Application.Exceptions
 {

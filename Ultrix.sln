@@ -28,6 +28,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Infrastructure", "Ul
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ultrix.Domain", "Ultrix.Domain\Ultrix.Domain.csproj", "{BCA7573A-E9B5-4378-9142-FCA4D9D4D0B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ultrix.Tests", "Ultrix.Tests\Ultrix.Tests.csproj", "{D39E48E9-574D-4631-8C37-80BE6BE6E3A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{BCA7573A-E9B5-4378-9142-FCA4D9D4D0B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCA7573A-E9B5-4378-9142-FCA4D9D4D0B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCA7573A-E9B5-4378-9142-FCA4D9D4D0B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D39E48E9-574D-4631-8C37-80BE6BE6E3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39E48E9-574D-4631-8C37-80BE6BE6E3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39E48E9-574D-4631-8C37-80BE6BE6E3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39E48E9-574D-4631-8C37-80BE6BE6E3A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
