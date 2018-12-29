@@ -58,6 +58,7 @@ namespace Ultrix.Mapping
             serviceCollection.AddTransient<IEntityValidator<CollectionItemDetail>, CollectionItemDetailValidator>();
             serviceCollection.AddTransient<IEntityValidator<CollectionSubscriber>, CollectionSubscriberValidator>();
             serviceCollection.AddTransient<IEntityValidator<ApplicationUser>, ApplicationUserValidator>();
+            serviceCollection.AddTransient<IEntityValidator<Comment>, CommentValidator>();
             #endregion Validators
 
             #region Repositories
@@ -108,6 +109,12 @@ namespace Ultrix.Mapping
                 ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
                 IEntityValidator<CollectionSubscriber> entityValidator = serviceProvider.GetService<IEntityValidator<CollectionSubscriber>>();
                 return new CollectionSubscriberRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
+            });
+            serviceCollection.AddTransient<IRepository<Comment>, CommentRepository>(serviceProvider =>
+            {
+                ApplicationDbFactory applicationDbFactory = serviceProvider.GetService<ApplicationDbFactory>();
+                IEntityValidator<Comment> entityValidator = serviceProvider.GetService<IEntityValidator<Comment>>();
+                return new CommentRepository(applicationDbFactory.CreateNewInstance(), entityValidator);
             });
             #endregion Repositories
 
@@ -167,6 +174,12 @@ namespace Ultrix.Mapping
                 ICollectionService collectionService = serviceProvider.GetService<ICollectionService>();
                 IFollowerService followerService = serviceProvider.GetService<IFollowerService>();
                 return new TempDataService(collectionService, followerService);
+            });
+            serviceCollection.AddTransient<ICommentService, CommentService>(serviceProvider =>
+            {
+                IRepository<Comment> commentRepository = serviceProvider.GetService<IRepository<Comment>>();
+                IRepository<Meme> memeRepository = serviceProvider.GetService<IRepository<Meme>>();
+                return new CommentService(commentRepository, memeRepository);
             });
             #endregion Services
 

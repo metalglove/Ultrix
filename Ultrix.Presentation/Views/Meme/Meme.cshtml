@@ -8,13 +8,13 @@
                 @{
                     if (Model.VideoUrl != null)
                     {
-                        <video controls>
+                        <video class="responsive-video" controls>
                             <source src="@Model.VideoUrl" type="video/mp4" />
                         </video>
                     }
                     else
                     {
-                        <img src="@Model.ImageUrl"/>
+                        <img class="responsive-img" src="@Model.ImageUrl"/>
                     }
                 }
             </div>
@@ -25,7 +25,7 @@
                     {
                         TempData.Peek("collections", out List<ShareCollectionDto> collections);
                         TempData.Peek("mutualFollowings", out List<FollowerDto> mutualFollowings);
-                         <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
+                        <form class="col s1" method="post" id='@(Model.Id + "LikeForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <input type="hidden" id="IsLike" name="IsLike" value="true" />
                             <input type="hidden" id='@(Model.Id + "IsLiked")' name="IsLiked" value="false" />
@@ -38,7 +38,7 @@
                             <i class="material-icons meme-icon" id='@(Model.Id + "DislikeIcon")' onclick="sendDislike('@(Model.Id + "DislikeForm")')">thumb_down</i>
                         </form>
                         <form method="post" id='@(Model.Id + "FriendSelectForm")'>
-                            <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id"/>
+                            <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <div class="input-field col s3">
                                 <select id="friendSelect" name="MutualId">
                                     <option value="" disabled selected>Friend..</option>
@@ -50,7 +50,7 @@
                                 <label>Share with a friend</label>
                             </div>
                             <i class="material-icons col s1 meme-icon" onclick="shareMemeToFriend('@(Model.Id + "FriendSelectForm")')">share</i>
-                        </form> 
+                        </form>
                         <form method="post" id='@(Model.Id + "CollectionSelectForm")'>
                             <input type="hidden" id="MemeId" name="MemeId" value="@Model.Id" />
                             <div class="input-field col s3">
@@ -65,14 +65,20 @@
                             </div>
                             <i class="material-icons col s1 meme-icon" onclick="addMemeToCollection('@(Model.Id + "CollectionSelectForm")')">add_box</i>
                         </form>
-                        <i class="material-icons col s1 offset-s1 meme-icon">forum</i>
+                        <i onclick="toggleCommentSection('@(Model.Id)')" class="material-icons col s1 offset-s1 meme-icon">forum</i>
                     }
                     else
                     {
                         <i class="material-icons col s1 meme-icon">thumb_up</i>
                         <i class="material-icons col s1 meme-icon">thumb_down</i>
-                        <i class="material-icons col s1 offset-s9 meme-icon">forum</i>
+                        <i class="material-icons col s1 offset-s9 meme-icon" onclick="toggleCommentSection('@(Model.Id)')">forum</i>
                     }
+                </div>
+            </div>
+            <div id='@(Model.Id + "Comments")' class="comment-section">
+                <div class="progress">
+                    <div class="indeterminate">
+                    </div>
                 </div>
             </div>
         </div>
@@ -81,5 +87,6 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('select').formSelect();
+        $('.collapsible').collapsible();
     }); 
 </script>

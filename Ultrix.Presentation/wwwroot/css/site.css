@@ -141,3 +141,14 @@ img, video {
     grid-template-columns: auto;
     padding: 5px;
 }
+.comment-section {
+    display: none;
+}
+.user-image {
+    min-height: 80px;
+    min-width: 80px;
+}
+.comment-collection {
+    overflow: hidden;
+    position:relative;
+}

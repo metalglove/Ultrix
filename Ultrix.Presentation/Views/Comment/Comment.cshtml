@@ -1,0 +1,29 @@
+﻿@model CommentDto
+
+<li class="blue-grey darken-2 avatar">
+    <div class="col s12 m8 offset-m2 l6 offset-l3">
+        <div class="card-panel grey lighten-5 z-depth-1" style="padding: 0px;">
+            <div class="row valign-wrapper">
+                <div class="col s1">
+                    <img src="~/images/default_user.jpg" alt="user image" class="circle user-image" style="position:relative;">
+                </div>
+                <div class="col s11">
+                    <div class="row" style="margin: 0px; text-align: left;">
+                        <b class="col s10 offset-s1">@Model.User.UserName</b>
+                    </div>
+                    <div class="row" style="margin: 0px;">
+                        <span class="col s10 offset-s1" style="text-align: left; overflow-wrap:break-word;">
+                            @Model.Text
+                            <br>
+                        </span>
+                    </div>
+                    <div class="row" style="margin: 0px;">
+                        <span class="black-text col s11 offset-s1" style="text-align: right;">
+                            @Model.TimestampAdded.ToString("R")
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

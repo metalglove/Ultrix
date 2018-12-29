@@ -134,3 +134,45 @@ function markAsSeen(formId) {
         }
     });
 }
+function toggleCommentSection(divId) {
+    var commentSection = document.getElementById(divId + "Comments");
+    if (commentSection.firstElementChild.classList.contains("progress")) {
+        commentSection.style.display = "block";
+        $("#" + divId + "Comments").load("/GetComments/" + divId);
+    }
+    else {
+        commentSection.style.display = (commentSection.style.display == "block") ? "none" : "block";
+    }
+}
+function ffsCreateCommentPLS(formId) {
+    var form = getFormData($("#" + formId));
+    if (form["Text"] == "") {
+        M.toast({ html: "The comment cannot be emtpy." });
+        return;
+    }
+    if (form["Text"].length < 10) {
+        M.toast({ html: "The comment length must be atleast 10." });
+        return;
+    }
+    var createCommentUrl = "/CreateComment";
+    $.ajax({
+        type: "POST",
+        url: createCommentUrl,
+        contentType: "application/json; charset=utf-8",
+        headers: {
+            RequestVerificationToken:
+                $('input:hidden[name="__RequestVerificationToken"]').val()
+        },
+        data: JSON.stringify(form),
+        success: function (data) {
+            if (data.success == true) {
+                $("#" + form["MemeId"] + "Comments").prepend('<div class="progress"><div class="indeterminate"></div></div>');
+                $("#" + form["MemeId"] + "Comments").load("/GetComments/" + form["MemeId"]);
+            }
+            M.toast({ html: data.message });
+        },
+        error: function () {
+            console.log("CreateComment form resulted faulty..");
+        }
+    });
+}

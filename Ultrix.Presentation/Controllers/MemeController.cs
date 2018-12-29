@@ -22,7 +22,8 @@ namespace Ultrix.Presentation.Controllers
         public MemeController(
             IMemeService memeService, 
             IMemeSharingService memeSharingService,
-            IMemeLikingService memeLikingService)
+            IMemeLikingService memeLikingService
+            )
         {
             _memeService = memeService;
             _memeSharingService = memeSharingService;
@@ -145,7 +146,6 @@ namespace Ultrix.Presentation.Controllers
             SharedMemeMarkAsSeenDto sharedMemeMarkAsSeenDto = await _memeSharingService.MarkSharedMemeAsSeenAsync(sharedMemeDto);
             return Json(sharedMemeMarkAsSeenDto);
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

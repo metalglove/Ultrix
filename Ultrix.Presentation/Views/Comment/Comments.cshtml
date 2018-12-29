@@ -1,0 +1,44 @@
+﻿@model CommentsViewModel
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row" style="margin-bottom: 0px">
+        <form id='@(Model.MemeId + "CommentsForm")' method="post">
+            <div class="col s1 offset-s2 user-image">
+                <img src="~/images/default_user.jpg" alt="user image" class="circle">
+            </div>
+            <input type="hidden" id="MemeId" name="MemeId" value='@(Model.MemeId)' />
+            <div class="input-field col s6">
+                <textarea id="Text" name="Text" class="materialize-textarea white-text"></textarea>
+                <label for="Text" class="white-text">Comment</label>
+            </div>
+        </form>
+        <button style="margin-top: 28px" class="btn s3" onclick="ffsCreateCommentPLS('@(Model.MemeId + "CommentsForm")')">
+            Comment<i class="material-icons right">insert_comment</i>
+        </button>
+    </div>
+}
+else
+{
+    <div class="blue-grey">
+        <p>
+            Login to place a comment.
+        </p>
+    </div>
+}
+
+@if (Model.Comments.Count().Equals(0))
+{
+    <div class="blue-grey">
+        <p>
+            Be the first to comment!
+        </p>
+    </div>
+}
+
+<ul id='@(Model.MemeId + "CommentsCollection")' class="comment-collection blue-grey darken-2">
+    @foreach (CommentDto comment in Model.Comments)
+    {
+        await Html.RenderPartialAsync("Comment", comment);
+    }
+</ul>
