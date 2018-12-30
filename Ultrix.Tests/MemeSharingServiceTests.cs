@@ -9,9 +9,9 @@ using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 using Ultrix.Infrastructure.Services;
 using Ultrix.Persistance.Contexts;
-using Ultrix.Persistance.Extensions;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
+using Ultrix.Tests.Utilities;
 
 namespace Ultrix.Tests
 {

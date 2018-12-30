@@ -9,9 +9,9 @@ using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 using Ultrix.Persistance.Contexts;
-using Ultrix.Persistance.Extensions;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
+using Ultrix.Tests.Utilities;
 
 namespace Ultrix.Tests
 {
@@ -107,7 +107,7 @@ namespace Ultrix.Tests
             };
             await CollectionService.CreateCollectionAsync(collectionDto);
             List<CollectionDto> collections = (await CollectionService.GetAllCollectionsAsync()).ToList();
-            Assert.IsTrue(collections.Count().Equals(1));
+            Assert.IsTrue(collections.Count.Equals(1));
 
             // Act
             DeleteCollectionDto deleteCollectionDto = new DeleteCollectionDto { Id = 1, UserId = 1 };
@@ -116,7 +116,7 @@ namespace Ultrix.Tests
             // Assert
             Assert.IsTrue(deleteCollectionResultDto.Success);
             collections = (await CollectionService.GetAllCollectionsAsync()).ToList();
-            Assert.IsTrue(collections.Count().Equals(0));
+            Assert.IsTrue(collections.Count.Equals(0));
         }
     }
 }

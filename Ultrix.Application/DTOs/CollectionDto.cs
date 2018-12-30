@@ -12,9 +12,8 @@ namespace Ultrix.Application.DTOs
 
         public override bool Equals(object obj)
         {
-            if (obj is CollectionDto)
+            if (obj is CollectionDto that)
             {
-                CollectionDto that = obj as CollectionDto;
                 return
                     this.UserId.Equals(that.UserId) &&
                     this.Name.Equals(that.Name);

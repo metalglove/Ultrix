@@ -49,7 +49,7 @@ namespace Ultrix.Application.Services
             if (await _collectionItemDetailRepository.CreateAsync(actualCollectionItemDetail))
             {
                 serviceResultDto.Success = true;
-                serviceResultDto.Message = "Succesfully added meme to the collection.";
+                serviceResultDto.Message = "Successfully added meme to the collection.";
             }
             else
             {

@@ -12,9 +12,8 @@ namespace Ultrix.Application.DTOs
 
         public override bool Equals(object obj)
         {
-            if (obj is MemeDto)
+            if (obj is MemeDto that)
             {
-                MemeDto that = obj as MemeDto;
                 return 
                     this.Id.Equals(that.Id) && 
                     this.Title.Equals(that.Title) &&

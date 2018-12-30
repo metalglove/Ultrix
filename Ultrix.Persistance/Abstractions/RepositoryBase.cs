@@ -15,13 +15,13 @@ namespace Ultrix.Persistance.Abstractions
         private readonly ApplicationDbContext _applicationDbContext;
         private readonly IEntityValidator<TEntity> _entityValidator;
 
-        public RepositoryBase(ApplicationDbContext applicationDbContext, IEntityValidator<TEntity> entityValidator)
+        protected RepositoryBase(ApplicationDbContext applicationDbContext, IEntityValidator<TEntity> entityValidator)
         {
             _applicationDbContext = applicationDbContext;
             _entityValidator = entityValidator;
         }
 
-        public async virtual Task<bool> CreateAsync(TEntity entity)
+        public virtual async Task<bool> CreateAsync(TEntity entity)
         {
             _entityValidator.Validate(entity);
             _applicationDbContext.Set<TEntity>().Add(entity);
@@ -37,7 +37,7 @@ namespace Ultrix.Persistance.Abstractions
             }
             return saveSuccess;
         }
-        public async virtual Task<bool> DeleteAsync(TEntity entity)
+        public virtual async Task<bool> DeleteAsync(TEntity entity)
         {
             if (!await _applicationDbContext.Set<TEntity>().ContainsAsync(entity))
                 throw new EntityNotFoundException($"The entity of type {typeof(TEntity).Name} could not be found.");
@@ -54,26 +54,26 @@ namespace Ultrix.Persistance.Abstractions
             }
             return saveSuccess;
         }
-        public async virtual Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _applicationDbContext.Set<TEntity>().AnyAsync(predicate);
         }
-        public async virtual Task<IEnumerable<TEntity>> FindManyByExpressionAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<IEnumerable<TEntity>> FindManyByExpressionAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _applicationDbContext.Set<TEntity>().Where(predicate).ToListAsync();
         }
-        public async virtual Task<TEntity> FindSingleByExpressionAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity> FindSingleByExpressionAsync(Expression<Func<TEntity, bool>> predicate)
         {
             TEntity entity = await _applicationDbContext.Set<TEntity>().SingleOrDefaultAsync(predicate);
             if (entity == default)
                 throw new EntityNotFoundException($"The entity of type {typeof(TEntity).Name} could not be found by the predicate.");
             return entity;
         }
-        public async virtual Task<IEnumerable<TEntity>> GetAllAsync()
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             return await _applicationDbContext.Set<TEntity>().ToListAsync();
         }
-        public async virtual Task<bool> UpdateAsync(TEntity entity)
+        public virtual async Task<bool> UpdateAsync(TEntity entity)
         {
             _applicationDbContext.Update(entity);
             int saveResult = await _applicationDbContext.SaveChangesAsync();

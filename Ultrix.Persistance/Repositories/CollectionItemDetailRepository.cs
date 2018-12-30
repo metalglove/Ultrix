@@ -20,7 +20,7 @@ namespace Ultrix.Persistance.Repositories
             _collectionItemDetailValidator = collectionItemDetailValidator;
         }
 
-        public async override Task<bool> CreateAsync(CollectionItemDetail entity)
+        public override async Task<bool> CreateAsync(CollectionItemDetail entity)
         {
             _collectionItemDetailValidator.Validate(entity);
             if (await _applicationDbContext.CollectionItemDetails.AnyAsync(collectionItemDetail =>
@@ -40,7 +40,7 @@ namespace Ultrix.Persistance.Repositories
             }
             return saveSuccess;
         }
-        public async override Task<bool> DeleteAsync(CollectionItemDetail entity)
+        public override async Task<bool> DeleteAsync(CollectionItemDetail entity)
         {
             if (!await _applicationDbContext.CollectionItemDetails.AnyAsync(collectionItemDetail => 
             collectionItemDetail.CollectionId.Equals(entity.CollectionId) &&

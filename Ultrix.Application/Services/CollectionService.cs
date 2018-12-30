@@ -72,7 +72,7 @@ namespace Ultrix.Application.Services
             if (await _collectionRepository.DeleteAsync(actualCollection))
             {
                 deleteCollectionResultDto.Success = true;
-                deleteCollectionResultDto.Message = "Succesfully deleted the collection.";
+                deleteCollectionResultDto.Message = "Successfully deleted the collection.";
                 return deleteCollectionResultDto;
             }
 

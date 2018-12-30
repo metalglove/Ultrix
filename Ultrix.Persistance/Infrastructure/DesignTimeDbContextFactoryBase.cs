@@ -10,15 +10,15 @@ namespace Ultrix.Persistance.Infrastructure
     public abstract class DesignTimeDbContextFactoryBase<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext
     {
         private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
-        private string ConnectionStringName { get; set; }
+        private string ConnectionStringName { get; }
         protected string ConnectionString { get; private set; }
         protected DbContextOptionsBuilder<TContext> OptionsBuilder { get; private set; }
-        private readonly string uniqueDbName;
+        private readonly string _uniqueDbName;
 
         protected DesignTimeDbContextFactoryBase(string connectionName, bool precompileConnectionString = false)
         {
             ConnectionStringName = connectionName;
-            uniqueDbName = Guid.NewGuid().ToString();
+            _uniqueDbName = Guid.NewGuid().ToString();
             if (!precompileConnectionString) return;
             SetConnectionString(BuildConfiguration());
             SetDbContextOptionsBuilder(ConnectionString);
@@ -68,7 +68,7 @@ namespace Ultrix.Persistance.Infrastructure
             DbContextOptionsBuilder<TContext> optionsBuilder = new DbContextOptionsBuilder<TContext>();
             optionsBuilder.UseLazyLoadingProxies();
             if (connectionString.Equals("InMemoryDatabase"))
-                optionsBuilder.UseInMemoryDatabase(uniqueDbName); // connectionString
+                optionsBuilder.UseInMemoryDatabase(_uniqueDbName); // connectionString
             else
                 optionsBuilder.UseSqlServer(connectionString);
             OptionsBuilder = optionsBuilder;

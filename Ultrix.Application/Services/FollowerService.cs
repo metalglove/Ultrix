@@ -34,7 +34,7 @@ namespace Ultrix.Application.Services
             if (await _followerRepository.CreateAsync(follower))
             {
                 followResultDto.Success = true;
-                followResultDto.Message = $"Succesfully followed {username}";
+                followResultDto.Message = $"Successfully followed {username}";
                 return followResultDto;
             }
 
@@ -56,7 +56,7 @@ namespace Ultrix.Application.Services
             if (await _followerRepository.DeleteAsync(actualFollower))
             {
                 unFollowResultDto.Success = true;
-                unFollowResultDto.Message = $"Succesfully unfollowed {username}";
+                unFollowResultDto.Message = $"Successfully unfollowed {username}";
                 return unFollowResultDto;
             }
 
@@ -68,7 +68,7 @@ namespace Ultrix.Application.Services
             IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             IEnumerable<Follower> followers = await _followerRepository.FindManyByExpressionAsync(follower => follower.UserId.Equals(userId));
             List<FollowerDto> followerDtos = followers
-                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+                .Select(EntityToDtoConverter.Convert<FollowerDto, Follower>).ToList();
             _ = followerDtos
                 .Where(follower => followings.Any(following => following.UserId.Equals(follower.FollowerUserId)))
                 .Select(follower => { follower.IsFollowed = true; return follower; }).ToList();
@@ -78,7 +78,7 @@ namespace Ultrix.Application.Services
         {
             IEnumerable<Follower> follows = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             List<FollowerDto> followerDtos = follows
-                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+                .Select(EntityToDtoConverter.Convert<FollowerDto, Follower>).ToList();
             return followerDtos.Select(follower => { follower.IsFollowed = true; return follower; });
         }
         public async Task<IEnumerable<FollowerDto>> GetMutualFollowersByUserIdAsync(int userId)
@@ -86,7 +86,7 @@ namespace Ultrix.Application.Services
             IEnumerable<Follower> followings = await _followerRepository.FindManyByExpressionAsync(follower => follower.FollowerUserId.Equals(userId));
             IEnumerable<Follower> followers = await _followerRepository.FindManyByExpressionAsync(follower => follower.UserId.Equals(userId));
             List<FollowerDto> followerDtos = followers
-                .Select(follower => EntityToDtoConverter.Convert<FollowerDto, Follower>(follower)).ToList();
+                .Select(EntityToDtoConverter.Convert<FollowerDto, Follower>).ToList();
             return followerDtos
                 .Where(follower => followings.Any(following => following.UserId.Equals(follower.FollowerUserId)))
                 .Select(follower => { follower.IsFollowed = true; return follower; });

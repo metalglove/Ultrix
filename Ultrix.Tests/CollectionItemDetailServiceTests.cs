@@ -10,9 +10,9 @@ using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 using Ultrix.Persistance.Contexts;
-using Ultrix.Persistance.Extensions;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
+using Ultrix.Tests.Utilities;
 
 namespace Ultrix.Tests
 {
@@ -105,7 +105,7 @@ namespace Ultrix.Tests
             
             // Assert
             Assert.IsTrue(addMemeToCollectionResultDto.Success);
-            Assert.AreEqual(addMemeToCollectionResultDto.Message, "Succesfully added meme to the collection.");
+            Assert.AreEqual(addMemeToCollectionResultDto.Message, "Successfully added meme to the collection.");
             CollectionItemDetail actualCollectionItemDetail = (await CollectionItemDetailRepository.GetAllAsync()).First();
             Assert.IsTrue(
                 actualCollectionItemDetail.MemeId.Equals("a0Q558q") && 
@@ -148,7 +148,7 @@ namespace Ultrix.Tests
             // Assert
             Assert.IsTrue(success);
             List<CollectionItemDetail> collectionItemDetails = (await CollectionItemDetailRepository.GetAllAsync()).ToList();
-            Assert.AreEqual(collectionItemDetails.Count(), 0);
+            Assert.AreEqual(collectionItemDetails.Count, 0);
         }
 
         [TestMethod]

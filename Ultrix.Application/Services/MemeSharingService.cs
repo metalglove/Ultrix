@@ -36,8 +36,10 @@ namespace Ultrix.Application.Services
 
         public async Task<SharedMemeMarkAsSeenDto> MarkSharedMemeAsSeenAsync(SharedMemeDto sharedMeme)
         {
-            SharedMemeMarkAsSeenDto sharedMemeMarkAsSeenDto = new SharedMemeMarkAsSeenDto();
-            sharedMemeMarkAsSeenDto.Message = "Something happened try again later..";
+            SharedMemeMarkAsSeenDto sharedMemeMarkAsSeenDto = new SharedMemeMarkAsSeenDto
+            {
+                Message = "Something happened try again later.."
+            };
 
             if (!await _sharedMemeRepository.ExistsAsync(sm => sm.Id.Equals(sharedMeme.Id)))
             {
@@ -57,7 +59,7 @@ namespace Ultrix.Application.Services
             if (await _sharedMemeRepository.UpdateAsync(sharedMemeEntity))
             {
                 sharedMemeMarkAsSeenDto.Success = true;
-                sharedMemeMarkAsSeenDto.Message = "Succesfully marked the shared meme as seen.";
+                sharedMemeMarkAsSeenDto.Message = "Successfully marked the shared meme as seen.";
             }
             return sharedMemeMarkAsSeenDto;
         }

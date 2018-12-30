@@ -43,7 +43,7 @@ namespace Ultrix.Tests
             //UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(
             //    new UserStore<ApplicationUser>(ApplicationDbFactory.Create()));
             
-            //UserManager<ApplicationUser> usserManager = new UserManager<ApplicationUser>();
+            //UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>();
             //SignInManager<ApplicationUser> signInManager = new SignInManager<ApplicationUser>(userManager,);
 
             //UserService = new UserService(signInManager, userManager, ApplicationUserRepository, FollowerRepository);

@@ -50,20 +50,12 @@ namespace Ultrix.Infrastructure.Services
             foreach (HtmlNode htmlNode in collection)
             {
                 string content = htmlNode.Attributes["content"].DeEntitizeValue;
-                switch (htmlNode.Attributes["property"].DeEntitizeValue)
-                {
-                    case "og:title":
-                        meme.Title = content;
-                        break;
-                    case "og:url":
-                        meme.PageUrl = content;
-                        break;
-                    case "og:image":
-                        meme.ImageUrl = content;
-                        break;
-                    default:
-                        break;
-                }
+                if (htmlNode.Attributes["property"].DeEntitizeValue == "og:title")
+                    meme.Title = content;
+                else if (htmlNode.Attributes["property"].DeEntitizeValue == "og:url")
+                    meme.PageUrl = content;
+                else if (htmlNode.Attributes["property"].DeEntitizeValue == "og:image")
+                    meme.ImageUrl = content;
             }
             meme.Id = meme.GetMemeIdFromUrl();
             string videoUrl = NineGagPhotoCacheUrl + meme.Id + Mp4Tag;
