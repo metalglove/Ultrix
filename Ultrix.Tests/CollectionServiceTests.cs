@@ -86,7 +86,7 @@ namespace Ultrix.Tests
                 UserId = 1,
                 Name = "Dank"
             };
-            CreateCollectionResultDto createCollectionResultDto = await CollectionService.CreateCollectionAsync(expectedCollectionDto1);
+            ServiceResponseDto createCollectionResultDto = await CollectionService.CreateCollectionAsync(expectedCollectionDto1);
             Assert.IsTrue(createCollectionResultDto.Success);
 
             // Act
@@ -111,7 +111,7 @@ namespace Ultrix.Tests
 
             // Act
             DeleteCollectionDto deleteCollectionDto = new DeleteCollectionDto { Id = 1, UserId = 1 };
-            DeleteCollectionResultDto deleteCollectionResultDto = await CollectionService.DeleteCollectionAsync(deleteCollectionDto);
+            ServiceResponseDto deleteCollectionResultDto = await CollectionService.DeleteCollectionAsync(deleteCollectionDto);
 
             // Assert
             Assert.IsTrue(deleteCollectionResultDto.Success);

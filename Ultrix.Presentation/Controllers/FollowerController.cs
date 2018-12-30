@@ -57,7 +57,7 @@ namespace Ultrix.Presentation.Controllers
         {
             // when the user also follows the follower, "Mutual"
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            IEnumerable<FollowerDto> followers = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
+            IEnumerable<FollowerDto> followers = await _followerService.GetMutualFollowersByUserIdAsync(userId);
             return View("Mutuals", new MutualsViewModel(followers));
         }
 
@@ -69,7 +69,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = followViewModel.GetFollowerDto(userId);
-            FollowResultDto followResultDto = await _followerService.FollowUserAsync(follower);
+            ServiceResponseDto followResultDto = await _followerService.FollowUserAsync(follower);
             await _tempDataService.UpdateTempDataAsync(TempData, userId);
             return Json(followResultDto);
         }
@@ -81,7 +81,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = unFollowViewModel.GetFollowerDto(userId);
-            UnFollowResultDto unFollowResultDto = await _followerService.UnFollowUserAsync(follower);
+            ServiceResponseDto unFollowResultDto = await _followerService.UnFollowUserAsync(follower);
             await _tempDataService.UpdateTempDataAsync(TempData, userId);
             return Json(unFollowResultDto);
         }

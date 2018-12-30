@@ -22,7 +22,7 @@ namespace Ultrix.Presentation.Controllers
         [Route("CreateComment"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCommentAsync([FromBody] CreateCommentViewModel createCommentViewModel)
         {
-            CommentResultDto commentResultDto = new CommentResultDto
+            ServiceResponseDto commentResultDto = new ServiceResponseDto
             {
                 Message = "Something happened try again later.."
             };

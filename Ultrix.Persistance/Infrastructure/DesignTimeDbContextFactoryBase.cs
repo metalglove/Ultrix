@@ -30,7 +30,7 @@ namespace Ultrix.Persistance.Infrastructure
         }
         private static IConfigurationRoot BuildConfiguration()
         {
-            string basePath = Directory.GetCurrentDirectory(); // TODO: need check for it being in the Presentation layer else add //..//Ultrix.Presentation
+            string basePath = Directory.GetCurrentDirectory();
             string environmentName = Environment.GetEnvironmentVariable(AspNetCoreEnvironment);
             return new ConfigurationBuilder()
                    .SetBasePath(basePath)

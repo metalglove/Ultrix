@@ -23,7 +23,7 @@ namespace Ultrix.Application.Services
         {
             IEnumerable<ShareCollectionDto> collectionDTOs = (await _collectionService.GetMyCollectionsAsync(userId))
                 .Select(collection => new ShareCollectionDto { Name = collection.Name, Id = collection.Id });
-            IEnumerable<FollowerDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowingsByUserIdAsync(userId);
+            IEnumerable<FollowerDto> mutualFollowingsDTOs = await _followerService.GetMutualFollowersByUserIdAsync(userId);
             tempData["collections"] = JsonConvert.SerializeObject(collectionDTOs.ToList());
             tempData.Keep("collections");
             tempData["mutualFollowings"] = JsonConvert.SerializeObject(mutualFollowingsDTOs.ToList());

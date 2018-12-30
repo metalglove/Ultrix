@@ -53,7 +53,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             CollectionDto collectionDto = createCollectionViewModel.GetCollectionDto(userId);
-            CreateCollectionResultDto collectionResult = await _collectionService.CreateCollectionAsync(collectionDto);
+            ServiceResponseDto collectionResult = await _collectionService.CreateCollectionAsync(collectionDto);
 
             await _tempDataService.UpdateTempDataAsync(TempData, userId);
 
@@ -88,7 +88,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             DeleteCollectionDto deleteCollectionDto = deleteCollectionViewModel.GetDeleteCollectionDto(userId);
-            DeleteCollectionResultDto deleteCollectionResultDto = await _collectionService.DeleteCollectionAsync(deleteCollectionDto);
+            ServiceResponseDto deleteCollectionResultDto = await _collectionService.DeleteCollectionAsync(deleteCollectionDto);
 
             await _tempDataService.UpdateTempDataAsync(TempData, userId);
 

@@ -22,7 +22,6 @@ namespace Ultrix.Persistance.Repositories
 
         public async override Task<bool> CreateAsync(CollectionItemDetail entity)
         {
-            // TODO: verify if this works
             _collectionItemDetailValidator.Validate(entity);
             if (await _applicationDbContext.CollectionItemDetails.AnyAsync(collectionItemDetail =>
             collectionItemDetail.CollectionId.Equals(entity.CollectionId) &&
@@ -43,7 +42,6 @@ namespace Ultrix.Persistance.Repositories
         }
         public async override Task<bool> DeleteAsync(CollectionItemDetail entity)
         {
-            // TODO: verify if this works
             if (!await _applicationDbContext.CollectionItemDetails.AnyAsync(collectionItemDetail => 
             collectionItemDetail.CollectionId.Equals(entity.CollectionId) &&
             collectionItemDetail.MemeId.Equals(entity.MemeId) &&

@@ -115,9 +115,9 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             SharedMemeDto sharedMemeDto = shareMemeViewModel.GetSharedMemeDto(userId);
-            SharedMemeResultDto sharedMemeResultDto = await _memeSharingService.ShareMemeToMutualFollowerAsync(sharedMemeDto);
+            ServiceResponseDto sharedMemeResultDto = await _memeSharingService.ShareMemeToMutualFollowerAsync(sharedMemeDto);
             return sharedMemeResultDto.Success 
-                ? Json(new { success = true, to = sharedMemeResultDto.ReceiverUsername }) 
+                ? Json(new { success = true, to = sharedMemeResultDto.Message }) 
                 : Json(new { success = false, message = "Something happened.." });
         }
         [Route("SharedMemes"), Authorize, HttpGet]

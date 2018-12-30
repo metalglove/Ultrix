@@ -8,8 +8,8 @@ namespace Ultrix.Application.Interfaces
     {
         Task<IEnumerable<CollectionDto>> GetAllCollectionsAsync();
         Task<CollectionDto> GetCollectionByIdAsync(int collectionId);
-        Task<CreateCollectionResultDto> CreateCollectionAsync(CollectionDto collectionDto);
+        Task<ServiceResponseDto> CreateCollectionAsync(CollectionDto collectionDto);
         Task<IEnumerable<CollectionDto>> GetMyCollectionsAsync(int userId);
-        Task<DeleteCollectionResultDto> DeleteCollectionAsync(DeleteCollectionDto deleteCollectionDto);
+        Task<ServiceResponseDto> DeleteCollectionAsync(DeleteCollectionDto deleteCollectionDto);
     }
 }

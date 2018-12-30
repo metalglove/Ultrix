@@ -27,9 +27,9 @@ namespace Ultrix.Application.Services
             Collection actualCollection = await _collectionRepository.FindSingleByExpressionAsync(collection => collection.Id.Equals(collectionId));
             return EntityToDtoConverter.Convert<CollectionDto, Collection>(actualCollection);
         }
-        public async Task<CreateCollectionResultDto> CreateCollectionAsync(CollectionDto collectionDto)
+        public async Task<ServiceResponseDto> CreateCollectionAsync(CollectionDto collectionDto)
         {
-            CreateCollectionResultDto createCollectionResultDto = new CreateCollectionResultDto();
+            ServiceResponseDto createCollectionResultDto = new ServiceResponseDto();
             if (await _collectionRepository.ExistsAsync(collection => collection.Name.Equals(collectionDto.Name)))
             {
                 createCollectionResultDto.Message = $"A collection with the name {collectionDto.Name} already exists.";
@@ -51,9 +51,9 @@ namespace Ultrix.Application.Services
             IEnumerable<Collection> collections = await _collectionRepository.FindManyByExpressionAsync(collection => collection.UserId.Equals(userId));
             return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }
-        public async Task<DeleteCollectionResultDto> DeleteCollectionAsync(DeleteCollectionDto deleteCollectionDto)
+        public async Task<ServiceResponseDto> DeleteCollectionAsync(DeleteCollectionDto deleteCollectionDto)
         {
-            DeleteCollectionResultDto deleteCollectionResultDto = new DeleteCollectionResultDto();
+            ServiceResponseDto deleteCollectionResultDto = new ServiceResponseDto();
 
             if (!await _collectionRepository.ExistsAsync(collection => collection.Id.Equals(deleteCollectionDto.Id)))
             {

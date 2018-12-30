@@ -62,15 +62,15 @@ namespace Ultrix.Application.Services
             return sharedMemeMarkAsSeenDto;
         }
 
-        public async Task<SharedMemeResultDto> ShareMemeToMutualFollowerAsync(SharedMemeDto sharedMemeDto)
+        public async Task<ServiceResponseDto> ShareMemeToMutualFollowerAsync(SharedMemeDto sharedMemeDto)
         {
             SharedMeme sharedMeme = DtoToEntityConverter.Convert<SharedMeme, SharedMemeDto>(sharedMemeDto);
             string username = (await _userRepository.FindSingleByExpressionAsync(user => user.Id.Equals(sharedMeme.ReceiverUserId))).UserName;
 
             if (await _sharedMemeRepository.CreateAsync(sharedMeme))
-                return new SharedMemeResultDto { ReceiverUsername = username, Success = true };
+                return new ServiceResponseDto { Message = username, Success = true };
 
-            return new SharedMemeResultDto { ReceiverUsername = username, Success = false };
+            return new ServiceResponseDto { Message = username, Success = false };
         }
     }
 }

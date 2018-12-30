@@ -6,7 +6,7 @@ namespace Ultrix.Application.Interfaces
 {
     public interface ICommentService
     {
-        Task<CommentResultDto> CreateCommentAsync(CommentDto commentDto);
+        Task<ServiceResponseDto> CreateCommentAsync(CommentDto commentDto);
         Task<IEnumerable<CommentDto>> GetCommentsByMemeIdAsync(string memeId);
     }
 }

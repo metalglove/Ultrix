@@ -19,9 +19,9 @@ namespace Ultrix.Application.Services
             _memeRepository = memeRepository;
         }
 
-        public async Task<CommentResultDto> CreateCommentAsync(CommentDto commentDto)
+        public async Task<ServiceResponseDto> CreateCommentAsync(CommentDto commentDto)
         {
-            CommentResultDto commentResultDto = new CommentResultDto
+            ServiceResponseDto commentResultDto = new ServiceResponseDto
             {
                 Message = "Something happened try again later."
             };

@@ -22,21 +22,21 @@ namespace Ultrix.Application.Services
             _memeRepository = memeRepository;
         }
 
-        public async Task<AddMemeToCollectionResultDto> AddMemeToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto)
+        public async Task<ServiceResponseDto> AddMemeToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto)
         {
-            AddMemeToCollectionResultDto addMemeToCollectionResultDto = new AddMemeToCollectionResultDto();
+            ServiceResponseDto serviceResultDto = new ServiceResponseDto();
             if (!await _memeRepository.ExistsAsync(meme => meme.Id.Equals(addMemeToCollectionDto.MemeId)))
             {
-                addMemeToCollectionResultDto.Message = "Meme does not exist.";
-                return addMemeToCollectionResultDto;
+                serviceResultDto.Message = "Meme does not exist.";
+                return serviceResultDto;
             }
 
             if (await _collectionItemDetailRepository.ExistsAsync(collectionItemDetail => 
             collectionItemDetail.MemeId.Equals(addMemeToCollectionDto.MemeId) && 
             collectionItemDetail.CollectionId.Equals(addMemeToCollectionDto.CollectionId)))
             {
-                addMemeToCollectionResultDto.Message = "Meme already exists in the collection.";
-                return addMemeToCollectionResultDto;
+                serviceResultDto.Message = "Meme already exists in the collection.";
+                return serviceResultDto;
             }
 
             CollectionItemDetail actualCollectionItemDetail = new CollectionItemDetail
@@ -48,14 +48,14 @@ namespace Ultrix.Application.Services
 
             if (await _collectionItemDetailRepository.CreateAsync(actualCollectionItemDetail))
             {
-                addMemeToCollectionResultDto.Success = true;
-                addMemeToCollectionResultDto.Message = "Succesfully added meme to the collection.";
+                serviceResultDto.Success = true;
+                serviceResultDto.Message = "Succesfully added meme to the collection.";
             }
             else
             {
-                addMemeToCollectionResultDto.Message = "Failed to add meme to the collection.";
+                serviceResultDto.Message = "Failed to add meme to the collection.";
             }
-            return addMemeToCollectionResultDto;
+            return serviceResultDto;
         }
 
         public async Task<bool> RemoveMemeFromCollectionAsync(RemoveMemeFromCollectionDto removeMemeFromCollectionDto)
