@@ -9,5 +9,18 @@ namespace Ultrix.Application.DTOs
         public string Name { get; set; }
         public List<CollectionItemDetailDto> CollectionItemDetails { get; set; }
         public List<CollectionSubscriberDto> CollectionSubscribers { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is CollectionDto)
+            {
+                CollectionDto that = obj as CollectionDto;
+                return
+                    this.UserId.Equals(that.UserId) &&
+                    this.Name.Equals(that.Name);
+            }
+
+            return false;
+        }
     }
 }

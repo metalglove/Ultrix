@@ -9,6 +9,7 @@ using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 using Ultrix.Infrastructure.Services;
 using Ultrix.Persistance.Contexts;
+using Ultrix.Persistance.Extensions;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
 
@@ -31,9 +32,12 @@ namespace Ultrix.Tests
         }
 
         [TestInitialize]
-        public void Initialize()
+        public async Task InitializeAsync()
         {
             ApplicationDbFactory = new ApplicationDbFactory("InMemoryDatabase");
+            await ApplicationDbFactory.Create().Database.EnsureDeletedAsync();
+            await ApplicationDbFactory.Create().Database.EnsureCreatedAsync();
+            ApplicationDbFactory.Create().ResetValueGenerators();
             MemeRepository = new MemeRepository(ApplicationDbFactory.Create(), MemeValidator);
             MemeService = new MemeService(LocalMemeFetcherService, MemeRepository);
         }
