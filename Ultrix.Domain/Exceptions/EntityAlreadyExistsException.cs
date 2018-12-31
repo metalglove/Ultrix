@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Ultrix.Application.Exceptions
+namespace Ultrix.Domain.Exceptions
 {
     [Serializable]
     public class EntityAlreadyExistsException : Exception

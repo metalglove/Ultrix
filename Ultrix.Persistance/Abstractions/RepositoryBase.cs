@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
+using Ultrix.Domain.Exceptions;
 using Ultrix.Persistance.Contexts;
 
 namespace Ultrix.Persistance.Abstractions

@@ -7,6 +7,7 @@ using Ultrix.Application.Interfaces;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
+using Ultrix.Domain.Exceptions;
 using Ultrix.Infrastructure.Services;
 using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;

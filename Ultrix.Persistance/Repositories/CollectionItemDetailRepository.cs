@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
+using Ultrix.Domain.Exceptions;
 using Ultrix.Persistance.Abstractions;
 using Ultrix.Persistance.Contexts;
 
