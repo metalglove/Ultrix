@@ -19,10 +19,6 @@ namespace Ultrix.Infrastructure.Services
 
         public async Task<MemeDto> GetRandomMemeAsync()
         {
-            return await GetMemeAsync();
-        }
-        private async Task<MemeDto> GetMemeAsync()
-        {
             using (HttpClient httpClient = new HttpClient())
             {
                 HttpResponseMessage response = await httpClient.GetAsync(NineGagRandomUrl, HttpCompletionOption.ResponseHeadersRead);

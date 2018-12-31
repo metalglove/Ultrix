@@ -58,8 +58,10 @@ namespace Ultrix.Application.Services
             return serviceResultDto;
         }
 
-        public async Task<bool> RemoveMemeFromCollectionAsync(RemoveMemeFromCollectionDto removeMemeFromCollectionDto)
+        public async Task<ServiceResponseDto> RemoveMemeFromCollectionAsync(RemoveMemeFromCollectionDto removeMemeFromCollectionDto)
         {
+            ServiceResponseDto serviceResultDto = new ServiceResponseDto();
+
             bool isOwnerOfCollection = await _collectionRepository.ExistsAsync(collection => 
             collection.Id.Equals(removeMemeFromCollectionDto.CollectionId) && 
             collection.UserId.Equals(removeMemeFromCollectionDto.UserId));
@@ -70,9 +72,21 @@ namespace Ultrix.Application.Services
             // TODO: check if user is currently subscribed?
 
             if (!actualCollectionItemDetail.AddedByUserId.Equals(removeMemeFromCollectionDto.UserId) || !isOwnerOfCollection)
-                throw new ApplicationUserIsNotAuthorizedException();
+            {
+                serviceResultDto.Message = "Failed to remove meme because user is not authorized.";
+                return serviceResultDto;
+            }
 
-            return await _collectionItemDetailRepository.DeleteAsync(actualCollectionItemDetail);
+            if (await _collectionItemDetailRepository.DeleteAsync(actualCollectionItemDetail))
+            {
+                serviceResultDto.Success = true;
+                serviceResultDto.Message = "Successfully removed meme from collection.";
+            }
+            else
+            {
+                serviceResultDto.Message = "Failed to remove meme from the collection";
+            }
+            return serviceResultDto;
         }
     }
 }

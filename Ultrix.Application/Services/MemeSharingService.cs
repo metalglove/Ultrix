@@ -34,9 +34,9 @@ namespace Ultrix.Application.Services
             return sharedMemes.Select(EntityToDtoConverter.Convert<SharedMemeDto, SharedMeme>);
         }
 
-        public async Task<SharedMemeMarkAsSeenDto> MarkSharedMemeAsSeenAsync(SharedMemeDto sharedMeme)
+        public async Task<ServiceResponseDto> MarkSharedMemeAsSeenAsync(SharedMemeDto sharedMeme)
         {
-            SharedMemeMarkAsSeenDto sharedMemeMarkAsSeenDto = new SharedMemeMarkAsSeenDto
+            ServiceResponseDto sharedMemeMarkAsSeenDto = new ServiceResponseDto
             {
                 Message = "Something happened try again later.."
             };

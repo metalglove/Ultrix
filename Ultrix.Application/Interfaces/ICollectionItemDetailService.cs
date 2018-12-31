@@ -6,6 +6,6 @@ namespace Ultrix.Application.Interfaces
     public interface ICollectionItemDetailService
     {
         Task<ServiceResponseDto> AddMemeToCollectionAsync(AddMemeToCollectionDto addMemeToCollectionDto);
-        Task<bool> RemoveMemeFromCollectionAsync(RemoveMemeFromCollectionDto removeMemeFromCollectionDto);
+        Task<ServiceResponseDto> RemoveMemeFromCollectionAsync(RemoveMemeFromCollectionDto removeMemeFromCollectionDto);
     }
 }

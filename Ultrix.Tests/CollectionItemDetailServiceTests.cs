@@ -143,10 +143,10 @@ namespace Ultrix.Tests
             };
 
             // Act
-            bool success = await CollectionItemDetailService.RemoveMemeFromCollectionAsync(removeMemeFromCollectionDto);
+            ServiceResponseDto serviceResponseDto = await CollectionItemDetailService.RemoveMemeFromCollectionAsync(removeMemeFromCollectionDto);
 
             // Assert
-            Assert.IsTrue(success);
+            Assert.IsTrue(serviceResponseDto.Success);
             List<CollectionItemDetail> collectionItemDetails = (await CollectionItemDetailRepository.GetAllAsync()).ToList();
             Assert.AreEqual(collectionItemDetails.Count, 0);
         }
@@ -183,8 +183,10 @@ namespace Ultrix.Tests
             };
 
             // Act & Assert
-            await Assert.ThrowsExceptionAsync<ApplicationUserIsNotAuthorizedException>(
-                async () => await CollectionItemDetailService.RemoveMemeFromCollectionAsync(removeMemeFromCollectionDto));
+            ServiceResponseDto serviceResponseDto =
+                await CollectionItemDetailService.RemoveMemeFromCollectionAsync(removeMemeFromCollectionDto);
+            Assert.IsFalse(serviceResponseDto.Success);
+            Assert.AreEqual(serviceResponseDto.Message, "Failed to remove meme because user is not authorized.");
         }
     }
 }

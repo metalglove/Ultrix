@@ -8,7 +8,7 @@ namespace Ultrix.Application.Interfaces
     public interface IMemeSharingService
     {
         Task<ServiceResponseDto> ShareMemeToMutualFollowerAsync(SharedMemeDto sharedMemeDto);
-        Task<SharedMemeMarkAsSeenDto> MarkSharedMemeAsSeenAsync(SharedMemeDto sharedMeme);
+        Task<ServiceResponseDto> MarkSharedMemeAsSeenAsync(SharedMemeDto sharedMemeDto);
         Task<IEnumerable<SharedMemeDto>> GetSharedMemesAsync(int userId, SeenStatus seenStatus);
     }
 }

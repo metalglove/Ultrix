@@ -143,7 +143,7 @@ namespace Ultrix.Presentation.Controllers
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             SharedMemeDto sharedMemeDto = markMemeAsSeenViewModel.GetSharedMemeDto(userId);
-            SharedMemeMarkAsSeenDto sharedMemeMarkAsSeenDto = await _memeSharingService.MarkSharedMemeAsSeenAsync(sharedMemeDto);
+            ServiceResponseDto sharedMemeMarkAsSeenDto = await _memeSharingService.MarkSharedMemeAsSeenAsync(sharedMemeDto);
             return Json(sharedMemeMarkAsSeenDto);
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
