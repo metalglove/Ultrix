@@ -10,8 +10,6 @@ namespace Ultrix.Application.Validators
         {
             if (entity == null)
                 throw new EntityValidationException("CollectionItemDetail is null");
-            if (entity.Id == 0 || entity.Id == -1)
-                throw new EntityValidationException("Id cannot be 0 OR -1.");
             if (string.IsNullOrWhiteSpace(entity.UserName))
                 throw new EntityValidationException("UserName IsNullOrWhiteSpace.");
             if (!entity.TimestampCreated.Equals(default))

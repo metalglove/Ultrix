@@ -3,6 +3,7 @@
     public enum SignUpResultError
     {
         CredentialTypeNotFound,
-        UserNameAlreadyExists
+        UserNameAlreadyExists,
+        SecretIsNullOrEmpty
     }
 }

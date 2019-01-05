@@ -23,6 +23,18 @@ namespace Ultrix.Application.Services
         {
             ServiceResponseDto followResultDto = new ServiceResponseDto();
             Follower follower = DtoToEntityConverter.Convert<Follower, FollowerDto>(followerDto);
+            if (!await _applicationUserRepository.ExistsAsync(user => user.Id.Equals(followerDto.UserId)))
+            {
+                followResultDto.Message = "The user does not exist.";
+                return followResultDto;
+            }
+
+            if (!await _applicationUserRepository.ExistsAsync(user => user.Id.Equals(followerDto.FollowerUserId)))
+            {
+                followResultDto.Message = "The follower user does not exist.";
+                return followResultDto;
+            }
+
             string username = (await _applicationUserRepository.FindSingleByExpressionAsync(user => user.Id.Equals(followerDto.UserId))).UserName;
 
             if (await _followerRepository.ExistsAsync(follow => follow.UserId.Equals(followerDto.UserId) && follow.FollowerUserId.Equals(followerDto.FollowerUserId)))
@@ -45,6 +57,17 @@ namespace Ultrix.Application.Services
         {
             ServiceResponseDto unFollowResultDto = new ServiceResponseDto();
             Follower follower = DtoToEntityConverter.Convert<Follower, FollowerDto>(followerDto);
+            if (!await _applicationUserRepository.ExistsAsync(user => user.Id.Equals(followerDto.UserId)))
+            {
+                unFollowResultDto.Message = "The user does not exist.";
+                return unFollowResultDto;
+            }
+
+            if (!await _applicationUserRepository.ExistsAsync(user => user.Id.Equals(followerDto.FollowerUserId)))
+            {
+                unFollowResultDto.Message = "The follower user does not exist.";
+                return unFollowResultDto;
+            }
             string username = (await _applicationUserRepository.FindSingleByExpressionAsync(user => user.Id.Equals(followerDto.UserId))).UserName;
 
             if (!await _followerRepository.ExistsAsync(follow => follow.UserId.Equals(followerDto.UserId) && follow.FollowerUserId.Equals(followerDto.FollowerUserId)))

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Ultrix.Application.Converters;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
@@ -54,8 +53,14 @@ namespace Ultrix.Application.Managers
         }
         public async Task<SignUpResultDto> SignUpAsync(string name, string credentialTypeCode, string identifier, string secret)
         {
+            if (string.IsNullOrEmpty(secret))
+                return new SignUpResultDto(success: false, error: SignUpResultError.SecretIsNullOrEmpty);
+
             if (await _applicationUserRepository.ExistsAsync(anyUser => anyUser.UserName.Equals(name, StringComparison.OrdinalIgnoreCase)))
                 return new SignUpResultDto(success: false, error: SignUpResultError.UserNameAlreadyExists);
+
+            if (!await _credentialTypeRepository.ExistsAsync(ct => string.Equals(ct.Code, credentialTypeCode, StringComparison.OrdinalIgnoreCase)))
+                return new SignUpResultDto(success: false, error: SignUpResultError.CredentialTypeNotFound);
 
             ApplicationUser user = new ApplicationUser
             {
@@ -64,25 +69,17 @@ namespace Ultrix.Application.Managers
             };
             await _applicationUserRepository.CreateAsync(user);
 
-            if (!await _credentialTypeRepository.ExistsAsync(ct => string.Equals(ct.Code, credentialTypeCode, StringComparison.OrdinalIgnoreCase)))
-                return new SignUpResultDto(success: false, error: SignUpResultError.CredentialTypeNotFound);
-
             CredentialType credentialType = await _credentialTypeRepository.FindSingleByExpressionAsync(ct => string.Equals(ct.Code, credentialTypeCode, StringComparison.OrdinalIgnoreCase));
+
+            byte[] salt = PasswordHasher.GenerateRandomSalt();
             Credential credential = new Credential
             {
                 UserId = user.Id,
                 CredentialTypeId = credentialType.Id,
-                Identifier = identifier
+                Identifier = identifier,
+                Secret = PasswordHasher.ComputeHash(secret, salt),
+                Extra = Convert.ToBase64String(salt)
             };
-
-            if (!string.IsNullOrEmpty(secret))
-            {
-                byte[] salt = PasswordHasher.GenerateRandomSalt();
-                string hash = PasswordHasher.ComputeHash(secret, salt);
-
-                credential.Secret = hash;
-                credential.Extra = Convert.ToBase64String(salt);
-            }
 
             await _credentialRepository.CreateAsync(credential);
 
@@ -277,6 +274,7 @@ namespace Ultrix.Application.Managers
         }
         public async Task<string> FindUserNameByIdAsync(int userId)
         {
+            // TODO: fix
             Credential credential = await _credentialRepository.FindSingleByExpressionAsync(c => c.UserId.Equals(userId));
             return credential?.User?.UserName ?? "";
         }

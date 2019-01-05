@@ -30,11 +30,11 @@ namespace Ultrix.Application.Services
                 return commentResultDto;
 
             Comment comment = DtoToEntityConverter.Convert<Comment, CommentDto>(commentDto);
-            if (await _commentRepository.CreateAsync(comment))
-            {
-                commentResultDto.Message = "Successfully added the comment.";
-                commentResultDto.Success = true;
-            }
+            if (!await _commentRepository.CreateAsync(comment))
+                return commentResultDto;
+
+            commentResultDto.Message = "Successfully added the comment.";
+            commentResultDto.Success = true;
 
             return commentResultDto;
         }
