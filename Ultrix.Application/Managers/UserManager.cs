@@ -244,7 +244,7 @@ namespace Ultrix.Application.Managers
             }
             if (_contextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                await _contextAccessor.HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+                await _contextAccessor.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 _contextAccessor.HttpContext.User = null;
             }
         }
