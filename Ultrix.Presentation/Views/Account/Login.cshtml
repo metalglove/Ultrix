@@ -18,23 +18,28 @@
                         </div>
                     </div>
 
-                    <div class="row">
+                    <div class="row" id="hideUsername" style="display: none;">
                         <div class="input-field col s12">
-                            <input id="Username" name="Username" class="validate" type="text"/>
+                            <input id="Username" name="Username" class="validate" type="text" />
                             <label for="Username">Enter your username</label>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="Password" name="Password" class="validate" type="password"/>
+                            <input id="Email" name="Email" class="validate" type="text" />
+                            <label for="Email">Enter your email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="Password" name="Password" class="validate" type="password" />
                             <label for="Password">Enter your password</label>
                         </div>
                     </div>
 
-                    <br/>
+                    <br />
                     <div class="row">
-                        <input id="submitButton" type="submit" class="col s12 btn btn waves-effect indigo" value="Login"/>
+                        <input id="submitButton" type="submit" class="col s12 btn btn waves-effect indigo" value="Login" />
                     </div>
                 </form>
             </div>
@@ -48,10 +53,12 @@
         if (switchTo === "Login") {
             loginUrl = "/Login";
             $("#formBanner").text(switchTo);
+            $("#hideUsername").hide();
             $("#submitButton").val(switchTo);
         } else if (switchTo === "Register") {
             loginUrl = "/Register";
             $("#formBanner").text(switchTo);
+            $("#hideUsername").show();
             $("#submitButton").val(switchTo);
         } else {
             M.toast({ html: "Something happened, try again later..." });

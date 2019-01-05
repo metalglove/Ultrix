@@ -8,98 +8,120 @@ using Ultrix.Persistance.Contexts;
 
 namespace Ultrix.Persistance.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AppDbContext))]
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-preview3-35497")
+                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+            modelBuilder.Entity("Ultrix.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                    b.Property<DateTime>("TimestampCreated")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GetDate()");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.Credential", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CredentialTypeId");
+
+                    b.Property<string>("Extra");
+
+                    b.Property<string>("Identifier")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.Property<string>("Secret")
+                        .HasMaxLength(1024);
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CredentialTypeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Credentials");
+                });
+
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(32);
 
                     b.Property<string>("Name")
-                        .HasMaxLength(256);
+                        .IsRequired()
+                        .HasMaxLength(64);
 
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
+                    b.Property<int?>("Position");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("Permissions");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.Role", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(32);
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64);
 
+                    b.Property<int?>("Position");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.RolePermission", b =>
+                {
                     b.Property<int>("RoleId");
 
-                    b.HasKey("Id");
+                    b.Property<int>("PermissionId");
 
-                    b.HasIndex("RoleId");
+                    b.HasKey("RoleId", "PermissionId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermissions");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
-                {
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("ProviderKey");
-
-                    b.Property<string>("ProviderDisplayName");
-
-                    b.Property<int>("UserId");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.UserRole", b =>
                 {
                     b.Property<int>("UserId");
 
@@ -109,74 +131,7 @@ namespace Ultrix.Persistance.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
-                {
-                    b.Property<int>("UserId");
-
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.ApplicationUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Collection", b =>
@@ -387,46 +342,61 @@ namespace Ultrix.Persistance.Migrations
                     b.ToTable("UserDetails");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
+            modelBuilder.Entity("Ultrix.Domain.Enumerations.CredentialType", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(32);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64);
+
+                    b.Property<int?>("Position");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CredentialTypes");
+                });
+
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.Credential", b =>
+                {
+                    b.HasOne("Ultrix.Domain.Enumerations.CredentialType", "CredentialType")
+                        .WithMany("Credentials")
+                        .HasForeignKey("CredentialTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Credentials")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.RolePermission", b =>
+                {
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
+            modelBuilder.Entity("Ultrix.Domain.Entities.Authentication.UserRole", b =>
                 {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
-                {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>")
+                    b.HasOne("Ultrix.Domain.Entities.Authentication.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
-                {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -434,7 +404,7 @@ namespace Ultrix.Persistance.Migrations
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Collection", b =>
                 {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Collections")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -442,7 +412,7 @@ namespace Ultrix.Persistance.Migrations
 
             modelBuilder.Entity("Ultrix.Domain.Entities.CollectionItemDetail", b =>
                 {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
                         .WithMany("CollectionItemDetails")
                         .HasForeignKey("AddedByUserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -464,7 +434,7 @@ namespace Ultrix.Persistance.Migrations
                         .HasForeignKey("CollectionId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
                         .WithMany("CollectionSubscribers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -476,7 +446,7 @@ namespace Ultrix.Persistance.Migrations
                         .WithMany("Comments")
                         .HasForeignKey("MemeId");
 
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -484,12 +454,12 @@ namespace Ultrix.Persistance.Migrations
 
             modelBuilder.Entity("Ultrix.Domain.Entities.Follower", b =>
                 {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "FollowerUser")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "FollowerUser")
                         .WithMany("Follows")
                         .HasForeignKey("FollowerUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
                         .WithMany("Followers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -501,7 +471,7 @@ namespace Ultrix.Persistance.Migrations
                         .WithMany("Likes")
                         .HasForeignKey("MemeId");
 
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "User")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "User")
                         .WithMany("MemeLikes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -513,12 +483,12 @@ namespace Ultrix.Persistance.Migrations
                         .WithMany("Shares")
                         .HasForeignKey("MemeId");
 
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "ReceiverUser")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "ReceiverUser")
                         .WithMany("ReceivedSharedMemes")
                         .HasForeignKey("ReceiverUserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "SenderUser")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "SenderUser")
                         .WithMany("SendSharedMemes")
                         .HasForeignKey("SenderUserId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -526,7 +496,7 @@ namespace Ultrix.Persistance.Migrations
 
             modelBuilder.Entity("Ultrix.Domain.Entities.UserDetail", b =>
                 {
-                    b.HasOne("Ultrix.Domain.Entities.Authentication.ApplicationUser", "ApplicationUser")
+                    b.HasOne("Ultrix.Domain.Entities.ApplicationUser", "ApplicationUser")
                         .WithOne("UserDetail")
                         .HasForeignKey("Ultrix.Domain.Entities.UserDetail", "Id")
                         .OnDelete(DeleteBehavior.Cascade);

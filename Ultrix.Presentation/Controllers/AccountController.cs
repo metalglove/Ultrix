@@ -32,9 +32,9 @@ namespace Ultrix.Presentation.Controllers
             if (!ModelState.IsValid)
                 return Json(new { success = false });
 
-            RegisterUserDto registerUserDto = registerViewModel.GetApplicationUserDto();
-            IdentityResult createIdentityResult = await _userService.RegisterUserAsync(registerUserDto);
-            return Json(createIdentityResult.Succeeded 
+            RegisterUserDto registerUserDto = registerViewModel.GetRegisterUserDto();
+            SignUpResultDto createIdentityResult = await _userService.RegisterUserAsync(registerUserDto);
+            return Json(createIdentityResult.Success 
                 ? new { success = true } 
                 : new { success = false });
         }
@@ -42,7 +42,7 @@ namespace Ultrix.Presentation.Controllers
         [Route("Logout"), Authorize]
         public async Task<IActionResult> LogoutAsync(string returnUrl)
         {
-            await _userService.SignOutAsync(HttpContext);
+            await _userService.SignOutAsync();
             return RedirectToAction("IndexAsync", "Meme");
         }
 
@@ -52,14 +52,14 @@ namespace Ultrix.Presentation.Controllers
             if (!ModelState.IsValid)
                 return Json(new { success = false });
 
-            await _userService.SignOutAsync(HttpContext);
+            await _userService.SignOutAsync();
             LoginUserDto loginUserDto = loginViewModel.GetLoginUserDto();
-            SignInResult signInResult = await _userService.SignInAsync(loginUserDto);
+            SignInResultDto signInResult = await _userService.SignInAsync(loginUserDto);
 
-            if (!signInResult.Succeeded)
+            if (!signInResult.Success)
                 return Json(new { success = false });
 
-            int userId = await _userService.GetUserIdByUserNameAsync(loginViewModel.Username);
+            int userId = await _userService.GetUserIdByEmailAsync(loginViewModel.Email);
             await _tempDataService.UpdateTempDataAsync(TempData, userId);
 
             return Json(new { success = true, loggedin = true });
@@ -68,20 +68,19 @@ namespace Ultrix.Presentation.Controllers
         [Route("VerifyTempData"), HttpGet]
         public async Task<IActionResult> VerifyTempDataAsync()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                TempData.Peek("collections", out List<ShareCollectionDto> collections);
-                TempData.Peek("mutualFollowings", out List<FollowerDto> mutualFollowings);
+            if (!User.Identity.IsAuthenticated)
+                return Json(new {success = false, refresh = false});
 
-                if (collections != null && mutualFollowings != null)
-                    return Json(new { success = true, refresh = false });
+            TempData.Peek("collections", out List<ShareCollectionDto> collections);
+            TempData.Peek("mutualFollowings", out List<FollowerDto> mutualFollowings);
 
-                int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                await _tempDataService.UpdateTempDataAsync(TempData, userId);
+            if (collections != null && mutualFollowings != null)
+                return Json(new { success = true, refresh = false });
 
-                return Json(new { success = true, refresh = true });  
-            }
-            return Json(new { success = false, refresh = false });
+            int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _tempDataService.UpdateTempDataAsync(TempData, userId);
+
+            return Json(new { success = true, refresh = true });
         }
     }
 }

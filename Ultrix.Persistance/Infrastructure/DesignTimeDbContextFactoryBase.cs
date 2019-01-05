@@ -11,7 +11,7 @@ namespace Ultrix.Persistance.Infrastructure
     {
         private const string AspNetCoreEnvironment = "ASPNETCORE_ENVIRONMENT";
         private string ConnectionStringName { get; }
-        protected string ConnectionString { get; private set; }
+        private string ConnectionString { get; set; }
         protected DbContextOptionsBuilder<TContext> OptionsBuilder { get; private set; }
         private readonly string _uniqueDbName;
 

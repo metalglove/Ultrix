@@ -4,23 +4,23 @@ using Ultrix.Persistance.Contexts;
 
 namespace Ultrix.Persistance.Infrastructure
 {
-    public class ApplicationDbFactory : DesignTimeDbContextFactoryBase<ApplicationDbContext>, IFactory<ApplicationDbContext> 
+    public class ApplicationDbFactory : DesignTimeDbContextFactoryBase<AppDbContext>, IFactory<AppDbContext> 
     {
         private static readonly string[] UsePrecompiledConnectionStringArguments = new string[]{ "UsePrecompiledConnectingString" };
 
+        public ApplicationDbFactory() : base("ApplicationDatabase", true)
+        {
+
+        }
         public ApplicationDbFactory(string connectionStringName = "ApplicationDatabase") : base(connectionStringName, true)
         {
         }
 
-        protected override ApplicationDbContext CreateNewInstance(DbContextOptions<ApplicationDbContext> options)
+        protected override AppDbContext CreateNewInstance(DbContextOptions<AppDbContext> options)
         {
-            return new ApplicationDbContext(options);
+            return new AppDbContext(options);
         }
-        public string GetConnectionString()
-        {
-            return ConnectionString;
-        }
-        public ApplicationDbContext Create()
+        public AppDbContext Create()
         {
             return base.CreateDbContext(UsePrecompiledConnectionStringArguments);
         }

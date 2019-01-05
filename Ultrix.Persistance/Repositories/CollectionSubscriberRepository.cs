@@ -7,7 +7,7 @@ namespace Ultrix.Persistance.Repositories
 {
     public class CollectionSubscriberRepository : RepositoryBase<CollectionSubscriber>
     {
-        public CollectionSubscriberRepository(ApplicationDbContext applicationDbContext, IEntityValidator<CollectionSubscriber> collectionSubscriberValidator) : base(applicationDbContext, collectionSubscriberValidator)
+        public CollectionSubscriberRepository(AppDbContext applicationDbContext, IEntityValidator<CollectionSubscriber> collectionSubscriberValidator) : base(applicationDbContext, collectionSubscriberValidator)
         {
         }
     }

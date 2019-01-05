@@ -7,9 +7,9 @@ namespace Ultrix.Persistance.Repositories
 {
     public class UserRepository : RepositoryBase<ApplicationUser>
     {
-        public UserRepository(ApplicationDbContext applicationDbContext, IEntityValidator<ApplicationUser> entityValidator) : base(applicationDbContext, entityValidator)
+        public UserRepository(AppDbContext applicationDbContext, IEntityValidator<ApplicationUser> entityValidator) : base(applicationDbContext, entityValidator)
         {
-            // The user manager handles creating users.
+
         }
     }
 }

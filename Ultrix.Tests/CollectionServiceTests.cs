@@ -19,7 +19,7 @@ namespace Ultrix.Tests
     public class CollectionServiceTests
     {
         public static IEntityValidator<Collection> CollectionValidator { get; set; }
-        public static IFactory<ApplicationDbContext> ApplicationDbFactory { get; set; }
+        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
         public static IRepository<Collection> CollectionRepository { get; set; }
         public static ICollectionService CollectionService { get; set; }
 
