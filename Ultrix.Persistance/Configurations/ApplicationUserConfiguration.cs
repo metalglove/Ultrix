@@ -10,6 +10,10 @@ namespace Ultrix.Persistance.Configurations
         {
             builder.HasKey(user => user.Id);
 
+            builder.Property(e => e.Id).ValueGeneratedOnAdd();
+            builder.Property(e => e.UserName).IsRequired().HasMaxLength(64);
+            builder.Property(p => p.TimestampCreated).HasDefaultValueSql("GetDate()");
+
             builder.HasMany(user => user.Collections)
                 .WithOne(collection => collection.User)
                 .HasForeignKey(collection => collection.UserId)

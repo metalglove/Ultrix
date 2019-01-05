@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System;
 using System.Collections.Generic;
+using Ultrix.Domain.Entities.Authentication;
 
 namespace Ultrix.Domain.Entities
 {
-    public class ApplicationUser : IdentityUser<int>
+    public class ApplicationUser
     {
-        // Id, UserName, PasswordHash in IdentityUser
-        public override int Id { get; set; }
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        public DateTime TimestampCreated { get; set; }
+        public virtual ICollection<Credential> Credentials { get; set; }
         public virtual UserDetail UserDetail { get; set; }
         public virtual List<MemeLike> MemeLikes { get; set; }
         public virtual List<Follower> Followers { get; set; }

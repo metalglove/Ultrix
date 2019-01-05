@@ -7,7 +7,7 @@ namespace Ultrix.Persistance.Repositories
 {
     public class CommentRepository : RepositoryBase<Comment>
     {
-        public CommentRepository(ApplicationDbContext applicationDbContext, IEntityValidator<Comment> commentValidator) : base(applicationDbContext, commentValidator)
+        public CommentRepository(AppDbContext applicationDbContext, IEntityValidator<Comment> commentValidator) : base(applicationDbContext, commentValidator)
         {
         }
     }

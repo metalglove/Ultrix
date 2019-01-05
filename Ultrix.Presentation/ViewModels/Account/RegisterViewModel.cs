@@ -10,15 +10,18 @@ namespace Ultrix.Presentation.ViewModels.Account
          MaxLength(20, ErrorMessage = "The length must be less than {1} characters."),
          DataType(DataType.Text)]
         public string Username { get; set; }
+        [Required(ErrorMessage = "Please enter an email address."), 
+         DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
         [Required(ErrorMessage = "Please enter a password."),
          MinLength(5, ErrorMessage = "The length must be less than {1} characters."),
          MaxLength(255, ErrorMessage = "The length must be less than {1} characters."),
          DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public RegisterUserDto GetApplicationUserDto()
+        public RegisterUserDto GetRegisterUserDto()
         {
-            return new RegisterUserDto { UserName = Username, Password = Password };
+            return new RegisterUserDto { UserName = Username, Email = Email, Password = Password };
         }
     }
 }

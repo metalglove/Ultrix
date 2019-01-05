@@ -11,10 +11,10 @@ namespace Ultrix.Persistance.Repositories
 {
     public class CollectionItemDetailRepository : RepositoryBase<CollectionItemDetail>
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AppDbContext _applicationDbContext;
         private readonly IEntityValidator<CollectionItemDetail> _collectionItemDetailValidator;
 
-        public CollectionItemDetailRepository(ApplicationDbContext applicationDbContext, IEntityValidator<CollectionItemDetail> collectionItemDetailValidator) : base(applicationDbContext, collectionItemDetailValidator)
+        public CollectionItemDetailRepository(AppDbContext applicationDbContext, IEntityValidator<CollectionItemDetail> collectionItemDetailValidator) : base(applicationDbContext, collectionItemDetailValidator)
         {
             _applicationDbContext = applicationDbContext;
             _collectionItemDetailValidator = collectionItemDetailValidator;

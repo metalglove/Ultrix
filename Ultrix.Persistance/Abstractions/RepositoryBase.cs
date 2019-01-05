@@ -12,10 +12,10 @@ namespace Ultrix.Persistance.Abstractions
 {
     public abstract class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly AppDbContext _applicationDbContext;
         private readonly IEntityValidator<TEntity> _entityValidator;
 
-        protected RepositoryBase(ApplicationDbContext applicationDbContext, IEntityValidator<TEntity> entityValidator)
+        protected RepositoryBase(AppDbContext applicationDbContext, IEntityValidator<TEntity> entityValidator)
         {
             _applicationDbContext = applicationDbContext;
             _entityValidator = entityValidator;

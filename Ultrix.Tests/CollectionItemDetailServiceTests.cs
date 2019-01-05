@@ -22,7 +22,7 @@ namespace Ultrix.Tests
         public static IEntityValidator<Collection> CollectionValidator { get; set; }
         public static IEntityValidator<Meme> MemeValidator { get; set; }
         public static IEntityValidator<CollectionItemDetail> CollectionItemDetailValidator { get; set; }
-        public static IFactory<ApplicationDbContext> ApplicationDbFactory { get; set; }
+        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
         public static IRepository<Collection> CollectionRepository { get; set; }
         public static IRepository<Meme> MemeRepository { get; set; }
         public static IRepository<CollectionItemDetail> CollectionItemDetailRepository { get; set; }

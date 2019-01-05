@@ -1,13 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Ultrix.Domain.Entities;
+using Ultrix.Domain.Entities.Authentication;
+using Ultrix.Domain.Enumerations;
 using Ultrix.Persistance.Extensions;
 
 namespace Ultrix.Persistance.Contexts
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
+    public class AppDbContext : DbContext
     {
+        public DbSet<ApplicationUser> Users { get; set; }
+        public DbSet<CredentialType> CredentialTypes { get; set; }
+        public DbSet<Credential> Credentials { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<Meme> Memes { get; set; }
         public DbSet<UserDetail> UserDetails { get; set; }
         public DbSet<Collection> Collections { get; set; }
@@ -18,7 +25,7 @@ namespace Ultrix.Persistance.Contexts
         public DbSet<MemeLike> MemeLikes { get; set; }
         public DbSet<SharedMeme> SharedMemes { get; set; }
 
-        public ApplicationDbContext(DbContextOptions options) : base (options)
+        public AppDbContext(DbContextOptions options) : base (options)
         {
 
         }

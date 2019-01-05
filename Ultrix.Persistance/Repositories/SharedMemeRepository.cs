@@ -7,7 +7,7 @@ namespace Ultrix.Persistance.Repositories
 {
     public class SharedMemeRepository : RepositoryBase<SharedMeme>
     {
-        public SharedMemeRepository(ApplicationDbContext applicationDbContext, IEntityValidator<SharedMeme> sharedMemeValidator) : base(applicationDbContext, sharedMemeValidator)
+        public SharedMemeRepository(AppDbContext applicationDbContext, IEntityValidator<SharedMeme> sharedMemeValidator) : base(applicationDbContext, sharedMemeValidator)
         {
         }
     }

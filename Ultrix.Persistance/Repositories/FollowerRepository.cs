@@ -7,7 +7,7 @@ namespace Ultrix.Persistance.Repositories
 {
     public class FollowerRepository : RepositoryBase<Follower>
     {
-        public FollowerRepository(ApplicationDbContext applicationDbContext, IEntityValidator<Follower> entityValidator) : base(applicationDbContext, entityValidator)
+        public FollowerRepository(AppDbContext applicationDbContext, IEntityValidator<Follower> entityValidator) : base(applicationDbContext, entityValidator)
         {
         }
     }

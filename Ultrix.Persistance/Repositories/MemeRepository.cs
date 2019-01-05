@@ -7,7 +7,7 @@ namespace Ultrix.Persistance.Repositories
 {
     public class MemeRepository : RepositoryBase<Meme>
     {
-        public MemeRepository(ApplicationDbContext applicationDbContext, IEntityValidator<Meme> memeValidator) : base(applicationDbContext, memeValidator)
+        public MemeRepository(AppDbContext applicationDbContext, IEntityValidator<Meme> memeValidator) : base(applicationDbContext, memeValidator)
         {
         }
     }

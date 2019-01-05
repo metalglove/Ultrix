@@ -20,7 +20,7 @@ namespace Ultrix.Tests
     {
         public static IEntityValidator<Meme> MemeValidator { get; set; }
         public static ILocalMemeFetcherService LocalMemeFetcherService { get; set; }
-        public static IFactory<ApplicationDbContext> ApplicationDbFactory { get; set; }
+        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
         public static IRepository<Meme> MemeRepository { get; set; }
         public static IMemeService MemeService { get; set; }
 
