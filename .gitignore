@@ -6,7 +6,7 @@ Ultrix.Presentation/appsettings.json
 Ultrix.Presentation/appsettings.development.json
 Ultrix.Presentation/appsettings.staging.json
 Ultrix.Presentation/appsettings.production.json
-Ultrix.Tests/appsettings.json
+#Ultrix.Tests/appsettings.json # for testing in memory
 
 # User-specific files
 *.suo
