@@ -2,34 +2,25 @@
 using System.Threading.Tasks;
 using Ultrix.Application.Converters;
 using Ultrix.Application.DTOs;
-using Ultrix.Application.Exceptions;
-using Ultrix.Application.Interfaces;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 using Ultrix.Domain.Exceptions;
 using Ultrix.Infrastructure.Services;
-using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
-using Ultrix.Tests.Utilities;
+using Ultrix.Tests.TestUtilities;
 
-namespace Ultrix.Tests
+namespace Ultrix.Tests.Services
 {
     [TestClass]
-    public class MemeServiceTests
+    public class MemeServiceTests : ServiceTestsBase
     {
-        public static IEntityValidator<Meme> MemeValidator { get; set; }
-        public static ILocalMemeFetcherService LocalMemeFetcherService { get; set; }
-        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
-        public static IRepository<Meme> MemeRepository { get; set; }
-        public static IMemeService MemeService { get; set; }
-
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
             MemeValidator = new MemeValidator();
-            LocalMemeFetcherService = new LocalMemeFetcherService();
+            MemeFetcherService = new LocalMemeFetcherService();
         }
 
         [TestInitialize]
@@ -40,7 +31,7 @@ namespace Ultrix.Tests
             await ApplicationDbFactory.Create().Database.EnsureCreatedAsync();
             ApplicationDbFactory.Create().ResetValueGenerators();
             MemeRepository = new MemeRepository(ApplicationDbFactory.Create(), MemeValidator);
-            MemeService = new MemeService(LocalMemeFetcherService, MemeRepository);
+            MemeService = new MemeService(MemeFetcherService, MemeRepository);
         }
 
         [TestMethod]

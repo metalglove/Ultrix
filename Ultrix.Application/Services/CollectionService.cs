@@ -47,7 +47,7 @@ namespace Ultrix.Application.Services
         }
         public async Task<IEnumerable<CollectionDto>> GetMyCollectionsAsync(int userId)
         {
-            // after creating a new collection, all collections but the last created collection in the service is a proxy...
+            // NOTE: after creating a new collection, all collections but the last created collection in the service is a proxy...
             IEnumerable<Collection> collections = await _collectionRepository.FindManyByExpressionAsync(collection => collection.UserId.Equals(userId));
             return collections.Select(EntityToDtoConverter.Convert<CollectionDto, Collection>);
         }

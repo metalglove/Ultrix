@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.ValueGeneration;
 using System.Linq;
 using System.Threading;
 
-namespace Ultrix.Tests.Utilities
+namespace Ultrix.Tests.TestUtilities
 {
     public static class DbContextExtensions
     {

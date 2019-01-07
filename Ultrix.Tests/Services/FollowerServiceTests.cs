@@ -4,44 +4,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ultrix.Application.DTOs;
-using Ultrix.Application.Interfaces;
 using Ultrix.Application.Managers;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
-using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
-using Ultrix.Tests.Utilities;
+using Ultrix.Tests.TestUtilities;
 
-namespace Ultrix.Tests
+namespace Ultrix.Tests.Services
 {
     [TestClass]
-    public class FollowerServiceTests
+    public class FollowerServiceTests : ServiceTestsBase
     {
-        public static IEntityValidator<ApplicationUser> ApplicationUserValidator { get; set; }
-        public static IEntityValidator<Follower> FollowerValidator { get; set; }
-        public static IEntityValidator<Credential> CredentialValidator { get; set; }
-        public static IEntityValidator<CredentialType> CredentialTypeValidator { get; set; }
-        public static IEntityValidator<Role> RoleValidator { get; set; }
-        public static IEntityValidator<UserRole> UserRoleValidator { get; set; }
-        public static IEntityValidator<RolePermission> RolePermissionValidator { get; set; }
-        public static IEntityValidator<Permission> PermissionValidator { get; set; }
-        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
-        public static IRepository<ApplicationUser> ApplicationUserRepository { get; set; }
-        public static IRepository<Follower> FollowerRepository { get; set; }
-        public static IRepository<Credential> CredentialRepository { get; set; }
-        public static IRepository<CredentialType> CredentialTypeRepository { get; set; }
-        public static IRepository<Role> RoleRepository { get; set; }
-        public static IRepository<UserRole> UserRoleRepository { get; set; }
-        public static IRepository<RolePermission> RolePermissionRepository { get; set; }
-        public static IRepository<Permission> PermissionRepository { get; set; }
-        public static IHttpContextAccessor HttpContextAccessor { get; set; }
-        public static IUserService UserService { get; set; }
-        public static IUserManager UserManager { get; set; }
-        public static IFollowerService FollowerService { get; set; }
-
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
@@ -73,7 +49,7 @@ namespace Ultrix.Tests
             PermissionRepository = new PermissionRepository(ApplicationDbFactory.Create(), PermissionValidator);
             HttpContextAccessor = new HttpContextAccessor(); // NOTE: Don't actually use it, when using Startup it will inject the HttpContext. (here it will always be null)
 
-            UserManager = new UserManager(ApplicationUserRepository, CredentialTypeRepository, CredentialRepository, RoleRepository, UserRoleRepository, RolePermissionRepository, PermissionRepository, HttpContextAccessor);
+            UserManager = new UserManager(ApplicationUserRepository, CredentialTypeRepository, CredentialRepository, RoleRepository, UserRoleRepository, RolePermissionRepository, PermissionRepository, HttpContextAccessor, Hasher, SaltGenerator);
             UserService = new UserService(UserManager, ApplicationUserRepository, FollowerRepository);
             FollowerService = new FollowerService(FollowerRepository, ApplicationUserRepository);
 
@@ -85,28 +61,28 @@ namespace Ultrix.Tests
                 Position = 1
             });
 
-            await UserService.RegisterUserAsync(new RegisterUserDto
+            await UserService.SignUpAsync(new RegisterUserDto
             {
                 Email = "Mario.Mario@Ultrix.nl",
                 Password = "password",
                 UserName = "Metalglove"
             });
 
-            await UserService.RegisterUserAsync(new RegisterUserDto
+            await UserService.SignUpAsync(new RegisterUserDto
             {
                 Email = "Jan.Willem@Ultrix.nl",
                 Password = "password",
                 UserName = "Jantje"
             });
 
-            await UserService.RegisterUserAsync(new RegisterUserDto
+            await UserService.SignUpAsync(new RegisterUserDto
             {
                 Email = "Bob.Keizer@Ultrix.nl",
                 Password = "password",
                 UserName = "Bobbie"
             });
 
-            await UserService.RegisterUserAsync(new RegisterUserDto
+            await UserService.SignUpAsync(new RegisterUserDto
             {
                 Email = "Karel.Kerel@Ultrix.nl",
                 Password = "password",

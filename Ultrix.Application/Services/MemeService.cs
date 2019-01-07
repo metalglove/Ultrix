@@ -11,11 +11,9 @@ namespace Ultrix.Application.Services
         private readonly IMemeFetcherService _memeFetcherService;
         private readonly IRepository<Meme> _memeRepository;
 
-        public MemeService(
-            ILocalMemeFetcherService localMemeFetcherService, 
-            IRepository<Meme> memeRepository)
+        public MemeService(IMemeFetcherService memeFetcherService, IRepository<Meme> memeRepository)
         {
-            _memeFetcherService = localMemeFetcherService;
+            _memeFetcherService = memeFetcherService;
             _memeRepository = memeRepository;
         }
 

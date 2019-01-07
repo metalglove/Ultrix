@@ -24,7 +24,7 @@ namespace Ultrix.Application.Services
             _followerRepository = followerRepository;
         }
 
-        public async Task<SignUpResultDto> RegisterUserAsync(RegisterUserDto registerUserDto)
+        public async Task<SignUpResultDto> SignUpAsync(RegisterUserDto registerUserDto)
         {
             return await _userManager.SignUpAsync(registerUserDto.UserName, "Email", registerUserDto.Email, registerUserDto.Password);
         }
@@ -39,15 +39,11 @@ namespace Ultrix.Application.Services
         {
             await _userManager.SignOutAsync();
         }
-        public async Task<string> GetUserNameByUserIdAsync(int userId)
-        {
-            return await _userManager.FindUserNameByIdAsync(userId);
-        }
         public async Task<int> GetUserIdByEmailAsync(string email)
         {
             return await _userManager.FindUserIdByEmailAsync(email);
         }
-        public async Task<IEnumerable<FilteredApplicationUserDto>> GetUsersAsync(int userId)
+        public async Task<IEnumerable<FilteredApplicationUserDto>> GetFilteredUsersAsync(int userId)
         {
             IEnumerable<ApplicationUser> users = await _userRepository.GetAllAsync();
             IEnumerable<ApplicationUserDto> userDTOs = users.Where(user => user.Id != userId).Select(EntityToDtoConverter.Convert<ApplicationUserDto, ApplicationUser>);

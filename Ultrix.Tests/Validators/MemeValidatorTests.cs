@@ -5,10 +5,10 @@ using Ultrix.Application.Interfaces;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 
-namespace Ultrix.Tests
+namespace Ultrix.Tests.Validators
 {
     [TestClass]
-    public class EntityValidatorTests
+    public class MemeValidatorTests
     {
         public static IEntityValidator<Meme> MemeValidator { get; set; }
 

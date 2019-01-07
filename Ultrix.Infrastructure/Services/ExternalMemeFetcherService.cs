@@ -8,7 +8,7 @@ using Ultrix.Application.DTOs;
 
 namespace Ultrix.Infrastructure.Services
 {
-    public class ExternalMemeFetcherService : WebServiceBase, IExternalMemeFetcherService
+    public class ExternalMemeFetcherService : WebServiceBase, IMemeFetcherService
     {
         private static readonly Uri UltrixMemeApi = new Uri("http://ultrix.nl/Api/");
 

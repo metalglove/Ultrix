@@ -56,11 +56,11 @@ namespace Ultrix.Application.Services
 
             sharedMemeEntity.IsSeen = true;
 
-            if (await _sharedMemeRepository.UpdateAsync(sharedMemeEntity))
-            {
-                sharedMemeMarkAsSeenDto.Success = true;
-                sharedMemeMarkAsSeenDto.Message = "Successfully marked the shared meme as seen.";
-            }
+            if (!await _sharedMemeRepository.UpdateAsync(sharedMemeEntity))
+                return sharedMemeMarkAsSeenDto;
+
+            sharedMemeMarkAsSeenDto.Success = true;
+            sharedMemeMarkAsSeenDto.Message = "Successfully marked the shared meme as seen.";
             return sharedMemeMarkAsSeenDto;
         }
 

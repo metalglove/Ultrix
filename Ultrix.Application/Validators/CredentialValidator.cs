@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities.Authentication;
 
@@ -6,10 +6,22 @@ namespace Ultrix.Application.Validators
 {
     public class CredentialValidator : IEntityValidator<Credential>
     {
-        /// <inheritdoc />
         public bool Validate(Credential entity)
         {
-            // TODO: check what needs to be validated...
+            if (entity == null)
+                throw new EntityValidationException("Credential is null");
+            if (entity.Id != 0)
+                throw new EntityValidationException("Id cannot be set.");
+            if (entity.UserId != 0)
+                throw new EntityValidationException("UserId is unset.");
+            if (entity.CredentialTypeId != 0)
+                throw new EntityValidationException("CredentialTypeId is unset.");
+            if (string.IsNullOrWhiteSpace(entity.Identifier))
+                throw new EntityValidationException("Identifier IsNullOrWhiteSpace.");
+            if (string.IsNullOrWhiteSpace(entity.Secret))
+                throw new EntityValidationException("Secret IsNullOrWhiteSpace.");
+            if (string.IsNullOrWhiteSpace(entity.Extra))
+                throw new EntityValidationException("Extra IsNullOrWhiteSpace.");
             return true;
         }
     }

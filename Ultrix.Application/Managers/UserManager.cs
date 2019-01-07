@@ -12,7 +12,6 @@ using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Domain.Enumerations;
-using Ultrix.Domain.Services;
 
 namespace Ultrix.Application.Managers
 {
@@ -26,6 +25,8 @@ namespace Ultrix.Application.Managers
         private readonly IRepository<RolePermission> _rolePermissionRepository;
         private readonly IRepository<Permission> _permissionRepository;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IHasher _hasher;
+        private readonly ISaltGenerator _saltGenerator;
 
         public UserManager(
             IRepository<ApplicationUser> applicationUserRepository, 
@@ -35,7 +36,9 @@ namespace Ultrix.Application.Managers
             IRepository<UserRole> userRoleRepository,
             IRepository<RolePermission> rolePermissionRepository,
             IRepository<Permission> permissionRepository,
-            IHttpContextAccessor contextAccessor)
+            IHttpContextAccessor contextAccessor,
+            IHasher hasher,
+            ISaltGenerator saltGenerator)
         {
             _applicationUserRepository = applicationUserRepository;
             _credentialTypeRepository = credentialTypeRepository;
@@ -45,12 +48,10 @@ namespace Ultrix.Application.Managers
             _rolePermissionRepository = rolePermissionRepository;
             _permissionRepository = permissionRepository;
             _contextAccessor = contextAccessor;
+            _hasher = hasher;
+            _saltGenerator = saltGenerator;
         }
 
-        public async Task<SignUpResultDto> SignUpAsync(string name, string credentialTypeCode, string identifier)
-        {
-            return await SignUpAsync(name, credentialTypeCode, identifier, null);
-        }
         public async Task<SignUpResultDto> SignUpAsync(string name, string credentialTypeCode, string identifier, string secret)
         {
             if (string.IsNullOrEmpty(secret))
@@ -71,13 +72,13 @@ namespace Ultrix.Application.Managers
 
             CredentialType credentialType = await _credentialTypeRepository.FindSingleByExpressionAsync(ct => string.Equals(ct.Code, credentialTypeCode, StringComparison.OrdinalIgnoreCase));
 
-            byte[] salt = PasswordHasher.GenerateRandomSalt();
+            byte[] salt = _saltGenerator.GenerateSalt();
             Credential credential = new Credential
             {
                 UserId = user.Id,
                 CredentialTypeId = credentialType.Id,
                 Identifier = identifier,
-                Secret = PasswordHasher.ComputeHash(secret, salt),
+                Secret = _hasher.Hash(secret, salt),
                 Extra = Convert.ToBase64String(salt)
             };
 
@@ -161,8 +162,8 @@ namespace Ultrix.Application.Managers
 
             Credential credential = await _credentialRepository.FindSingleByExpressionAsync(c => c.CredentialTypeId == credentialType.Id && c.Identifier == identifier);
 
-            byte[] salt = PasswordHasher.GenerateRandomSalt();
-            string hash = PasswordHasher.ComputeHash(secret, salt);
+            byte[] salt = _saltGenerator.GenerateSalt();
+            string hash = _hasher.Hash(secret, salt);
 
             credential.Secret = hash;
             credential.Extra = Convert.ToBase64String(salt);
@@ -177,10 +178,6 @@ namespace Ultrix.Application.Managers
             }
 
             return changeSecretResultDto;
-        }
-        public async Task<ValidateResultDto> ValidateAsync(string credentialTypeCode, string identifier)
-        {
-            return await ValidateAsync(credentialTypeCode, identifier, null);
         }
         public async Task<ValidateResultDto> ValidateAsync(string credentialTypeCode, string identifier, string secret)
         {
@@ -205,12 +202,7 @@ namespace Ultrix.Application.Managers
             }
 
             Credential credential = await _credentialRepository.FindSingleByExpressionAsync(c => c.CredentialTypeId.Equals(credentialType.Id) && c.Identifier.Equals(identifier));
-            
-
-            byte[] salt = Convert.FromBase64String(credential.Extra);
-            string hash = PasswordHasher.ComputeHash(secret, salt);
-
-            if (credential.Secret != hash)
+            if (!_hasher.VerifyHash(credential.Secret, credential.Extra, secret))
             {
                 validateResultDto.Error = ValidateResultError.SecretNotValid;
             }

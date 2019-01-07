@@ -4,25 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Ultrix.Application.Converters;
 using Ultrix.Application.DTOs;
-using Ultrix.Application.Interfaces;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
-using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
-using Ultrix.Tests.Utilities;
+using Ultrix.Tests.TestUtilities;
 
-namespace Ultrix.Tests
+namespace Ultrix.Tests.Services
 {
     [TestClass]
-    public class CollectionServiceTests
+    public class CollectionServiceTests : ServiceTestsBase
     {
-        public static IEntityValidator<Collection> CollectionValidator { get; set; }
-        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
-        public static IRepository<Collection> CollectionRepository { get; set; }
-        public static ICollectionService CollectionService { get; set; }
-
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {

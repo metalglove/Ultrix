@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Ultrix.Application.Converters;
 using Ultrix.Application.DTOs;
-using Ultrix.Application.Exceptions;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 

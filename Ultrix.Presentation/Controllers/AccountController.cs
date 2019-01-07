@@ -33,7 +33,7 @@ namespace Ultrix.Presentation.Controllers
                 return Json(new { success = false });
 
             RegisterUserDto registerUserDto = registerViewModel.GetRegisterUserDto();
-            SignUpResultDto createIdentityResult = await _userService.RegisterUserAsync(registerUserDto);
+            SignUpResultDto createIdentityResult = await _userService.SignUpAsync(registerUserDto);
             return Json(createIdentityResult.Success 
                 ? new { success = true } 
                 : new { success = false });

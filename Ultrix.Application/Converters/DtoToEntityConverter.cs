@@ -20,6 +20,7 @@ namespace Ultrix.Application.Converters
             foreach (PropertyInfo property in joinedProperties)
             {
                 object value = dto.GetType().GetProperty(property.Name).GetValue(dto);
+                if (value == null) continue;
                 property.SetValue(entity, value);
             }
             return entity;

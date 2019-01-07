@@ -2,54 +2,23 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Ultrix.Application.DTOs;
-using Ultrix.Application.Interfaces;
 using Ultrix.Application.Managers;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Infrastructure.Services;
-using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
-using Ultrix.Tests.Utilities;
+using Ultrix.Tests.TestUtilities;
 using System.Collections.Generic;
+using Ultrix.Application.Cryptography;
 
-namespace Ultrix.Tests
+namespace Ultrix.Tests.Services
 {
     [TestClass]
-    public class MemeSharingServiceTests
+    public class MemeSharingServiceTests : ServiceTestsBase
     {
-        public static IEntityValidator<ApplicationUser> ApplicationUserValidator { get; set; }
-        public static IEntityValidator<Follower> FollowerValidator { get; set; }
-        public static IEntityValidator<Credential> CredentialValidator { get; set; }
-        public static IEntityValidator<CredentialType> CredentialTypeValidator { get; set; }
-        public static IEntityValidator<Role> RoleValidator { get; set; }
-        public static IEntityValidator<UserRole> UserRoleValidator { get; set; }
-        public static IEntityValidator<RolePermission> RolePermissionValidator { get; set; }
-        public static IEntityValidator<Permission> PermissionValidator { get; set; }
-        public static IEntityValidator<Meme> MemeValidator { get; set; }
-        public static IEntityValidator<Comment> CommentValidator { get; set; }
-        public static IEntityValidator<SharedMeme> SharedMemeValidator { get; set; }
-        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
-        public static IRepository<ApplicationUser> ApplicationUserRepository { get; set; }
-        public static IRepository<Meme> MemeRepository { get; set; }
-        public static IRepository<Comment> CommentRepository { get; set; }
-        public static IRepository<Follower> FollowerRepository { get; set; }
-        public static IRepository<Credential> CredentialRepository { get; set; }
-        public static IRepository<CredentialType> CredentialTypeRepository { get; set; }
-        public static IRepository<Role> RoleRepository { get; set; }
-        public static IRepository<UserRole> UserRoleRepository { get; set; }
-        public static IRepository<RolePermission> RolePermissionRepository { get; set; }
-        public static IRepository<Permission> PermissionRepository { get; set; }
-        public static IRepository<SharedMeme> SharedMemeRepository { get; set; }
-        public static IHttpContextAccessor HttpContextAccessor { get; set; }
-        public static ILocalMemeFetcherService LocalMemeFetcherService { get; set; }
-        public static IUserService UserService { get; set; }
-        public static IFollowerService FollowerService { get; set; }
-        public static IUserManager UserManager { get; set; }
-        public static IMemeSharingService MemeSharingService { get; set; }
-
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
@@ -62,9 +31,11 @@ namespace Ultrix.Tests
             UserRoleValidator = new UserRoleValidator();
             RolePermissionValidator = new RolePermissionValidator();
             PermissionValidator = new PermissionValidator();
-            LocalMemeFetcherService = new LocalMemeFetcherService();
+            MemeFetcherService = new LocalMemeFetcherService();
             SharedMemeValidator = new SharedMemeValidator();
             CommentValidator = new CommentValidator();
+            Hasher = new Pbkdf2Hasher();
+            SaltGenerator = new RandomSaltGenerator();
         }
 
         [TestInitialize]
@@ -88,12 +59,12 @@ namespace Ultrix.Tests
             CommentRepository = new CommentRepository(ApplicationDbFactory.Create(), CommentValidator);
             HttpContextAccessor = new HttpContextAccessor(); // NOTE: Don't actually use it, when using Startup it will inject the HttpContext. (here it will always be null)
 
-            UserManager = new UserManager(ApplicationUserRepository, CredentialTypeRepository, CredentialRepository, RoleRepository, UserRoleRepository, RolePermissionRepository, PermissionRepository, HttpContextAccessor);
+            UserManager = new UserManager(ApplicationUserRepository, CredentialTypeRepository, CredentialRepository, RoleRepository, UserRoleRepository, RolePermissionRepository, PermissionRepository, HttpContextAccessor, Hasher, SaltGenerator);
             UserService = new UserService(UserManager, ApplicationUserRepository, FollowerRepository);
             FollowerService = new FollowerService(FollowerRepository, ApplicationUserRepository);
             MemeSharingService = new MemeSharingService(SharedMemeRepository, ApplicationUserRepository);
 
-            // A Credential type is required for a user to be able to login or register.
+            // NOTE: A CredentialType is required for a user to be able to login or register.
             await CredentialTypeRepository.CreateAsync(new CredentialType
             {
                 Code = "Email",
@@ -101,14 +72,14 @@ namespace Ultrix.Tests
                 Position = 1
             });
 
-            await UserService.RegisterUserAsync(new RegisterUserDto
+            await UserService.SignUpAsync(new RegisterUserDto
             {
                 Email = "Mario.Mario@Ultrix.nl",
                 Password = "password",
                 UserName = "Metalglove"
             });
 
-            await UserService.RegisterUserAsync(new RegisterUserDto
+            await UserService.SignUpAsync(new RegisterUserDto
             {
                 Email = "Jan.Willem@Ultrix.nl",
                 Password = "password",

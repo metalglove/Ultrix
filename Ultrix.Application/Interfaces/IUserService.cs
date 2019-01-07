@@ -6,11 +6,10 @@ namespace Ultrix.Application.Interfaces
 {
     public interface IUserService
     {
-        Task<SignUpResultDto> RegisterUserAsync(RegisterUserDto registerUserDto);
+        Task<SignUpResultDto> SignUpAsync(RegisterUserDto registerUserDto);
         Task<SignInResultDto> SignInAsync(LoginUserDto loginUserDto);
         Task SignOutAsync();
-        Task<string> GetUserNameByUserIdAsync(int userId);
-        Task<int> GetUserIdByEmailAsync(string userName);
-        Task<IEnumerable<FilteredApplicationUserDto>> GetUsersAsync(int userId);
+        Task<int> GetUserIdByEmailAsync(string email);
+        Task<IEnumerable<FilteredApplicationUserDto>> GetFilteredUsersAsync(int userId);
     }
 }

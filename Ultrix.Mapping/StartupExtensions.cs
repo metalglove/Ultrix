@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Ultrix.Application.Cryptography;
 using Ultrix.Application.Interfaces;
 using Ultrix.Application.Managers;
 using Ultrix.Application.Services;
@@ -28,6 +29,11 @@ namespace Ultrix.Mapping
                         options.ExpireTimeSpan = TimeSpan.FromDays(7);
                     }
                 );
+
+            #region Cryptography
+            serviceCollection.AddSingleton<IHasher, Pbkdf2Hasher>();
+            serviceCollection.AddSingleton<ISaltGenerator, RandomSaltGenerator>();
+            #endregion Cryptography
 
             #region Validators
             serviceCollection.AddTransient<IEntityValidator<Follower>, FollowerValidator>();
@@ -102,7 +108,6 @@ namespace Ultrix.Mapping
                 IEntityValidator<Comment> entityValidator = serviceProvider.GetService<IEntityValidator<Comment>>();
                 return new CommentRepository(applicationDbFactory.Create(), entityValidator);
             });
-
             serviceCollection.AddTransient<IRepository<Credential>, CredentialRepository>(serviceProvider =>
             {
                 IFactory<AppDbContext> applicationDbFactory = serviceProvider.GetService<IFactory<AppDbContext>>();
@@ -152,17 +157,19 @@ namespace Ultrix.Mapping
                 IRepository<RolePermission> rolePermissionRepository = serviceProvider.GetService<IRepository<RolePermission>>();
                 IRepository<Permission> permissionRepository = serviceProvider.GetService<IRepository<Permission>>();
                 IHttpContextAccessor httpContextAccessor = serviceProvider.GetService<IHttpContextAccessor>();
-                return new UserManager(applicationUserRepository, credentialTypeRepository, credentialRepository, roleRepository, userRoleRepository, rolePermissionRepository, permissionRepository, httpContextAccessor);
+                IHasher hasher = serviceProvider.GetService<IHasher>();
+                ISaltGenerator saltGenerator = serviceProvider.GetService<ISaltGenerator>();
+                return new UserManager(applicationUserRepository, credentialTypeRepository, credentialRepository, roleRepository, userRoleRepository, rolePermissionRepository, permissionRepository, httpContextAccessor, hasher, saltGenerator);
             });
-            #endregion
+            #endregion Managers
 
             #region Services
-            serviceCollection.AddTransient<IExternalMemeFetcherService, ExternalMemeFetcherService>();
-            serviceCollection.AddTransient<ILocalMemeFetcherService, LocalMemeFetcherService>();
+            //serviceCollection.AddTransient<IExternalMemeFetcherService, ExternalMemeFetcherService>();
+            serviceCollection.AddTransient<IMemeFetcherService, LocalMemeFetcherService>();
             serviceCollection.AddTransient<IMemeService, MemeService>(serviceProvider =>
             {
                 IRepository<Meme> memeRepository = serviceProvider.GetService<IRepository<Meme>>();
-                ILocalMemeFetcherService memeFetcherService = serviceProvider.GetService<ILocalMemeFetcherService>();
+                IMemeFetcherService memeFetcherService = serviceProvider.GetService<IMemeFetcherService>();
                 return new MemeService(memeFetcherService, memeRepository);
             });
             serviceCollection.AddTransient<ICollectionService, CollectionService>(serviceProvider =>

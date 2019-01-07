@@ -11,7 +11,7 @@ using Ultrix.Infrastructure.Extensions;
 
 namespace Ultrix.Infrastructure.Services
 {
-    public class LocalMemeFetcherService : ILocalMemeFetcherService
+    public class LocalMemeFetcherService : IMemeFetcherService
     {
         private const string NineGagRandomUrl = "http://9gag.com/random/";
         private const string NineGagPhotoCacheUrl = "http://img-9gag-fun.9cache.com/photo/";

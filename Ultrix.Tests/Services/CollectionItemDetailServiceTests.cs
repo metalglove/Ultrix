@@ -1,34 +1,21 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ultrix.Application.Converters;
 using Ultrix.Application.DTOs;
-using Ultrix.Application.Exceptions;
-using Ultrix.Application.Interfaces;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
 using Ultrix.Domain.Entities;
-using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
-using Ultrix.Tests.Utilities;
+using Ultrix.Tests.TestUtilities;
 
-namespace Ultrix.Tests
+namespace Ultrix.Tests.Services
 {
     [TestClass]
-    public class CollectionItemDetailServiceTests
+    public class CollectionItemDetailServiceTests : ServiceTestsBase
     {
-        public static IEntityValidator<Collection> CollectionValidator { get; set; }
-        public static IEntityValidator<Meme> MemeValidator { get; set; }
-        public static IEntityValidator<CollectionItemDetail> CollectionItemDetailValidator { get; set; }
-        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
-        public static IRepository<Collection> CollectionRepository { get; set; }
-        public static IRepository<Meme> MemeRepository { get; set; }
-        public static IRepository<CollectionItemDetail> CollectionItemDetailRepository { get; set; }
-        public static ICollectionService CollectionService { get; set; }
-        public static ICollectionItemDetailService CollectionItemDetailService { get; set; }
-
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {

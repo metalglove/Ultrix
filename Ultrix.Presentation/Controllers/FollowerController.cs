@@ -30,7 +30,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> UsersAsync()
         {
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            IEnumerable<FilteredApplicationUserDto> users = await _userService.GetUsersAsync(userId);
+            IEnumerable<FilteredApplicationUserDto> users = await _userService.GetFilteredUsersAsync(userId);
             return View("Users", new UsersViewModel(users));
         }
 

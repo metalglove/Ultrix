@@ -18,9 +18,7 @@ namespace Ultrix.Application.Interfaces
         Task<RemoveFromRoleResultDto> RemoveFromRoleAsync(ApplicationUser user, string roleCode);
         Task SignInAsync(ApplicationUser user, bool isPersistent = false);
         Task SignOutAsync();
-        Task<SignUpResultDto> SignUpAsync(string name, string credentialTypeCode, string identifier);
         Task<SignUpResultDto> SignUpAsync(string name, string credentialTypeCode, string identifier, string secret);
-        Task<ValidateResultDto> ValidateAsync(string credentialTypeCode, string identifier);
         Task<ValidateResultDto> ValidateAsync(string credentialTypeCode, string identifier, string secret);
     }
 }

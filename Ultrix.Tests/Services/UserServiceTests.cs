@@ -1,45 +1,22 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Ultrix.Application.Cryptography;
 using Ultrix.Application.DTOs;
-using Ultrix.Application.Interfaces;
 using Ultrix.Application.Managers;
 using Ultrix.Application.Services;
 using Ultrix.Application.Validators;
-using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
 using Ultrix.Domain.Enumerations;
-using Ultrix.Persistance.Contexts;
 using Ultrix.Persistance.Infrastructure;
 using Ultrix.Persistance.Repositories;
-using Ultrix.Tests.Utilities;
+using Ultrix.Tests.TestUtilities;
 
-namespace Ultrix.Tests
+namespace Ultrix.Tests.Services
 {
     [TestClass]
-    public class UserServiceTests
+    public class UserServiceTests : ServiceTestsBase
     {
-        public static IEntityValidator<ApplicationUser> ApplicationUserValidator { get; set; }
-        public static IEntityValidator<Follower> FollowerValidator { get; set; }
-        public static IEntityValidator<Credential> CredentialValidator { get; set; }
-        public static IEntityValidator<CredentialType> CredentialTypeValidator { get; set; }
-        public static IEntityValidator<Role> RoleValidator { get; set; }
-        public static IEntityValidator<UserRole> UserRoleValidator { get; set; }
-        public static IEntityValidator<RolePermission> RolePermissionValidator { get; set; }
-        public static IEntityValidator<Permission> PermissionValidator { get; set; }
-        public static IFactory<AppDbContext> ApplicationDbFactory { get; set; }
-        public static IRepository<ApplicationUser> ApplicationUserRepository { get; set; }
-        public static IRepository<Follower> FollowerRepository { get; set; }
-        public static IRepository<Credential> CredentialRepository { get; set; }
-        public static IRepository<CredentialType> CredentialTypeRepository { get; set; }
-        public static IRepository<Role> RoleRepository { get; set; }
-        public static IRepository<UserRole> UserRoleRepository { get; set; }
-        public static IRepository<RolePermission> RolePermissionRepository { get; set; }
-        public static IRepository<Permission> PermissionRepository { get; set; }
-        public static IHttpContextAccessor HttpContextAccessor { get; set; }
-        public static IUserService UserService { get; set; }
-        public static IUserManager UserManager { get; set; }
-
         [ClassInitialize]
         public static void Initialize(TestContext testContext)
         {
@@ -51,6 +28,8 @@ namespace Ultrix.Tests
             UserRoleValidator = new UserRoleValidator();
             RolePermissionValidator = new RolePermissionValidator();
             PermissionValidator = new PermissionValidator();
+            Hasher = new Pbkdf2Hasher();
+            SaltGenerator = new RandomSaltGenerator();
         }
 
         [TestInitialize]
@@ -69,7 +48,7 @@ namespace Ultrix.Tests
             RolePermissionRepository = new RolePermissionRepository(ApplicationDbFactory.Create(), RolePermissionValidator);
             PermissionRepository = new PermissionRepository(ApplicationDbFactory.Create(), PermissionValidator);
             HttpContextAccessor = new HttpContextAccessor(); // NOTE: Don't actually use it, when using Startup it will inject the HttpContext. (here it will always be null)
-            UserManager = new UserManager(ApplicationUserRepository, CredentialTypeRepository, CredentialRepository, RoleRepository, UserRoleRepository, RolePermissionRepository, PermissionRepository, HttpContextAccessor);
+            UserManager = new UserManager(ApplicationUserRepository, CredentialTypeRepository, CredentialRepository, RoleRepository, UserRoleRepository, RolePermissionRepository, PermissionRepository, HttpContextAccessor, Hasher, SaltGenerator);
             UserService = new UserService(UserManager, ApplicationUserRepository, FollowerRepository);
 
             // A Credential type is required for a user to be able to login or register.
@@ -93,7 +72,7 @@ namespace Ultrix.Tests
             };
 
             // Act
-            SignUpResultDto signUpResultDto = await UserService.RegisterUserAsync(registerUserDto);
+            SignUpResultDto signUpResultDto = await UserService.SignUpAsync(registerUserDto);
 
             // Assert
             Assert.IsTrue(signUpResultDto.Success);
@@ -111,7 +90,7 @@ namespace Ultrix.Tests
             };
 
             // Act
-            SignUpResultDto signUpResultDto = await UserService.RegisterUserAsync(registerUserDto);
+            SignUpResultDto signUpResultDto = await UserService.SignUpAsync(registerUserDto);
 
             // Assert
             Assert.IsFalse(signUpResultDto.Success);
@@ -128,7 +107,7 @@ namespace Ultrix.Tests
                 Password = "password",
                 UserName = "Metalglove"
             };
-            SignUpResultDto signUpResultDto = await UserService.RegisterUserAsync(registerUserDto);
+            SignUpResultDto signUpResultDto = await UserService.SignUpAsync(registerUserDto);
             Assert.IsTrue(signUpResultDto.Success);
             LoginUserDto loginUserDto = new LoginUserDto
             {
@@ -154,7 +133,7 @@ namespace Ultrix.Tests
                 Password = "password",
                 UserName = "Metalglove"
             };
-            SignUpResultDto signUpResultDto = await UserService.RegisterUserAsync(registerUserDto);
+            SignUpResultDto signUpResultDto = await UserService.SignUpAsync(registerUserDto);
             Assert.IsTrue(signUpResultDto.Success);
             LoginUserDto loginUserDto = new LoginUserDto
             {
