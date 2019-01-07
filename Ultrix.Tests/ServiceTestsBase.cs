@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using Ultrix.Application.Interfaces;
 using Ultrix.Domain.Entities;
 using Ultrix.Domain.Entities.Authentication;
@@ -49,5 +50,10 @@ namespace Ultrix.Tests
         public static ICollectionService CollectionService { get; set; }
         public static ICollectionItemDetailService CollectionItemDetailService { get; set; }
         public static IUserManager UserManager { get; set; }
+
+        public ServiceTestsBase()
+        {
+            Console.WriteLine($"Service: {GetType().Name}");
+        }
     }
 }

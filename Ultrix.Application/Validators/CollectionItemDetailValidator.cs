@@ -10,9 +10,9 @@ namespace Ultrix.Application.Validators
         {
             if (entity == null)
                 throw new EntityValidationException("CollectionItemDetail is null");
-            if (entity.AddedByUserId == 0)
+            if (entity.AddedByUserId.Equals(default))
                 throw new EntityValidationException("AddedByUserId cannot be 0.");
-            if (entity.CollectionId == 0)
+            if (entity.CollectionId.Equals(default))
                 throw new EntityValidationException("CollectionId cannot be 0.");
             if (string.IsNullOrWhiteSpace(entity.MemeId))
                 throw new EntityValidationException("MemeId IsNullOrWhiteSpace.");

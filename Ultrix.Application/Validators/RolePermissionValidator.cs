@@ -10,9 +10,9 @@ namespace Ultrix.Application.Validators
         {
             if (entity == null)
                 throw new EntityValidationException("RoleId is null");
-            if (entity.RoleId == 0)
+            if (entity.RoleId.Equals(default))
                 throw new EntityValidationException("RoleId is unset.");
-            if (entity.PermissionId == 0)
+            if (entity.PermissionId.Equals(default))
                 throw new EntityValidationException("PermissionId is unset.");
             return true;
         }

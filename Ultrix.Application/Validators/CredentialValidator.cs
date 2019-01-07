@@ -10,11 +10,11 @@ namespace Ultrix.Application.Validators
         {
             if (entity == null)
                 throw new EntityValidationException("Credential is null");
-            if (entity.Id != 0)
+            if (!entity.Id.Equals(default))
                 throw new EntityValidationException("Id cannot be set.");
-            if (entity.UserId != 0)
+            if (entity.UserId.Equals(default))
                 throw new EntityValidationException("UserId is unset.");
-            if (entity.CredentialTypeId != 0)
+            if (entity.CredentialTypeId.Equals(default))
                 throw new EntityValidationException("CredentialTypeId is unset.");
             if (string.IsNullOrWhiteSpace(entity.Identifier))
                 throw new EntityValidationException("Identifier IsNullOrWhiteSpace.");
