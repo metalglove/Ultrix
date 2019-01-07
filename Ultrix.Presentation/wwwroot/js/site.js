@@ -25,3 +25,14 @@ function getFormData($form) {
 
     return indexedArray;
 }
+
+function displayErrors(data) {
+    for (let i = 0; i < Object.keys(data.errors).length; i++) {
+        const errorHeader = Object.keys(data.errors)[i];
+        let errorMessages = "";
+        for (let j = 0; j < data.errors[errorHeader].length; j++) {
+            errorMessages += `<li>${data.errors[errorHeader][j]}</li>`;
+        }
+        M.toast({ html: `<div><b>${errorHeader}</b><ul>${errorMessages}</ul></div>` });
+    }
+}

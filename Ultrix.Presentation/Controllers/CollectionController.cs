@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
+using Ultrix.Presentation.Utilities;
 using Ultrix.Presentation.ViewModels.Collection_;
 
 namespace Ultrix.Presentation.Controllers
@@ -49,7 +50,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> CreateCollectionAsync([FromBody] CreateCollectionViewModel createCollectionViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new {Success = false, Message = "Something happened try again later.." });
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             CollectionDto collectionDto = createCollectionViewModel.GetCollectionDto(userId);
@@ -63,7 +64,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> AddMemeToCollectionAsync([FromBody] AddMemeToCollectionViewModel addMemeToCollectionViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { Success = false, Message = "Something happened try again later.." });
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             AddMemeToCollectionDto addMemeToCollectionDto =
@@ -84,7 +85,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> DeleteCollectionAsync([FromBody] DeleteCollectionViewModel deleteCollectionViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { Success = false, Message = "Something happened try again later.." });
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             DeleteCollectionDto deleteCollectionDto = deleteCollectionViewModel.GetDeleteCollectionDto(userId);

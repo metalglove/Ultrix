@@ -29,7 +29,7 @@
                 }
             }
             else {
-                M.toast({ html: "Something happened, try again later..." });
+                displayErrors(data);
             }
         },
         error: function () {
@@ -69,7 +69,7 @@ function sendDislike(formId) {
                 }
             }
             else {
-                M.toast({ html: "Something happened, try again later..." });
+                displayErrors(data);
             }
         },
         error: function () {
@@ -97,10 +97,10 @@ function shareMemeToFriend(formId) {
         data: JSON.stringify(form),
         success: function (data) {
             if (data.success === true) {
-                M.toast({ html: "Successfully Shared to " + data.to + "!" });
+                M.toast({ html: `Successfully Shared to ${data.to}!` });
             }
             else {
-                M.toast({ html: "Something happened, try again later..." });
+                displayErrors(data);
             }
         },
         error: function () {
@@ -147,7 +147,7 @@ function toggleCommentSection(divId) {
 function ffsCreateCommentPLS(formId) {
     var form = getFormData($("#" + formId));
     if (form["Text"] == "") {
-        M.toast({ html: "The comment cannot be emtpy." });
+        M.toast({ html: "The comment cannot be empty." });
         return;
     }
     if (form["Text"].length < 10) {
@@ -165,14 +165,18 @@ function ffsCreateCommentPLS(formId) {
         },
         data: JSON.stringify(form),
         success: function (data) {
-            if (data.success == true) {
-                $("#" + form["MemeId"] + "Comments").prepend('<div class="progress"><div class="indeterminate"></div></div>');
-                $("#" + form["MemeId"] + "Comments").load("/GetComments/" + form["MemeId"]);
-            }
             M.toast({ html: data.message });
+            if (data.success === true) {
+                $("#" + form["MemeId"] + "Comments")
+                    .prepend('<div class="progress"><div class="indeterminate"></div></div>');
+                $("#" + form["MemeId"] + "Comments").load("/GetComments/" + form["MemeId"]);
+            } else {
+                displayErrors(data);
+            }
         },
         error: function () {
             console.log("CreateComment form resulted faulty..");
         }
     });
 }
+

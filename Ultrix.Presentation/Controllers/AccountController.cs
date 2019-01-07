@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
 using Ultrix.Presentation.Utilities;
 using Ultrix.Presentation.ViewModels.Account;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Ultrix.Presentation.Controllers
 {
@@ -18,9 +16,7 @@ namespace Ultrix.Presentation.Controllers
         private readonly IUserService _userService;
         private readonly ITempDataService _tempDataService;
 
-        public AccountController(
-            IUserService userService, 
-            ITempDataService tempDataService)
+        public AccountController(IUserService userService, ITempDataService tempDataService)
         {
             _userService = userService;
             _tempDataService = tempDataService;
@@ -30,7 +26,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> RegisterUserAsync([FromBody] RegisterViewModel registerViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { success = false });
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             RegisterUserDto registerUserDto = registerViewModel.GetRegisterUserDto();
             SignUpResultDto createIdentityResult = await _userService.SignUpAsync(registerUserDto);
@@ -50,7 +46,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> LoginUserAsync([FromBody] LoginViewModel loginViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { success = false });
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             await _userService.SignOutAsync();
             LoginUserDto loginUserDto = loginViewModel.GetLoginUserDto();

@@ -17,6 +17,9 @@
         data: JSON.stringify(form),
         success: function (data) {
             M.toast({ html: data.message });
+            if (!data.success) {
+                    displayErrors(data);
+            }
         },
         error: function () {
             console.log("CreateCollection form resulted faulty..");
@@ -41,19 +44,14 @@ function deleteCollection(formId, collectionDiv) {
         },
         data: JSON.stringify(form),
         success: function (data) {
+            M.toast({ html: data.message });
             if (data.success)
                 document.getElementById(collectionDiv).remove();
-
-            M.toast({ html: data.message });
+            else
+                displayErrors(data);
         },
         error: function () {
             console.log("DeleteCollection form resulted faulty..");
         }
     });
-}
-function DisplayErrors(errors) {
-    for (var i = 0; i < errors.length; i++) {
-        $("<label for='" + errors[i].Key + "' class='error'></label>")
-            .html(errors[i].Value[0]).appendTo($("input#" + errors[i].Key).parent());
-    }
 }

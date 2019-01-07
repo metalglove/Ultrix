@@ -13,6 +13,9 @@
         data: JSON.stringify(form),
         success: function (data) {
             M.toast({ html: data.message });
+            if (!data.success) {
+                displayErrors(data);
+            }
         },
         error: function () {
             console.log("Follow form resulted faulty..");
@@ -35,6 +38,9 @@ function unFollow(formId) {
         data: JSON.stringify(form),
         success: function (data) {
             M.toast({ html: data.message });
+            if (!data.success) {
+                displayErrors(data);
+            }
         },
         error: function () {
             console.log("UnFollow form resulted faulty..");

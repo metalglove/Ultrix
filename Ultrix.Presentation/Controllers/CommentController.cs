@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
+using Ultrix.Presentation.Utilities;
 using Ultrix.Presentation.ViewModels.Comment;
 
 namespace Ultrix.Presentation.Controllers
@@ -22,19 +23,17 @@ namespace Ultrix.Presentation.Controllers
         [Route("CreateComment"), Authorize, HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateCommentAsync([FromBody] CreateCommentViewModel createCommentViewModel)
         {
-            ServiceResponseDto commentResultDto = new ServiceResponseDto
-            {
-                Message = "Something happened try again later.."
-            };
-
             if (!ModelState.IsValid)
-                return Json(commentResultDto);
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             CommentDto commentDto = createCommentViewModel.GetCommentDto(userId);
-            commentResultDto = await _commentService.CreateCommentAsync(commentDto);
+            ServiceResponseDto commentResultDto = await _commentService.CreateCommentAsync(commentDto);
             return Json(commentResultDto);
         }
+
+        
+
         [Route("GetComments/{memeId}"), HttpGet]
         public async Task<IActionResult> GetCommentsAsync(string memeId)
         {

@@ -17,6 +17,9 @@
         data: JSON.stringify(form),
         success: function (data) {
             M.toast({ html: data.message });
+            if (!data.success) {
+                displayErrors(data);
+            }
         },
         error: function () {
             console.log("AddMemeToCollection form resulted faulty..");

@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Ultrix.Application.DTOs;
 using Ultrix.Application.Interfaces;
+using Ultrix.Presentation.Utilities;
 using Ultrix.Presentation.ViewModels.Follower;
 
 namespace Ultrix.Presentation.Controllers
@@ -65,7 +66,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> FollowAsync([FromBody] FollowViewModel followViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { Success = false, Message = "Something happened try again later.." });
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = followViewModel.GetFollowerDto(userId);
@@ -77,7 +78,7 @@ namespace Ultrix.Presentation.Controllers
         public async Task<IActionResult> UnFollowAsync([FromBody] UnFollowViewModel unFollowViewModel)
         {
             if (!ModelState.IsValid)
-                return Json(new { Success = false, Message = "Something happened try again later.." });
+                return Json(ModelState.DefaultInvalidModelStateWithErrorMessages());
 
             int userId = Convert.ToInt32(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FollowerDto follower = unFollowViewModel.GetFollowerDto(userId);
