@@ -4,15 +4,20 @@
 // Write your JavaScript code.
 document.addEventListener("DOMContentLoaded",
     function () {
-        const dropdownTriggeredElements = document.querySelectorAll(".dropdown-trigger");
-        $('.dropdown-trigger').click(function () {
-            M.Dropdown.init(dropdownTriggeredElements,
-                {
-                    constrainWidth: false,
-                    belowOrigin: true,
-                    closeOnClick: false
-                });
+        $(".dropdown-trigger").dropdown({
+            constrainWidth: false,
+            belowOrigin: true,
+            closeOnClick: false
         });
+        //const dropdownTriggeredElements = document.querySelectorAll(".dropdown-trigger");
+        //$(".dropdown-trigger").click(function () {
+        //    M.Dropdown.init(dropdownTriggeredElements,
+        //        {
+        //            constrainWidth: false,
+        //            belowOrigin: true,
+        //            closeOnClick: false
+        //        });
+        //});
     });
 
 function getFormData($form) {

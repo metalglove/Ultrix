@@ -50,6 +50,7 @@
     var loginUrl = "/Login";
 
     function switchFormTo(switchTo) {
+        const instance = M.Dropdown.getInstance($('.dropdown-trigger'));
         if (switchTo === "Login") {
             loginUrl = "/Login";
             $("#formBanner").text(switchTo);
@@ -63,7 +64,9 @@
         } else {
             M.toast({ html: "Something happened, try again later..." });
         }
+        instance.recalculateDimensions();
     }
+
     $(document).ready(function () {
         $('#errorMsg').hide();
         loginUrl = "/Login";
