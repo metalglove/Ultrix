@@ -75,15 +75,7 @@ Follow these steps to get your development environment set up:
 
 ---
 
-**NOTE:** If you also want to run all the tests, also create an `appsettings.json` file in the root of the Tests layer. 
-```json
-    {
-        "ConnectionStrings": {
-            "InMemoryDatabase": "InMemoryDatabase"
-        }
-    }
-```
-For the tests each method will create its own database with a random GUID and delete itself after completion of the test. This is done so that it can run in parallel and each test does not depend on anything. Because InMemoryDatabase is not *yet* a relational-database provider some tests will use the repository instead of the service to make the tests work as intended.
+**NOTE:** For the tests each method will create its own database with a random GUID and delete itself after completion of the test. This is done so that it can run in parallel and each test does not depend on anything. Because InMemoryDatabase is not *yet* a relational-database provider some tests will use the repository instead of the service to make the tests work as intended.
 
 ## Usage
 *Explanation coming soon..*
