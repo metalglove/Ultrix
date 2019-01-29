@@ -9,14 +9,23 @@ Use these instructions to get the project up and running.
 ### Prerequisites
 You will need the following tools:
 
-* [Visual Studio 2017 or 2019](https://www.visualstudio.com/downloads/)
+* [Visual Studio 2017 or 2019](https://www.visualstudio.com/downloads/) (with the ASP.NET Core module)
 * [.NET Core SDK 2.2](https://www.microsoft.com/net/download/dotnet-core/2.2)
+* [SQLServer 2017](https://www.microsoft.com/nl-nl/sql-server/sql-server-downloads)
 
 ### Setup
 Follow these steps to get your development environment set up:
 
-  1. Clone the repository
-  2. Create a `appsettings.json` file at the root of the Presentation layer with the connectionstring to a fresh database:
+  1. Clone the repository.
+  2. Open PowerShell, connect to your local sqlserver and create a new database:
+     ```sql
+     SQLCMD.EXE -S "(LocalDb)\MSSQLLocalDB" -E
+
+     CREATE DATABASE UltrixDb
+
+     GO
+     ```
+  3. Create an `appsettings.json` file at the root of the Presentation layer with the connectionstring to the new database:
      ```json
         {
             "Logging": {
@@ -26,28 +35,47 @@ Follow these steps to get your development environment set up:
             },
             "AllowedHosts": "*",
             "ConnectionStrings": {
-                "ApplicationDatabase": "Server={Instance};Database={DATABASE};User Id={USER};Password={PW};",
+                "ApplicationDatabase": "Server=(LocalDb)\\MSSQLLocalDB;Database=UltrixDb;",
                 "InMemoryDatabase": "InMemoryDatabase"
             }
         }
      ```
-  3. Next, go to `Tools > NuGet Package Manager > Package Manager Console` in visual studio, in the console type:
+  4. Next, go to `Tools > NuGet Package Manager > Package Manager Console` in visual studio, To restore all dependencies:
+     ```
+     dotnet restore
+     ```
+     Followed by:
+     ```
+     dotnet build
+     ```
+     To make sure all dependencies were added succesfully, it should build without dependency warnings else you have probably not installed .NET core 2.2 SDK.
+  5. Next, to add the code first database to your new database (make sure the default project is Ultrix.Persistance):
      ```
      Add-Migration InitialCreate
-     
+     ```
+     Finally, update the database:
+     ```
      Update-Database
      ```
-     The `Add-Migration` command scaffolds a migration to create the initial set of tables for the model. The `Update-Database` command creates the database and applies the new migration to it.
-  4. Next, build the solution either by selecting it in the `Build > Build solution` in visual studio or hitting `CTRL + SHIFT + B`.
-  5. Once the build has run succesfully, start the website to confirm that the database connection is succesfull either by hitting `F5` or go to `Debug > Start`.
-  6. Launch [http://localhost:52468/](http://localhost:52468/) in your browser to view the website. If memes start flowing in then it went succesfully, else your connectionstring was probably incorrect. If that is not the case please create an issue if you want help with that.
-  7. For the time being the you need to manually insert a `CredentialType` for authentication. Run this query:
-  ```SQL
-    INSERT INTO [dbo].[CredentialTypes] ([Code], [Name], [Position]) VALUES ('Email', 'Email', 1)
-  ```
-  8. Now users are able to register and login, have fun!
+     *The `Add-Migration` command scaffolds a migration to create the initial set of tables for the entities in the Persistance layer. The `Update-Database` command creates the database and applies the new migration to it.*
+  6. Next, build the solution either by selecting it in the `Build > Build solution` in visual studio or hitting `CTRL + SHIFT + B` or if you are still in the package manager console by typing `dotnet build`.
+  7. Once the build has run succesfully, start the website to confirm that the database connection is succesfull either by hitting `F5` or go to `Debug > Start`.
+  8. Launch [http://localhost:60216/](http://localhost:60216/) in your browser to view the website.
+  9. For the time being the you need to manually insert a `CredentialType` for authentication. Run this query (in PowerShell):
+     ```sql
+     USE UltrixDb
 
-**NOTE:** If you also want to run all the tests, also create a `appsettings.json` file in the root of the Tests layer. 
+     GO
+
+     INSERT INTO [dbo].[CredentialTypes] ([Code], [Name], [Position]) VALUES ('Email', 'Email', 1)
+
+     GO
+     ```
+  10. Now users are able to register and login, have fun!
+
+---
+
+**NOTE:** If you also want to run all the tests, also create an `appsettings.json` file in the root of the Tests layer. 
 ```json
     {
         "ConnectionStrings": {
